@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.householdStatsController">
+   <children>
+      <ImageView fx:id="gradient" fitHeight="868.0" fitWidth="868.0" layoutX="-327.0" layoutY="235.0">
+         <image>
+            <Image url="@../assets/gradient_star.png" />
+         </image>
+      </ImageView>
+      <GridPane layoutX="32.0" layoutY="62.0" prefHeight="280.0" prefWidth="229.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="household" contentDisplay="CENTER" onMouseClicked="#hoKhauView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Hộ khẩu">
+               <font>
+                  <Font name="Inter Regular" size="32.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <Label fx:id="stat" contentDisplay="CENTER" onMouseClicked="#statView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Thống kê" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Inter Regular" size="32.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <Label fx:id="member" contentDisplay="CENTER" layoutX="10.0" layoutY="37.0" onMouseClicked="#nhanKhauView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Nhân khẩu" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Inter Regular" size="32.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+         </children>
+      </GridPane>
+      <Button id="button_logout" fx:id="logout" layoutX="42.0" layoutY="720.0" mnemonicParsing="false" onAction="#logoutView" text="Đăng xuất" />
+      <TableView id="feeTable" fx:id="statsTable" layoutX="288.0" layoutY="54.0" prefHeight="588.0" prefWidth="798.0">
+         <columns>
+            <TableColumn fx:id="idCol" prefWidth="140.66668701171875" styleClass="tableAtrb" text="ID" />
+            <TableColumn fx:id="idHoKhauCol" prefWidth="170.0" styleClass="tableAtrb" text="Mã hộ" />
+            <TableColumn fx:id="hoTenCol" minWidth="0.0" prefWidth="491.0" styleClass="tableAtrb" text="Họ tên" />
+         </columns>
+      </TableView>
+      <Button id="householdStats" fx:id="thongKe_btn" layoutX="1141.0" layoutY="676.0" mnemonicParsing="false" onAction="#thongKe" styleClass="mybutton" text="Thống kê" />
+      <Label layoutX="1122.0" layoutY="406.0" styleClass="functionDetailTitle" text="Từ ngày">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="1122.0" layoutY="484.0" styleClass="functionDetailTitle" text="Đến ngày">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="tuNgay_date" layoutX="1123.0" layoutY="442.0" prefHeight="35.0" prefWidth="207.0" />
+      <DatePicker fx:id="denNgay_date" layoutX="1123.0" layoutY="519.0" prefHeight="35.0" prefWidth="207.0" />
+      <ImageView id="button_home" fx:id="home" fitHeight="62.0" fitWidth="68.0" layoutX="69.0" layoutY="635.0" onMouseClicked="#home">
+         <image>
+            <Image url="@../assets/home.png" />
+         </image>
+      </ImageView>
+      <ChoiceBox fx:id="gioiTinh_cb" layoutX="1147.0" layoutY="93.0" prefHeight="44.0" prefWidth="172.0" styleClass="dropdown_search" />
+      <ChoiceBox fx:id="doTuoi_cb" layoutX="1146.0" layoutY="187.0" prefHeight="44.0" prefWidth="172.0" styleClass="dropdown_search" />
+      <Label layoutX="1122.0" layoutY="55.0" styleClass="functionDetailTitle" text="Giới tính">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="1122.0" layoutY="152.0" styleClass="functionDetailTitle" text="Độ tuổi">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="639.0" layoutY="686.0" styleClass="functionDetailTitle" text="Số lượng">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="soLuong_tf" layoutX="751.0" layoutY="671.0" prefHeight="60.0" prefWidth="327.0" styleClass="functionDetailInfo" />
+      <Label layoutX="1122.0" layoutY="292.0" styleClass="functionDetailTitle" text="Trạng thái">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="trangThai_cb" layoutX="1146.0" layoutY="342.0" prefHeight="44.0" prefWidth="172.0" styleClass="dropdown_search" />
+   </children>
+</AnchorPane>

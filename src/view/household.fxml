@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.householdController">
+   <children>
+      <ImageView fx:id="gradient" fitHeight="868.0" fitWidth="868.0" layoutX="-327.0" layoutY="235.0">
+         <image>
+            <Image url="@../assets/gradient_star.png" />
+         </image>
+      </ImageView>
+      <GridPane layoutX="32.0" layoutY="62.0" prefHeight="280.0" prefWidth="229.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="household" contentDisplay="CENTER" onMouseClicked="#hoKhauView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Hộ khẩu">
+               <font>
+                  <Font name="Inter Regular" size="32.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <Label fx:id="stat" contentDisplay="CENTER" onMouseClicked="#statView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Thống kê" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Inter Regular" size="32.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="15.0" />
+               </GridPane.margin>
+            </Label>
+            <Label fx:id="nhanKhau" contentDisplay="CENTER" layoutX="10.0" layoutY="37.0" onMouseClicked="#nhanKhauView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Nhân khẩu" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Inter Regular" size="32.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+         </children>
+      </GridPane>
+      <Button id="button_logout" fx:id="logout" layoutX="42.0" layoutY="720.0" mnemonicParsing="false" onAction="#logoutView" stylesheets="@style.css" text="Đăng xuất" />
+      <TableView id="feeTable" fx:id="hoKhauTable" layoutX="299.0" layoutY="54.0" prefHeight="588.0" prefWidth="1050.0">
+         <columns>
+            <TableColumn fx:id="idHoKhauCol" prefWidth="177.33334350585938" styleClass="tableAtrb" text="Mã hộ" />
+            <TableColumn fx:id="tenChuHoCol" prefWidth="621.6666564941406" styleClass="tableAtrb" text="Tên chủ hộ" />
+            <TableColumn fx:id="ghiChuCol" prefWidth="250.00006103515625" styleClass="tableAtrb" text="Ghi chú" />
+         </columns>
+      </TableView>
+      <Button id="editHousehold" fx:id="change_btn" layoutX="1062.0" layoutY="666.0" mnemonicParsing="false" onAction="#moHoKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Sửa" />
+      <Button id="addHousehold" fx:id="addHousehold_btn" layoutX="1180.0" layoutY="666.0" mnemonicParsing="false" onAction="#moHoKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Thêm Hộ" />
+      <ImageView id="button_home" fx:id="home" fitHeight="62.0" fitWidth="69.0" layoutX="69.0" layoutY="635.0" onMouseClicked="#home">
+         <image>
+            <Image url="@../assets/home.png" />
+         </image>
+      </ImageView>
+      <TextField id="search_box" fx:id="search_tf" layoutX="426.0" layoutY="672.0" prefHeight="51.0" prefWidth="385.0" styleClass="functionDetailInfo" />
+      <ChoiceBox fx:id="searchHo" layoutX="254.0" layoutY="676.0" prefWidth="150.0" styleClass="dropdown_search" stylesheets="@style.css" />
+      <Pane fx:id="hoKhauDialogPane" layoutX="31.0" layoutY="29.0" prefHeight="622.0" prefWidth="1332.0" styleClass="dialog">
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="tenChuHo_lbl" layoutX="69.0" layoutY="66.0" styleClass="functionDetailTitle" stylesheets="@style.css" />
+                  <Label layoutX="69.0" layoutY="128.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Mã hộ" />
+                  <Label layoutX="69.0" layoutY="196.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Đường phố (ấp)" />
+                  <TextField fx:id="tenChuHo_tf" editable="false" layoutX="198.0" layoutY="53.0" prefHeight="51.0" prefWidth="308.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+                  <TextField fx:id="duongPho_tf" layoutX="256.0" layoutY="187.0" prefHeight="51.0" prefWidth="486.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+                  <TextField fx:id="soNha_tf" layoutX="628.0" layoutY="119.0" prefHeight="51.0" prefWidth="113.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+                  <Button id="saveHousehold" fx:id="suaHoKhauDialog_btn" layoutX="1207.0" layoutY="473.0" mnemonicParsing="false" onAction="#suaHoKhau" styleClass="mybutton" stylesheets="@style.css" text="Sửa" />
+                  <Label layoutX="69.0" layoutY="270.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Phường (xã/thị trấn)" />
+                  <Label layoutX="69.0" layoutY="335.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Quận (huyện)" />
+                  <Label layoutX="981.0" layoutY="13.0" styleClass="functionDetailTitle" text="Thành viên" />
+                  <Label layoutX="544.0" layoutY="129.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Số nhà" />
+                  <TextField fx:id="maHo_tf" disable="true" editable="false" layoutX="198.0" layoutY="119.0" prefHeight="51.0" prefWidth="308.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+                  <TextField fx:id="phuong_tf" layoutX="290.0" layoutY="254.0" prefHeight="51.0" prefWidth="453.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+                  <TextField fx:id="quan_tf" layoutX="232.0" layoutY="325.0" prefHeight="51.0" prefWidth="513.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+                  <TableView fx:id="nhanKhauTable" layoutX="770.0" layoutY="53.0" prefHeight="405.0" prefWidth="531.0">
+                    <columns>
+                      <TableColumn fx:id="nhanKhauID_col" prefWidth="146.0" styleClass="tableAtrb" text="ID" />
+                      <TableColumn fx:id="nhanKhauName_col" prefWidth="384.0" styleClass="tableAtrb" text="Họ tên" />
+                    </columns>
+                  </TableView>
+                  <Label layoutX="69.0" layoutY="399.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Lịch sử thay đổi" />
+                  <TextField fx:id="lichSuThayDoi_tf" layoutX="248.0" layoutY="393.0" prefHeight="68.0" prefWidth="497.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+                  <Button id="split" layoutX="774.0" layoutY="475.0" mnemonicParsing="false" onAction="#moTachKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Tách hộ" />
+                  <Button id="moveTemp" layoutX="949.0" layoutY="473.0" mnemonicParsing="false" onAction="#moTamTruDialog" styleClass="mybutton" stylesheets="@style.css" text="Tạm trú/vắng" />
+                  <Button id="saveHousehold" fx:id="themHoKhauDialog_btn" layoutX="1207.0" layoutY="473.0" mnemonicParsing="false" onAction="#themHoKhau" styleClass="mybutton" stylesheets="@style.css" text="Thêm" />
+               </children>
+            </Pane>
+            <Button layoutX="1279.0" layoutY="564.0" mnemonicParsing="false" onAction="#dongHoKhauDialog" styleClass="close" text="X" />
+            <Label fx:id="idThanhVien_lbl" layoutX="67.0" layoutY="478.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="ID thành viên" />
+            <TextField fx:id="idThanhVien_tf" layoutX="248.0" layoutY="478.0" prefHeight="51.0" prefWidth="249.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
+            <Button id="search_btn" fx:id="themThanhVien_btn" layoutX="511.0" layoutY="474.0" mnemonicParsing="false" onAction="#themThanhVien" prefHeight="61.0" prefWidth="68.0" styleClass="mybutton" stylesheets="@style.css" text="➕" />
+            <Label layoutX="546.0" layoutY="61.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="ID chủ hộ" />
+            <TextField fx:id="idChuHo_tf" layoutX="659.0" layoutY="53.0" prefHeight="51.0" prefWidth="84.0" styleClass="functionDetailInfo" />
+         </children>
+      </Pane>
+      <Pane fx:id="tachKhauDialogPane" layoutX="51.0" layoutY="62.0" prefHeight="503.0" prefWidth="752.0" styleClass="dialog" visible="false">
+         <children>
+            <Pane layoutX="-5.0" prefHeight="535.0" prefWidth="1063.0">
+               <children>
+                  <Label layoutX="48.0" layoutY="177.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Đường phố (ấp)" />
+                  <TextField fx:id="newDuong_tf" layoutX="231.0" layoutY="169.0" prefHeight="51.0" prefWidth="486.0" styleClass="functionDetailInfo" />
+                  <TextField fx:id="newSoNha_tf" layoutX="604.0" layoutY="102.0" prefHeight="51.0" prefWidth="113.0" styleClass="functionDetailInfo" />
+                  <Button id="saveTachHo" fx:id="saveTachKhau_btn" layoutX="332.0" layoutY="387.0" mnemonicParsing="false" onAction="#saveTachKhau" styleClass="mybutton" stylesheets="@style.css" text="Lưu" />
+                  <Label layoutX="48.0" layoutY="241.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Phường (xã/thị trấn)" />
+                  <Label layoutX="48.0" layoutY="302.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Quận (huyện)" />
+                  <Label layoutX="519.0" layoutY="110.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Số nhà" />
+                  <TextField fx:id="newPhuong_tf" layoutX="264.0" layoutY="233.0" prefHeight="51.0" prefWidth="453.0" styleClass="functionDetailInfo" />
+                  <TextField fx:id="newQuan_tf" layoutX="204.0" layoutY="294.0" prefHeight="51.0" prefWidth="513.0" styleClass="functionDetailInfo" />
+                  <Label layoutX="48.0" layoutY="110.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="ID chủ hộ" />
+                  <TextField fx:id="newIdChuHo_tf" layoutX="171.0" layoutY="102.0" prefHeight="51.0" prefWidth="329.0" styleClass="functionDetailInfo" />
+                  <Button layoutX="693.0" layoutY="448.0" mnemonicParsing="false" onAction="#dongTachKhauDialog" styleClass="close" stylesheets="@style.css" text="X" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+      <Pane fx:id="tamTruDialogPane" layoutX="257.0" layoutY="30.0" prefHeight="521.0" prefWidth="895.0" styleClass="dialog" visible="false">
+         <children>
+            <Pane prefHeight="473.0" prefWidth="892.0">
+               <children>
+                  <Label layoutX="69.0" layoutY="66.0" styleClass="functionDetailTitle" text="ID" />
+                  <Label layoutX="69.0" layoutY="128.0" styleClass="functionDetailTitle" text="Họ tên" />
+                  <TextField layoutX="198.0" layoutY="53.0" prefHeight="51.0" prefWidth="308.0" styleClass="functionDetailInfo" />
+                  <Button id="tamTru" fx:id="saveTamTru_btn" layoutX="399.0" layoutY="315.0" mnemonicParsing="false" onAction="#saveTamTru" styleClass="mybutton" text="Lưu" />
+                  <TextField layoutX="198.0" layoutY="119.0" prefHeight="51.0" prefWidth="625.0" styleClass="functionDetailInfo" />
+                  <RadioButton layoutX="483.0" layoutY="230.0" mnemonicParsing="false" text="Tạm trú" />
+                  <RadioButton layoutX="272.0" layoutY="227.0" mnemonicParsing="false" text="Tạm vắng" />
+               </children>
+            </Pane>
+            <Button layoutX="825.0" layoutY="448.0" mnemonicParsing="false" onAction="#dongTamTruDialog" styleClass="close" text="X" />
+         </children>
+      </Pane>
+      <Button id="search_btn" fx:id="find_btn" layoutX="825.0" layoutY="667.0" mnemonicParsing="false" onAction="#timHoKhau" prefHeight="62.0" prefWidth="83.0" styleClass="mybutton" stylesheets="@style.css" text="🔍">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Button>
+      <Button id="deletePerson" layoutX="948.0" layoutY="666.0" mnemonicParsing="false" onAction="#xoaHoKhau" styleClass="mybutton" stylesheets="@style.css" text="Xóa" fx:id="xoa_btn" />
+   </children>
+</AnchorPane>
