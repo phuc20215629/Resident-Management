@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -22,7 +23,7 @@
             <Image url="@../assets/gradient_star.png" />
          </image>
       </ImageView>
-      <GridPane layoutX="32.0" layoutY="62.0" prefHeight="280.0" prefWidth="229.0">
+      <GridPane layoutX="40.0" layoutY="-7.0" prefHeight="280.0" prefWidth="230.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
@@ -32,14 +33,6 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label fx:id="collection" contentDisplay="CENTER" onMouseClicked="#collectionView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Thu / Đóng">
-               <font>
-                  <Font name="Inter Regular" size="32.0" />
-               </font>
-               <padding>
-                  <Insets left="15.0" />
-               </padding>
-            </Label>
             <Label fx:id="stat" contentDisplay="CENTER" onMouseClicked="#statView" prefHeight="36.0" prefWidth="366.0" styleClass="functionInsideTitle" text="Thống kê" GridPane.rowIndex="2">
                <font>
                   <Font name="Inter Regular" size="32.0" />
@@ -59,23 +52,13 @@
          </children>
       </GridPane>
       <Button id="button_logout" fx:id="logout" layoutX="42.0" layoutY="720.0" mnemonicParsing="false" onAction="#logoutView" text="Đăng xuất" />
-      <TableView id="feeTable" layoutX="288.0" layoutY="121.0" prefHeight="521.0" prefWidth="798.0">
+      <TableView id="feeTable" fx:id="timMaHo_table" layoutX="288.0" layoutY="121.0" prefHeight="521.0" prefWidth="798.0">
          <columns>
-            <TableColumn prefWidth="141.0" styleClass="tableAtrb" text="Mã hộ" />
-            <TableColumn prefWidth="656.0" styleClass="tableAtrb" text="Khoản đã nộp" />
+            <TableColumn fx:id="maHo_col" prefWidth="141.0" styleClass="tableAtrb" text="Mã hộ" />
+            <TableColumn fx:id="khoanDaNop_col" prefWidth="656.0" styleClass="tableAtrb" text="Khoản đã nộp" />
          </columns>
       </TableView>
-      <Button id="feeStats" layoutX="1141.0" layoutY="676.0" mnemonicParsing="false" styleClass="mybutton" text="Thống kê" />
-      <TextField layoutX="1222.0" layoutY="103.0" prefHeight="46.0" prefWidth="47.0" styleClass="functionDetailInfo">
-         <font>
-            <Font size="22.0" />
-         </font>
-      </TextField>
-      <Label layoutX="1170.0" layoutY="119.0" styleClass="functionDetailTitle" text="Đợt">
-         <font>
-            <Font size="22.0" />
-         </font>
-      </Label>
+      <Button id="feeStats" layoutX="1141.0" layoutY="676.0" mnemonicParsing="false" onAction="#thongKe" styleClass="mybutton" text="Thống kê" />
       <Label layoutX="1122.0" layoutY="214.0" styleClass="functionDetailTitle" text="Từ ngày">
          <font>
             <Font size="22.0" />
@@ -86,38 +69,38 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <DatePicker layoutX="1123.0" layoutY="268.0" prefHeight="35.0" prefWidth="207.0" />
-      <DatePicker layoutX="1123.0" layoutY="395.0" prefHeight="35.0" prefWidth="207.0" />
+      <DatePicker fx:id="tuNgay_date" layoutX="1123.0" layoutY="268.0" prefHeight="35.0" prefWidth="207.0" />
+      <DatePicker fx:id="denNgay_date" layoutX="1123.0" layoutY="395.0" prefHeight="35.0" prefWidth="207.0" />
       <ImageView id="button_home" fx:id="home" fitHeight="62.0" fitWidth="69.0" layoutX="69.0" layoutY="645.0" onMouseClicked="#home">
          <image>
             <Image url="@../assets/home.png" />
          </image>
       </ImageView>
-      <Label layoutX="301.0" layoutY="54.0" styleClass="functionDetailTitle" text="Tổng thu">
+      <Label fx:id="tongThu_lbl" layoutX="301.0" layoutY="54.0" styleClass="functionDetailTitle" text="Tổng thu">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <TextField layoutX="408.0" layoutY="44.0" prefHeight="51.0" prefWidth="383.0" styleClass="functionDetailInfo">
+      <TextField fx:id="tongThu_tf" editable="false" layoutX="408.0" layoutY="44.0" prefHeight="51.0" prefWidth="383.0" styleClass="functionDetailInfo">
          <font>
             <Font size="22.0" />
          </font>
       </TextField>
-      <Label layoutX="813.0" layoutY="52.0" styleClass="functionDetailTitle" text="Số hộ đã nộp">
+      <Label fx:id="soHoDaNop_lbl" layoutX="813.0" layoutY="52.0" styleClass="functionDetailTitle" text="Số hộ đã nộp">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <TextField layoutX="965.0" layoutY="40.0" prefHeight="51.0" prefWidth="116.0" styleClass="functionDetailInfo">
+      <TextField fx:id="soHoDaNop_tf" editable="false" layoutX="965.0" layoutY="40.0" prefHeight="51.0" prefWidth="116.0" styleClass="functionDetailInfo">
          <font>
             <Font size="22.0" />
          </font>
       </TextField>
-      <TextField id="search_box" editable="false" layoutX="542.0" layoutY="681.0" prefHeight="51.0" prefWidth="317.0" promptText="Mã hộ" styleClass="functionDetailInfo" />
-      <ImageView id="button_search" fitHeight="34.0" fitWidth="33.0" layoutX="821.0" layoutY="691.0">
-         <image>
-            <Image url="@../assets/search.png" />
-         </image>
-      </ImageView>
+      <TextField id="search_box" fx:id="search_tf" editable="false" layoutX="522.0" layoutY="681.0" prefHeight="51.0" prefWidth="317.0" promptText="Mã hộ" styleClass="functionDetailInfo" />
+      <Button id="search_btn" fx:id="find_btn" layoutX="874.0" layoutY="676.0" mnemonicParsing="false" onAction="#timKhoanPhi" prefHeight="61.0" prefWidth="75.0" styleClass="mybutton" stylesheets="@style.css" text="🔍">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>

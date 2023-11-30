@@ -18,6 +18,13 @@ public class GiaoDich {
         this.thoiGian = thoiGian;
     }
 
+    public GiaoDich(int maKhoanPhi, int soTien, int maHoKhau, Date thoiGian) {
+        this.maKhoanPhi = maKhoanPhi;
+        this.soTien = soTien;
+        this.maHoKhau = maHoKhau;
+        this.thoiGian = thoiGian;
+    }
+
     public GiaoDich(int maGiaoDich) {
         this.maGiaoDich = maGiaoDich;
     }

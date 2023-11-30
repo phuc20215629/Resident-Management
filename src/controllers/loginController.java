@@ -141,7 +141,7 @@ public class loginController implements Initializable{
 	}
 	
 	public void thuPhiDongGop(MouseEvent event)throws Exception{
-		Parent root = FXMLLoader.load(loginController.class.getResource("/view/feeCollection.fxml"));
+		Parent root = FXMLLoader.load(loginController.class.getResource("/view/feeType.fxml"));
 		Stage window = (Stage)fee.getScene().getWindow();
 		Scene s = new Scene(root,1400,800);
 		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());

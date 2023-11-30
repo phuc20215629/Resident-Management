@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +36,11 @@ public class feeStatsController implements Initializable{
 
     @FXML
     private Label type;
+
+	@FXML
+	void timKhoanPhi(ActionEvent event) {
+		
+	}
 
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

@@ -153,6 +153,14 @@
 	-fx-background-color: white;
 }
 
+#submit_btn{
+	-fx-background-color: #403B4A;
+}
+
+#submit_btn:hover{
+	-fx-text-fill:#403B4A;
+	-fx-background-color: white;
+}
 
 #addFeeType{
 	-fx-background-color: mediumseagreen;

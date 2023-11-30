@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import application.database.JDBCUtil;
 import application.model.GiaoDich;
-import application.model.HoKhau;
 
 public class GiaoDichDAO implements DAOInterface<GiaoDich>{
     public static GiaoDichDAO getInstance(){
@@ -59,6 +58,21 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
             Statement st = connection.createStatement();
             String sql="DELETE FROM GIAODICH "+
                     "WHERE GiaoDichID = "+ id + ";";
+            int ans = st.executeUpdate(sql);
+            JDBCUtil.closeConnection(connection);
+            return ans > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean deleteByKPID(int id){
+        try {
+            Connection connection = JDBCUtil.getConnection();
+            Statement st = connection.createStatement();
+            String sql="DELETE FROM GIAODICH "+
+                    "WHERE KhoanPhiID = "+ id + ";";
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
             return ans > 0;
@@ -139,12 +153,12 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
         return list;
     }
     
-    public ArrayList<GiaoDich> selectByFamily(HoKhau t){
+    public ArrayList<GiaoDich> selectByHKID(int id){
         ArrayList<GiaoDich> list= new ArrayList<GiaoDich>();
         try {
             Connection connection = JDBCUtil.getConnection();
             String query = "SELECT * FROM GIAODICH " 
-                    + "WHERE HoKhauID = " + t.getIdHoKhau() + ";";
+                    + "WHERE HoKhauID = " + id + ";";
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(query);
             while (rs.next()){
@@ -161,5 +175,28 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
             e.printStackTrace();
         }
         return list;
+    }
+
+    public GiaoDich selectByHK_KPID(int idHK, int idKP){
+        GiaoDich u = null;
+        try {
+            Connection connection = JDBCUtil.getConnection();
+            String query = "SELECT * FROM GIAODICH " 
+                    + "WHERE HoKhauID = " + idHK + " AND KhoanPhiID = " + idKP + ";";
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()){
+                int maGiaoDich = rs.getInt("GiaoDichID");
+                int maKhoanPhi = rs.getInt("KhoanPhiID");
+                int soTien = rs.getInt("SoTien");
+                int maHoKhau = rs.getInt("HoKhauID");
+                Date time = rs.getDate("ThoiGianGiaoDich");
+                u = new GiaoDich(maGiaoDich, maKhoanPhi, soTien, maHoKhau, time);
+            }
+            JDBCUtil.closeConnection(connection);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 }

@@ -1,10 +1,15 @@
 package controllers;
 
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import application.authentication.AlertMessage;
+import application.dao.GiaoDichDAO;
 import application.dao.KhoanPhiDAO;
+import application.model.GiaoDich;
 import application.model.KhoanPhi;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -18,6 +23,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -29,6 +36,24 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class feeTypeController implements Initializable {
+
+    @FXML
+    private Pane dongPhiDialog;
+
+    @FXML
+    private TextField maHo_tf;
+
+    @FXML
+    private TextField tenKhoan_tf1;
+
+    @FXML
+    private TextField dinhMuc_tf1;
+
+    @FXML
+    private DatePicker tuNgay_date;
+
+    @FXML
+    private DatePicker denNgay_date;
 
     @FXML
     private Button sua_btn1;
@@ -88,6 +113,12 @@ public class feeTypeController implements Initializable {
     private Label type;
 
     @FXML
+    private TextField search_tf;
+
+    @FXML
+    private ChoiceBox<String> search_cb;
+
+    @FXML
     private TableView<KhoanPhi> statsTable;
 
     @FXML
@@ -102,14 +133,111 @@ public class feeTypeController implements Initializable {
     @FXML
     private TableColumn<KhoanPhi, Integer> id_col;
 
+    @FXML
+    private TableColumn<KhoanPhi, String> trangThai_col;
+
     ObservableList<KhoanPhi> statsTableList;
+    ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Tên khoản");
+    KhoanPhi selectedKP;
 
     @FXML
-    void timKhoan(ActionEvent event) {
-
+    void timKhoanPhi(ActionEvent event) {
+        if(!search_tf.getText().isBlank()) {
+            statsTableList.clear();
+            if(search_cb.getValue().equals("ID")) {
+                KhoanPhi kp = KhoanPhiDAO.getInstance().selectById(Integer.parseInt(search_tf.getText()));
+                if(kp == null) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("Không tìm thấy khoản phí!");
+                } else {
+                    statsTableList.add(kp);
+                    statsTable.setItems(statsTableList);
+                }
+            } else {
+                ArrayList<KhoanPhi> kp = KhoanPhiDAO.getInstance().selectByTen(search_tf.getText());
+                if(kp == null) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("Không tìm thấy khoản phí!");
+                } else {
+                    statsTableList = FXCollections.observableArrayList(kp);
+                    statsTable.setItems(statsTableList);
+                }
+            }
+        } else {
+            AlertMessage alert = new AlertMessage();
+            alert.errorMessage("Bạn chưa nhập thông tin tìm kiếm!");
+            refreshStatsTable();
+        }
     }
 
-    KhoanPhi selectedKP;
+    @FXML
+    void moDongPhiDialog(ActionEvent event) {
+        selectedKP = statsTable.getSelectionModel().getSelectedItem();
+        if(selectedKP == null) {
+            AlertMessage alert = new AlertMessage();
+            alert.errorMessage("Bạn chưa chọn khoản phí!");
+        } else {
+            dongPhiDialog.setVisible(true);
+            tenKhoan_tf1.setText(selectedKP.getTenKhoanPhi());
+            if(selectedKP.getLoaiPhi().equals("Bat buoc")) {
+                dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien()));
+                dinhMuc_tf1.setEditable(false);
+            }
+        }
+    }
+
+    @FXML 
+    void dongDongPhiDialog(ActionEvent event) {
+        dongPhiDialog.setVisible(false);
+        clearInfo();
+    }
+
+    @FXML
+    void nopPhi(ActionEvent event) {
+        if(selectedKP.getLoaiPhi().equals("Khong bat buoc")) {
+            if(maHo_tf.getText().isBlank() || dinhMuc_tf1.getText().isBlank()) {
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("Bạn chưa nhập đủ thông tin!");
+            } else {
+                try {
+                    int maHo = Integer.parseInt(maHo_tf.getText());
+                    int soTien = Integer.parseInt(dinhMuc_tf1.getText());
+                    Date now = Date.valueOf(LocalDate.now());
+                    GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now));
+
+                    AlertMessage alert = new AlertMessage();
+                    alert.successMessage("Nộp phí thành công!");
+                    dongDongPhiDialog(event);
+                } catch (Exception e) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("ID và số tiền phải là số!");
+                }
+            }
+        } else {
+            if(maHo_tf.getText().isBlank()) {
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("Bạn chưa nhập đủ thông tin!");
+            } else {
+                try {
+                    int maHo = Integer.parseInt(maHo_tf.getText());
+                    if(GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) {
+                        Date now = Date.valueOf(LocalDate.now());
+                        GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), selectedKP.getSoTien(), maHo, now));
+
+                        AlertMessage alert = new AlertMessage();
+                        alert.successMessage("Nộp phí thành công!");
+                        dongDongPhiDialog(event);
+                    } else {
+                        AlertMessage alert = new AlertMessage();
+                        alert.errorMessage("Hộ khẩu đã đóng phí này rồi!");
+                    }  
+                } catch (Exception e) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("ID phải là số!");
+                }
+            }
+        }
+    }
 
     public void moKhoanThuDialog() {
         if (!khoanThuDialog.isVisible() && them_btn.isArmed()) { // Them khoan phi
@@ -144,6 +272,10 @@ public class feeTypeController implements Initializable {
                 });
 
                 tenKhoan_tf.setText(selectedKP.getTenKhoanPhi());
+                Date tuNgayDate = selectedKP.getTuNgay();
+                Date denNgayDate = selectedKP.getDenNgay();
+                tuNgay_date.setValue(tuNgayDate.toLocalDate());
+                denNgay_date.setValue(denNgayDate.toLocalDate());
                 if (selectedKP.getLoaiPhi().equals("Bat buoc")) {
                     batBuoc_cb.setSelected(true);
                     dinhMuc_tf.setText(Integer.toString(selectedKP.getSoTien()));
@@ -157,53 +289,69 @@ public class feeTypeController implements Initializable {
 
     public void dongKhoanThuDialog() {
         khoanThuDialog.setVisible(false);
+        clearInfo();
     }
 
     @FXML
     void themKhoanPhi(ActionEvent event) {
         String tenKhoan = tenKhoan_tf.getText();
-        if (batBuoc_cb.isSelected()) { // Loai phi bat buoc
-            dinhMuc_tf.setEditable(true);
-            try {
-                int soTien = Integer.parseInt(dinhMuc_tf.getText());
+        try {
+            Date tuNgay = Date.valueOf(tuNgay_date.getValue());
+            Date denNgay = Date.valueOf(denNgay_date.getValue());
+            if (batBuoc_cb.isSelected()) { // Loai phi bat buoc
+                dinhMuc_tf.setEditable(true);
+                try {
+                    int soTien = Integer.parseInt(dinhMuc_tf.getText());
+                    if (tenKhoan.isBlank()) {
+                        AlertMessage alert = new AlertMessage();
+                        alert.errorMessage("Bạn chưa nhập đủ thông tin!");
+                    } else {
+                        String trangThai = "Đang hiệu lực";
+                        if(tuNgay.toLocalDate().isAfter(LocalDate.now()) || denNgay.toLocalDate().isBefore(LocalDate.now())) {
+                            trangThai = "Không hiệu lực";
+                        }
+                        KhoanPhi newKP = new KhoanPhi(tenKhoan, "Bat buoc", soTien, tuNgay, denNgay, trangThai);
+                        if (KhoanPhiDAO.getInstance().insert(newKP)) {
+                            AlertMessage alert = new AlertMessage();
+                            alert.successMessage("Thêm khoản phí thành công!");
+                            dongKhoanThuDialog();
+                            refreshStatsTable();
+                        } else {
+                            AlertMessage alert = new AlertMessage();
+                            alert.errorMessage("Thêm khoản phí không thành công!");
+                        }
+                    }
+                } catch (Exception e) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("Định mức phải là số!");
+                }
+            } else { // Loai phi khong bat buoc
+                dinhMuc_tf.setEditable(false);
                 if (tenKhoan.isBlank()) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Bạn chưa nhập đủ thông tin!");
                 } else {
-                    KhoanPhi newKP = new KhoanPhi(tenKhoan, "Bat buoc", soTien);
+                    String trangThai = "Đang hiệu lực";
+                        if(tuNgay.toLocalDate().isAfter(LocalDate.now()) || denNgay.toLocalDate().isBefore(LocalDate.now())) {
+                            trangThai = "Không hiệu lực";
+                        }
+                        KhoanPhi newKP = new KhoanPhi(tenKhoan, "Khong bat buoc", 0, tuNgay, denNgay, trangThai);
                     if (KhoanPhiDAO.getInstance().insert(newKP)) {
                         AlertMessage alert = new AlertMessage();
-                        alert.successMessage("Sửa khoản phí thành công!");
+                        alert.successMessage("Thêm khoản phí thành công!");
                         dongKhoanThuDialog();
                         refreshStatsTable();
                     } else {
                         AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Sửa khoản phí không thành công!");
+                        alert.errorMessage("Thêm khoản phí không thành công!");
                     }
                 }
-            } catch (Exception e) {
-                AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Định mức phải là số!");
             }
-        } else { // Loai phi khong bat buoc
-            dinhMuc_tf.setEditable(false);
-            if (tenKhoan.isBlank()) {
-                AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Bạn chưa nhập đủ thông tin!");
-            } else {
-                KhoanPhi newKP = new KhoanPhi(tenKhoan, "Khong bat buoc", 0);
-                if (KhoanPhiDAO.getInstance().insert(newKP)) {
-                    AlertMessage alert = new AlertMessage();
-                    alert.successMessage("Sửa khoản phí thành công!");
-                    dongKhoanThuDialog();
-                    refreshStatsTable();
-                } else {
-                    AlertMessage alert = new AlertMessage();
-                    alert.errorMessage("Sửa khoản phí không thành công!");
-                }
-            }
+        } catch(Exception e) {
+            AlertMessage alert = new AlertMessage();
+            alert.errorMessage("Bạn chưa nhập thông tin thời hạn khoản phí!");
         }
-
+        clearInfo();
     }
 
     @FXML
@@ -220,6 +368,12 @@ public class feeTypeController implements Initializable {
                     selectedKP.setTenKhoanPhi(tenKhoan);
                     selectedKP.setLoaiPhi("Bat buoc");
                     selectedKP.setSoTien(soTien);
+                    selectedKP.setDenNgay(Date.valueOf(denNgay_date.getValue()));
+                    selectedKP.setTuNgay(Date.valueOf(tuNgay_date.getValue()));
+                    selectedKP.setTrangThai("Đang hiệu lực");
+                    if(tuNgay_date.getValue().isAfter(LocalDate.now()) || denNgay_date.getValue().isBefore(LocalDate.now())) {
+                        selectedKP.setTrangThai("Không hiệu lực");
+                    }
                     if (KhoanPhiDAO.getInstance().update(selectedKP)) {
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Sửa khoản phí thành công!");
@@ -242,6 +396,12 @@ public class feeTypeController implements Initializable {
             } else {
                 selectedKP.setTenKhoanPhi(tenKhoan);
                 selectedKP.setLoaiPhi("Khong bat buoc");
+                selectedKP.setDenNgay(Date.valueOf(denNgay_date.getValue()));
+                selectedKP.setTuNgay(Date.valueOf(tuNgay_date.getValue()));
+                selectedKP.setTrangThai("Đang hiệu lực");
+                if(tuNgay_date.getValue().isAfter(LocalDate.now()) || denNgay_date.getValue().isBefore(LocalDate.now())) {
+                    selectedKP.setTrangThai("Không hiệu lực");
+                }
                 if (KhoanPhiDAO.getInstance().update(selectedKP)) {
                     AlertMessage alert = new AlertMessage();
                     alert.successMessage("Sửa khoản phí thành công!");
@@ -253,31 +413,53 @@ public class feeTypeController implements Initializable {
                 }
             }
         }
+        clearInfo();
+    }
+
+    @FXML
+    void xoaKhoanPhi(ActionEvent event) {
+        selectedKP = statsTable.getSelectionModel().getSelectedItem();
+        if(selectedKP == null) {
+            AlertMessage alert = new AlertMessage();
+            alert.errorMessage("Bạn chưa chọn khoản phí!");
+        } else {
+            try {
+                GiaoDichDAO.getInstance().deleteByKPID(selectedKP.getMaKhoanPhi());
+                KhoanPhiDAO.getInstance().deleteByID(selectedKP.getMaKhoanPhi());
+                AlertMessage alert = new AlertMessage();
+                alert.successMessage("Xóa khoản phí thành công");
+                refreshStatsTable();
+            } catch (Exception e) {
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("Xóa khoản phí không thành công!");
+            }
+        }
+    }
+
+    public void clearInfo() {
+        if(!tenKhoan_tf.getText().isEmpty()) tenKhoan_tf.clear();
+        if(!dinhMuc_tf.getText().isEmpty()) dinhMuc_tf.clear();
+        if(tuNgay_date.getValue() != null) tuNgay_date.setValue(null);
+        if(denNgay_date.getValue() != null) denNgay_date.setValue(null);
+        if(!maHo_tf.getText().isEmpty()) maHo_tf.clear();
+        if(!tenKhoan_tf1.getText().isEmpty()) tenKhoan_tf1.clear();
+        if(!dinhMuc_tf1.getText().isEmpty()) dinhMuc_tf1.clear();
     }
 
     public void refreshStatsTable() {
+        // ArrayList<KhoanPhi> list = KhoanPhiDAO.getInstance().selectAll();
+        // for(KhoanPhi kp : list) {
+        //     if(kp.getDenNgay().toLocalDate().isBefore(LocalDate.now())) {
+        //         list.remove(kp);
+        //     }
+        // }
         statsTableList = FXCollections.observableArrayList(KhoanPhiDAO.getInstance().selectAll());
         id_col.setCellValueFactory(new PropertyValueFactory<KhoanPhi, Integer>("maKhoanPhi"));
         tenKhoanPhi_col.setCellValueFactory(new PropertyValueFactory<KhoanPhi, String>("tenKhoanPhi"));
         loaiPhi_col.setCellValueFactory(new PropertyValueFactory<KhoanPhi, String>("loaiPhi"));
         dinhMuc_col.setCellValueFactory(new PropertyValueFactory<KhoanPhi, Integer>("soTien"));
+        trangThai_col.setCellValueFactory(new PropertyValueFactory<KhoanPhi, String>("trangThai"));
         statsTable.setItems(statsTableList);
-    }
-
-    @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
-        RotateTransition rotate = new RotateTransition();
-        rotate.setNode(gradient);
-        rotate.setDuration(Duration.millis(10000));
-        rotate.setCycleCount(RotateTransition.INDEFINITE);
-        rotate.setInterpolator(Interpolator.LINEAR);
-        rotate.setByAngle(360);
-        rotate.play();
-
-        if (khoanThuDialog != null)
-            khoanThuDialog.setVisible(false);
-        refreshStatsTable();
-
     }
 
     public void home() throws Exception {
@@ -318,5 +500,24 @@ public class feeTypeController implements Initializable {
         Scene s = new Scene(root, 1400, 800);
         s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         window.setScene(s);
+    }
+
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        RotateTransition rotate = new RotateTransition();
+        rotate.setNode(gradient);
+        rotate.setDuration(Duration.millis(10000));
+        rotate.setCycleCount(RotateTransition.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.setByAngle(360);
+        rotate.play();
+
+        if (khoanThuDialog != null) khoanThuDialog.setVisible(false);
+        if(search_cb != null) {
+            search_cb.setValue(searchOptionList.get(0));
+            search_cb.setItems(searchOptionList);
+        }
+        refreshStatsTable();
+
     }
 }
