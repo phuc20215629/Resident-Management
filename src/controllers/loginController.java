@@ -46,7 +46,6 @@ public class loginController implements Initializable{
 		rotate.setInterpolator(Interpolator.LINEAR);
 		rotate.setByAngle(360);
 		rotate.play();
-		
 	}
 	
 //	--------------------------------------------------------------------------

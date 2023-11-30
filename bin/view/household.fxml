@@ -77,7 +77,7 @@
          </image>
       </ImageView>
       <TextField id="search_box" fx:id="search_tf" layoutX="426.0" layoutY="672.0" prefHeight="51.0" prefWidth="385.0" styleClass="functionDetailInfo" />
-      <ChoiceBox fx:id="searchHo" layoutX="254.0" layoutY="676.0" prefWidth="150.0" styleClass="dropdown_search" stylesheets="@style.css" />
+      <ChoiceBox fx:id="searchHo" layoutX="291.0" layoutY="676.0" prefHeight="26.0" prefWidth="113.0" styleClass="dropdown_search" stylesheets="@style.css" />
       <Pane fx:id="hoKhauDialogPane" layoutX="31.0" layoutY="29.0" prefHeight="622.0" prefWidth="1332.0" styleClass="dialog">
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0">
@@ -153,7 +153,7 @@
             <Button layoutX="825.0" layoutY="448.0" mnemonicParsing="false" onAction="#dongTamTruDialog" styleClass="close" text="X" />
          </children>
       </Pane>
-      <Button id="search_btn" fx:id="find_btn" layoutX="825.0" layoutY="667.0" mnemonicParsing="false" onAction="#timHoKhau" prefHeight="62.0" prefWidth="83.0" styleClass="mybutton" stylesheets="@style.css" text="🔍">
+      <Button id="search_btn" fx:id="find_btn" layoutX="838.0" layoutY="667.0" mnemonicParsing="false" onAction="#timHoKhau" prefHeight="62.0" prefWidth="83.0" styleClass="mybutton" stylesheets="@style.css" text="🔍">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
          </cursor>

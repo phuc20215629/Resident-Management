@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TextFieldEnterActionExample",
+            "request": "launch",
+            "mainClass": "application.TextFieldEnterActionExample",
+            "projectName": "Resident_2a3c6fa3"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

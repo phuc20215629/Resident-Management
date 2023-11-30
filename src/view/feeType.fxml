@@ -73,7 +73,26 @@
       </Button>
       <Button id="deletePerson" layoutX="891.0" layoutY="38.0" mnemonicParsing="false" onAction="#xoaKhoanPhi" styleClass="mybutton" stylesheets="@style.css" text="Xóa" fx:id="xoa_btn" />
       <ChoiceBox fx:id="search_cb" layoutX="277.0" layoutY="46.0" prefHeight="43.0" prefWidth="150.0" />
-      <GridPane layoutX="43.0" layoutY="3.0" prefHeight="280.0" prefWidth="230.0">
+      <Button id="submit_btn" layoutX="681.0" layoutY="681.0" mnemonicParsing="false" onAction="#moDongPhiDialog" prefHeight="62.0" prefWidth="264.0" styleClass="mybutton" text="Đóng phí" />
+      <Pane fx:id="dongPhiDialog" layoutX="394.0" layoutY="106.0" prefHeight="495.0" prefWidth="800.0" styleClass="dialog" visible="false">
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="74.0" layoutY="203.0" styleClass="functionDetailTitle" text="Tên khoản" />
+                  <TextField fx:id="tenKhoan_tf1" editable="false" layoutX="199.0" layoutY="195.0" prefHeight="51.0" prefWidth="544.0" styleClass="functionDetailInfo" />
+                  <Label layoutX="75.0" layoutY="138.0" styleClass="functionDetailTitle" text="Mã hộ" />
+                  <TextField fx:id="maHo_tf" layoutX="199.0" layoutY="128.0" prefHeight="51.0" prefWidth="544.0" styleClass="functionDetailInfo" />
+               </children>
+            </Pane>
+            <Button layoutX="747.0" layoutY="438.0" mnemonicParsing="false" onAction="#dongDongPhiDialog" styleClass="close" text="X" />
+            <Label fx:id="themKhoan_lbl1" layoutX="340.0" layoutY="54.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Thêm khoản" visible="false" />
+            <Label fx:id="suaKhoan_lbl1" layoutX="360.0" layoutY="55.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Đóng phí" />
+            <Button id="saveFeeType" layoutX="367.0" layoutY="387.0" mnemonicParsing="false" onAction="#nopPhi" styleClass="mybutton" text="Nộp" />
+            <Label layoutX="74.0" layoutY="270.0" styleClass="functionDetailTitle" text="Số tiền" />
+            <TextField fx:id="dinhMuc_tf1" layoutX="199.0" layoutY="264.0" prefHeight="51.0" prefWidth="543.0" styleClass="functionDetailInfo" />
+         </children>
+      </Pane>
+      <GridPane layoutX="39.0" layoutY="10.0" prefHeight="280.0" prefWidth="172.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
@@ -101,24 +120,5 @@
             </Label>
          </children>
       </GridPane>
-      <Button id="submit_btn" layoutX="681.0" layoutY="681.0" mnemonicParsing="false" onAction="#moDongPhiDialog" prefHeight="62.0" prefWidth="264.0" styleClass="mybutton" text="Đóng phí" />
-      <Pane fx:id="dongPhiDialog" layoutX="394.0" layoutY="106.0" prefHeight="495.0" prefWidth="800.0" styleClass="dialog" visible="false">
-         <children>
-            <Pane prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <Label layoutX="74.0" layoutY="203.0" styleClass="functionDetailTitle" text="Tên khoản" />
-                  <TextField fx:id="tenKhoan_tf1" editable="false" layoutX="199.0" layoutY="195.0" prefHeight="51.0" prefWidth="544.0" styleClass="functionDetailInfo" />
-                  <Label layoutX="75.0" layoutY="138.0" styleClass="functionDetailTitle" text="Mã hộ" />
-                  <TextField fx:id="maHo_tf" layoutX="199.0" layoutY="128.0" prefHeight="51.0" prefWidth="544.0" styleClass="functionDetailInfo" />
-               </children>
-            </Pane>
-            <Button layoutX="747.0" layoutY="438.0" mnemonicParsing="false" onAction="#dongDongPhiDialog" styleClass="close" text="X" />
-            <Label fx:id="themKhoan_lbl1" layoutX="340.0" layoutY="54.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Thêm khoản" visible="false" />
-            <Label fx:id="suaKhoan_lbl1" layoutX="360.0" layoutY="55.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Đóng phí" />
-            <Button id="saveFeeType" layoutX="367.0" layoutY="387.0" mnemonicParsing="false" onAction="#nopPhi" styleClass="mybutton" text="Nộp" />
-            <Label layoutX="74.0" layoutY="270.0" styleClass="functionDetailTitle" text="Số tiền" />
-            <TextField fx:id="dinhMuc_tf1" layoutX="199.0" layoutY="264.0" prefHeight="51.0" prefWidth="543.0" styleClass="functionDetailInfo" />
-         </children>
-      </Pane>
    </children>
 </AnchorPane>

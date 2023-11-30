@@ -106,7 +106,7 @@
             <ChoiceBox fx:id="gioiTinh_cb" layoutX="655.0" layoutY="65.0" prefHeight="43.0" prefWidth="179.0" />
          </children>
       </Pane>
-      <Pane fx:id="nhanKhauPane2" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog">
+      <Pane fx:id="nhanKhauPane2" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog" visible="false">
          <children>
             <Button fx:id="back1_btn" layoutX="1158.0" layoutY="520.0" mnemonicParsing="false" onAction="#moNhanKhauDialog" styleClass="close" text="Trước" />
             <Pane prefHeight="200.0" prefWidth="200.0">
@@ -130,7 +130,7 @@
             <Button layoutX="1245.0" layoutY="520.0" mnemonicParsing="false" onAction="#moNhanKhauDialog3" styleClass="close" text="Tiếp" />
          </children>
       </Pane>
-      <Pane fx:id="nhanKhauPane3" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog" visible="false">
+      <Pane fx:id="nhanKhauPane3" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog">
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
@@ -140,7 +140,7 @@
                </children>
             </Pane>
             <Button fx:id="back2_btn" layoutX="1178.0" layoutY="514.0" mnemonicParsing="false" onAction="#moNhanKhauDialog2" styleClass="close" text="Trước" />
-            <Button layoutX="1266.0" layoutY="515.0" mnemonicParsing="false" onAction="#dongNhanKhauDialog" styleClass="close" text="X" />
+            <Button layoutX="1266.0" layoutY="514.0" mnemonicParsing="false" onAction="#dongNhanKhauDialog" styleClass="close" text="X" />
          </children>
       </Pane>
       <Button id="search_btn" fx:id="find_btn" layoutX="805.0" layoutY="672.0" mnemonicParsing="false" onAction="#timNhanKhau" prefHeight="61.0" prefWidth="75.0" styleClass="mybutton" stylesheets="@style.css" text="🔍">

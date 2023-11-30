@@ -413,25 +413,30 @@ public class householdMemberController implements Initializable {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Bạn chưa nhập giới tính!");
                 } else {
-                    newNK.setGioiTinh(gioiTinh_cb.getValue());
-                    newNK.setDanToc(danToc_tf.getText());
-                    newNK.setNgaySinh(Date.valueOf(ngaySinh_date.getValue()));
-                    newNK.setNoiSinh(noiSinh_tf.getText());
-                    newNK.setNguyenQuan(nguyenQuan_tf.getText());
-                    newNK.setNgheNghiep(ngheNghiep_tf.getText());
-                    newNK.setNoiLamViec(noiLamViec_tf.getText());
-                    newNK.setCccd(cccd_tf.getText());
-                    newNK.setNgayCapID(Date.valueOf(ngayCap_date.getValue()));
-                    newNK.setNoiCapID(noiCap_tf.getText());
-                    newNK.setGhiChu(ghiChu_tf.getText());
+                    try {
+                        newNK.setGioiTinh(gioiTinh_cb.getValue());
+                        newNK.setDanToc(danToc_tf.getText());
+                        newNK.setNgaySinh(Date.valueOf(ngaySinh_date.getValue()));
+                        newNK.setNoiSinh(noiSinh_tf.getText());
+                        newNK.setNguyenQuan(nguyenQuan_tf.getText());
+                        newNK.setNgheNghiep(ngheNghiep_tf.getText());
+                        newNK.setNoiLamViec(noiLamViec_tf.getText());
+                        newNK.setCccd(cccd_tf.getText());
+                        newNK.setNgayCapID(Date.valueOf(ngayCap_date.getValue()));
+                        newNK.setNoiCapID(noiCap_tf.getText());
+                        newNK.setGhiChu(ghiChu_tf.getText());
 
-                    if (NhanKhauDAO.getInstance().insert(newNK)) {
+                        if (NhanKhauDAO.getInstance().insert(newNK)) {
+                            AlertMessage alert = new AlertMessage();
+                            alert.successMessage("Thêm nhân khẩu thành công!");
+                            dongNhanKhauDialog(event);
+                        } else {
+                            AlertMessage alert = new AlertMessage();
+                            alert.errorMessage("Thêm nhân khẩu không thành công!");
+                        }
+                    } catch (Exception e) {
                         AlertMessage alert = new AlertMessage();
-                        alert.successMessage("Thêm nhân khẩu thành công!");
-                        dongNhanKhauDialog(event);
-                    } else {
-                        AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Thêm nhân khẩu không thành công!");
+                        alert.errorMessage("Bạn chưa nhập đủ thông tin nhân khẩu!");
                     }
                 }
             }

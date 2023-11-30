@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import application.authentication.AlertMessage;
 import application.dao.GiaoDichDAO;
+import application.dao.HoKhauDAO;
 import application.dao.KhoanPhiDAO;
 import application.model.GiaoDich;
 import application.model.KhoanPhi;
@@ -201,13 +202,18 @@ public class feeTypeController implements Initializable {
             } else {
                 try {
                     int maHo = Integer.parseInt(maHo_tf.getText());
-                    int soTien = Integer.parseInt(dinhMuc_tf1.getText());
-                    Date now = Date.valueOf(LocalDate.now());
-                    GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now));
+                    if(HoKhauDAO.getInstance().selectById(maHo) != null) {
+                        int soTien = Integer.parseInt(dinhMuc_tf1.getText());
+                        Date now = Date.valueOf(LocalDate.now());
+                        GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now, selectedKP.getTenKhoanPhi()));
 
-                    AlertMessage alert = new AlertMessage();
-                    alert.successMessage("Nộp phí thành công!");
-                    dongDongPhiDialog(event);
+                        AlertMessage alert = new AlertMessage();
+                        alert.successMessage("Nộp phí thành công!");
+                        dongDongPhiDialog(event);
+                    } else {
+                        AlertMessage alert = new AlertMessage();
+                        alert.errorMessage("Hộ khẩu không tồn tại!");
+                    }
                 } catch (Exception e) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("ID và số tiền phải là số!");
@@ -220,17 +226,22 @@ public class feeTypeController implements Initializable {
             } else {
                 try {
                     int maHo = Integer.parseInt(maHo_tf.getText());
-                    if(GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) {
-                        Date now = Date.valueOf(LocalDate.now());
-                        GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), selectedKP.getSoTien(), maHo, now));
+                    if(HoKhauDAO.getInstance().selectById(maHo) != null) {
+                        if(GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) {   //Hộ khẩu đã đóng khoản phí bắt buộc 1 lần thì không được đóng nữa
+                            Date now = Date.valueOf(LocalDate.now());
+                            GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), selectedKP.getSoTien(), maHo, now, selectedKP.getTenKhoanPhi()));
 
-                        AlertMessage alert = new AlertMessage();
-                        alert.successMessage("Nộp phí thành công!");
-                        dongDongPhiDialog(event);
+                            AlertMessage alert = new AlertMessage();
+                            alert.successMessage("Nộp phí thành công!");
+                            dongDongPhiDialog(event);
+                        } else {
+                            AlertMessage alert = new AlertMessage();
+                            alert.errorMessage("Hộ khẩu đã đóng phí này rồi!");
+                        } 
                     } else {
                         AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Hộ khẩu đã đóng phí này rồi!");
-                    }  
+                        alert.errorMessage("Hộ khẩu không tồn tại!");
+                    }
                 } catch (Exception e) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("ID phải là số!");
@@ -473,14 +484,6 @@ public class feeTypeController implements Initializable {
     public void logoutView() throws Exception {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/login.fxml"));
         Stage window = (Stage) logout.getScene().getWindow();
-        Scene s = new Scene(root, 1400, 800);
-        s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-        window.setScene(s);
-    }
-
-    public void collectionView() throws Exception {
-        Parent root = FXMLLoader.load(loginController.class.getResource("/view/feeCollection.fxml"));
-        Stage window = (Stage) collection.getScene().getWindow();
         Scene s = new Scene(root, 1400, 800);
         s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         window.setScene(s);

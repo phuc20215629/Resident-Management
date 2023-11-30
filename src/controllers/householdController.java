@@ -266,6 +266,8 @@ public class householdController implements Initializable {
                 }
             }
         } else {
+            AlertMessage alert = new AlertMessage();
+            alert.errorMessage("Bạn chưa nhập thông tin tìm kiếm!");
             refreshHoKhauTable();
         }
         search_tf.clear();
@@ -314,6 +316,9 @@ public class householdController implements Initializable {
                 themHoKhauDialog_btn.setVisible(false);
                 hoKhauDialogPane.setVisible(true);
                 nhanKhauTable.setVisible(true);
+                themThanhVien_btn.setVisible(true);
+                idThanhVien_lbl.setVisible(true);
+                idThanhVien_tf.setVisible(true);
 
                 idChuHo_tf.setText(Integer.toString(selectedHK.getIdChuHo()));
                 tenChuHo_tf.setText(selectedHK.getTenChuHo());
@@ -482,8 +487,8 @@ public class householdController implements Initializable {
 
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Sửa thành công!");
-                        refreshHoKhauTable();
                         dongHoKhauDialog(event);
+                        refreshHoKhauTable();
                     }
                 } catch (Exception e) {
                     AlertMessage alert = new AlertMessage();
