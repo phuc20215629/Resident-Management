@@ -178,11 +178,16 @@ public class feeTypeController implements Initializable {
             AlertMessage alert = new AlertMessage();
             alert.errorMessage("Bạn chưa chọn khoản phí!");
         } else {
-            dongPhiDialog.setVisible(true);
-            tenKhoan_tf1.setText(selectedKP.getTenKhoanPhi());
-            if(selectedKP.getLoaiPhi().equals("Bat buoc")) {
-                dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien()));
-                dinhMuc_tf1.setEditable(false);
+            if(selectedKP.getTrangThai().equals("Không hiệu lực")) {
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("Khoản phí không hiệu lực!");
+            } else {
+                dongPhiDialog.setVisible(true);
+                tenKhoan_tf1.setText(selectedKP.getTenKhoanPhi());
+                if(selectedKP.getLoaiPhi().equals("Bat buoc")) {
+                    dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien()));
+                    dinhMuc_tf1.setEditable(false);
+                }
             }
         }
     }

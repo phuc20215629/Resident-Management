@@ -162,6 +162,18 @@
 	-fx-background-color: white;
 }
 
+#minus_btn{
+	-fx-background-color: #EB3349;
+	-fx-background-radius: 50px;
+	-fx-border-radius: 50px;
+	-fx-text-fill: white;
+}
+
+#minus_btn:hover{
+	-fx-background-color: white;
+	-fx-text-fill: #EB3349;
+}
+
 #addFeeType{
 	-fx-background-color: mediumseagreen;
 }

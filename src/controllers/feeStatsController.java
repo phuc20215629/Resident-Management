@@ -112,30 +112,15 @@ public class feeStatsController implements Initializable {
 		if (loaiPhi_cb.getValue().equals("Bắt buộc")) {
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
 					Date.valueOf(denNgay), "Bat buoc");
-			timMaHoTableList = FXCollections.observableArrayList(list);
-			maHo_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("maHoKhau"));
-			khoanDaNop_col.setCellValueFactory(new PropertyValueFactory<>("tenKhoanPhi"));
-			soTien_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("soTien"));
-			thoiGian_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Date>("thoiGian"));
-			timMaHo_table.setItems(timMaHoTableList);
+			refreshTimMaHoTable(list);
 		} else if(loaiPhi_cb.getValue().equals("Không bắt buộc")){
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
 					Date.valueOf(denNgay), "Khong bat buoc");
-			timMaHoTableList = FXCollections.observableArrayList(list);
-			maHo_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("maHoKhau"));
-			khoanDaNop_col.setCellValueFactory(new PropertyValueFactory<>("tenKhoanPhi"));
-			soTien_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("soTien"));
-			thoiGian_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Date>("thoiGian"));
-			timMaHo_table.setItems(timMaHoTableList);
+			refreshTimMaHoTable(list);
 		} else {
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
 					Date.valueOf(denNgay), "Tat ca");
-			timMaHoTableList = FXCollections.observableArrayList(list);
-			maHo_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("maHoKhau"));
-			khoanDaNop_col.setCellValueFactory(new PropertyValueFactory<>("tenKhoanPhi"));
-			soTien_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("soTien"));
-			thoiGian_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Date>("thoiGian"));
-			timMaHo_table.setItems(timMaHoTableList);
+			refreshTimMaHoTable(list);
 		}
 		long tongThu = 0;
 		int soHoDaNop = 0;
@@ -157,18 +142,13 @@ public class feeStatsController implements Initializable {
 		if (search_tf.getText().isBlank()) {
 			AlertMessage alert = new AlertMessage();
 			alert.errorMessage("Bạn chưa nhập thông tin tìm kiếm!");
-			refreshTimMaHoTable();
+			refreshTimMaHoTable(GiaoDichDAO.getInstance().selectAll());
 		} else {
 			try {
 				int maHo = Integer.parseInt(search_tf.getText());
 				ArrayList<GiaoDich> list = GiaoDichDAO.getInstance().selectByHKID(maHo);
 				if (!list.isEmpty()) {
-					timMaHoTableList = FXCollections.observableArrayList();
-					maHo_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("maHoKhau"));
-					khoanDaNop_col.setCellValueFactory(new PropertyValueFactory<>("tenKhoanPhi"));
-					soTien_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("soTien"));
-					thoiGian_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Date>("thoiGian"));
-					timMaHo_table.setItems(timMaHoTableList);
+					refreshTimMaHoTable(list);
 				} else {
 					AlertMessage alert = new AlertMessage();
 					alert.errorMessage("Không tìm thấy mã hộ khẩu hoặc hộ khẩu này chưa thực hiện đóng phí nào!");
@@ -186,14 +166,15 @@ public class feeStatsController implements Initializable {
 		if(GiaoDichDAO.getInstance().deleteByID(selectedGD.getMaGiaoDich())) {
 			AlertMessage alert = new AlertMessage();
 			alert.successMessage("Xóa giao dịch thành công!");
+			refreshTimMaHoTable(GiaoDichDAO.getInstance().selectAll());
 		} else {
 			AlertMessage alert = new AlertMessage();
 			alert.errorMessage("Xóa giao dịch không thành công!");
 		}
 	}
 
-	void refreshTimMaHoTable() {
-		timMaHoTableList = FXCollections.observableArrayList(GiaoDichDAO.getInstance().selectAll());
+	void refreshTimMaHoTable(ArrayList<GiaoDich> list) {
+		timMaHoTableList = FXCollections.observableArrayList(list);
 		maHo_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("maHoKhau"));
 		khoanDaNop_col.setCellValueFactory(new PropertyValueFactory<>("tenKhoanPhi"));
 		soTien_col.setCellValueFactory(new PropertyValueFactory<GiaoDich, Integer>("soTien"));
@@ -211,7 +192,7 @@ public class feeStatsController implements Initializable {
 		rotate.setByAngle(360);
 		rotate.play();
 
-		refreshTimMaHoTable();
+		refreshTimMaHoTable(GiaoDichDAO.getInstance().selectAll());
 		if (loaiPhi_cb != null) {
 			loaiPhi_cb.setValue(loaiPhiList.get(0));
 			loaiPhi_cb.setItems(loaiPhiList);

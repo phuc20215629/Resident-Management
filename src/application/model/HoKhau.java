@@ -35,7 +35,7 @@ public class HoKhau {
     }
 
     public HoKhau() {}
-    
+
     public int getIdHoKhau(){
         return idHoKhau;
     }
