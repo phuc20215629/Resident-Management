@@ -16,6 +16,15 @@ public class AlertMessage {
 
     public void successMessage(String message) {
         alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Success message:");
+        alert.setHeaderText("Success");
+        alert.setContentText(message);
+        alert.showAndWait();
+        alert = new Alert(AlertType.CONFIRMATION);
+    }
+
+    public void infoMessage(String message) {
+        alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Information message:");
         alert.setHeaderText("Success");
         alert.setContentText(message);

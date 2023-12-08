@@ -150,11 +150,11 @@ public class feeTypeController implements Initializable {
 
     @FXML
     void timKhoanPhi(ActionEvent event) {
-        if(!search_tf.getText().isBlank()) {
+        if (!search_tf.getText().isBlank()) {
             statsTableList.clear();
-            if(search_cb.getValue().equals("ID")) {
+            if (search_cb.getValue().equals("ID")) {
                 KhoanPhi kp = KhoanPhiDAO.getInstance().selectById(Integer.parseInt(search_tf.getText()));
-                if(kp == null) {
+                if (kp == null) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Không tìm thấy khoản phí!");
                 } else {
@@ -163,7 +163,7 @@ public class feeTypeController implements Initializable {
                 }
             } else {
                 ArrayList<KhoanPhi> kp = KhoanPhiDAO.getInstance().selectByTen(search_tf.getText());
-                if(kp == null) {
+                if (kp == null) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Không tìm thấy khoản phí!");
                 } else {
@@ -178,29 +178,30 @@ public class feeTypeController implements Initializable {
         }
     }
 
-    boolean dongPhi = false;    //dongPhi == false khi dong phi ve sinh, dongPhi == true khi dong phi khac
+    boolean dongPhi = false; // dongPhi == false khi dong phi ve sinh, dongPhi == true khi dong phi khac
+
     @FXML
     void moDongPhiDialog(ActionEvent event) {
-        if(dongPhi_btn.isArmed()) {
+        if (dongPhi_btn.isArmed()) {
             dongPhi = true;
             selectedKP = statsTable.getSelectionModel().getSelectedItem();
-            if(selectedKP == null) {
+            if (selectedKP == null) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa chọn khoản phí!");
             } else {
-                if(selectedKP.getTrangThai().equals("Không hiệu lực")) {
+                if (selectedKP.getTrangThai().equals("Không hiệu lực")) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Khoản phí không hiệu lực!");
                 } else {
                     dongPhiDialog.setVisible(true);
                     tenKhoan_tf1.setText(selectedKP.getTenKhoanPhi());
-                    if(selectedKP.getLoaiPhi().equals("Bat buoc")) {
+                    if (selectedKP.getLoaiPhi().equals("Bat buoc")) {
                         dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien()));
                         dinhMuc_tf1.setEditable(false);
                     }
                 }
             }
-        } else if(dongPhiVS_btn.isArmed()) {
+        } else if (dongPhiVS_btn.isArmed()) {
             dongPhi = false;
             dongPhiDialog.setVisible(true);
             tenKhoan_tf1.setText("Phí vệ sinh năm " + LocalDate.now().getYear());
@@ -211,19 +212,15 @@ public class feeTypeController implements Initializable {
                 try {
                     maHo = Integer.parseInt(newValue);
                     HoKhau hk = HoKhauDAO.getInstance().selectById(maHo);
-                    if(hk != null) {
-                        dinhMuc_tf1.setText(Integer.toString(hk.getSoThanhVien() * 6000));
-                    } else {
-                        dinhMuc_tf1.setText("");
-                    }
+                    dinhMuc_tf1.setText(Integer.toString(hk.getSoThanhVien() * 6000));
                 } catch (Exception e) {
-                    
+                    dinhMuc_tf1.setText("");
                 }
             });
         }
     }
 
-    @FXML 
+    @FXML
     void dongDongPhiDialog(ActionEvent event) {
         dongPhiDialog.setVisible(false);
         clearInfo();
@@ -231,18 +228,19 @@ public class feeTypeController implements Initializable {
 
     @FXML
     void nopPhi(ActionEvent event) {
-        if(dongPhi) {   //dong phi khac
-            if(selectedKP.getLoaiPhi().equals("Khong bat buoc")) {
-                if(maHo_tf.getText().isBlank() || dinhMuc_tf1.getText().isBlank()) {
+        if (dongPhi) { // dong phi khac
+            if (selectedKP.getLoaiPhi().equals("Khong bat buoc")) {
+                if (maHo_tf.getText().isBlank() || dinhMuc_tf1.getText().isBlank()) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Bạn chưa nhập đủ thông tin!");
                 } else {
                     try {
                         int maHo = Integer.parseInt(maHo_tf.getText());
-                        if(HoKhauDAO.getInstance().selectById(maHo) != null) {
+                        if (HoKhauDAO.getInstance().selectById(maHo) != null) {
                             int soTien = Integer.parseInt(dinhMuc_tf1.getText());
                             Date now = Date.valueOf(LocalDate.now());
-                            GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now, selectedKP.getTenKhoanPhi()));
+                            GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now,
+                                    selectedKP.getTenKhoanPhi()));
 
                             AlertMessage alert = new AlertMessage();
                             alert.successMessage("Nộp phí thành công!");
@@ -257,16 +255,31 @@ public class feeTypeController implements Initializable {
                     }
                 }
             } else {
-                if(maHo_tf.getText().isBlank()) {
+                if (maHo_tf.getText().isBlank()) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Bạn chưa nhập đủ thông tin!");
                 } else {
                     try {
                         int maHo = Integer.parseInt(maHo_tf.getText());
-                        if(HoKhauDAO.getInstance().selectById(maHo) != null) {
-                            if(GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) {   //Hộ khẩu đã đóng khoản phí bắt buộc 1 lần thì không được đóng nữa
+                        if (HoKhauDAO.getInstance().selectById(maHo) != null) {
+                            if (GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) { // Hộ
+                                                                                                                       // khẩu
+                                                                                                                       // đã
+                                                                                                                       // đóng
+                                                                                                                       // khoản
+                                                                                                                       // phí
+                                                                                                                       // bắt
+                                                                                                                       // buộc
+                                                                                                                       // 1
+                                                                                                                       // lần
+                                                                                                                       // thì
+                                                                                                                       // không
+                                                                                                                       // được
+                                                                                                                       // đóng
+                                                                                                                       // nữa
                                 Date now = Date.valueOf(LocalDate.now());
-                                GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), selectedKP.getSoTien(), maHo, now, selectedKP.getTenKhoanPhi()));
+                                GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(),
+                                        selectedKP.getSoTien(), maHo, now, selectedKP.getTenKhoanPhi()));
 
                                 AlertMessage alert = new AlertMessage();
                                 alert.successMessage("Nộp phí thành công!");
@@ -274,7 +287,7 @@ public class feeTypeController implements Initializable {
                             } else {
                                 AlertMessage alert = new AlertMessage();
                                 alert.errorMessage("Hộ khẩu đã đóng phí này rồi!");
-                            } 
+                            }
                         } else {
                             AlertMessage alert = new AlertMessage();
                             alert.errorMessage("Hộ khẩu không tồn tại!");
@@ -285,14 +298,17 @@ public class feeTypeController implements Initializable {
                     }
                 }
             }
-        } else {    //dong phi ve sinh
-            if(dinhMuc_tf1.getText().isBlank()) {   //TH nhap ID ho khau sai dinh dang hoac khong tim thay ID ho khau
+        } else { // dong phi ve sinh
+            if (dinhMuc_tf1.getText().isBlank()) { // TH nhap ID ho khau sai dinh dang hoac khong tim thay ID ho khau
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("ID hộ khẩu không hợp lệ!");
             } else {
                 Date now = Date.valueOf(LocalDate.now());
-                GiaoDichDAO.getInstance().insert(new GiaoDich(1, Integer.parseInt(dinhMuc_tf1.getText()), Integer.parseInt(maHo_tf.getText()), now, KhoanPhiDAO.getInstance().selectById(1).getTenKhoanPhi()));
-                
+                GiaoDichDAO.getInstance()
+                        .insert(new GiaoDich(1, Integer.parseInt(dinhMuc_tf1.getText()),
+                                Integer.parseInt(maHo_tf.getText()), now,
+                                KhoanPhiDAO.getInstance().selectById(1).getTenKhoanPhi()));
+
                 AlertMessage alert = new AlertMessage();
                 alert.successMessage("Nộp phí vệ sinh thành công!");
                 dongDongPhiDialog(event);
@@ -368,7 +384,8 @@ public class feeTypeController implements Initializable {
                         alert.errorMessage("Bạn chưa nhập đủ thông tin!");
                     } else {
                         String trangThai = "Đang hiệu lực";
-                        if(tuNgay.toLocalDate().isAfter(LocalDate.now()) || denNgay.toLocalDate().isBefore(LocalDate.now())) {
+                        if (tuNgay.toLocalDate().isAfter(LocalDate.now())
+                                || denNgay.toLocalDate().isBefore(LocalDate.now())) {
                             trangThai = "Không hiệu lực";
                         }
                         KhoanPhi newKP = new KhoanPhi(tenKhoan, "Bat buoc", soTien, tuNgay, denNgay, trangThai);
@@ -393,10 +410,11 @@ public class feeTypeController implements Initializable {
                     alert.errorMessage("Bạn chưa nhập đủ thông tin!");
                 } else {
                     String trangThai = "Đang hiệu lực";
-                        if(tuNgay.toLocalDate().isAfter(LocalDate.now()) || denNgay.toLocalDate().isBefore(LocalDate.now())) {
-                            trangThai = "Không hiệu lực";
-                        }
-                        KhoanPhi newKP = new KhoanPhi(tenKhoan, "Khong bat buoc", 0, tuNgay, denNgay, trangThai);
+                    if (tuNgay.toLocalDate().isAfter(LocalDate.now())
+                            || denNgay.toLocalDate().isBefore(LocalDate.now())) {
+                        trangThai = "Không hiệu lực";
+                    }
+                    KhoanPhi newKP = new KhoanPhi(tenKhoan, "Khong bat buoc", 0, tuNgay, denNgay, trangThai);
                     if (KhoanPhiDAO.getInstance().insert(newKP)) {
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Thêm khoản phí thành công!");
@@ -408,7 +426,7 @@ public class feeTypeController implements Initializable {
                     }
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             AlertMessage alert = new AlertMessage();
             alert.errorMessage("Bạn chưa nhập thông tin thời hạn khoản phí!");
         }
@@ -432,7 +450,8 @@ public class feeTypeController implements Initializable {
                     selectedKP.setDenNgay(Date.valueOf(denNgay_date.getValue()));
                     selectedKP.setTuNgay(Date.valueOf(tuNgay_date.getValue()));
                     selectedKP.setTrangThai("Đang hiệu lực");
-                    if(tuNgay_date.getValue().isAfter(LocalDate.now()) || denNgay_date.getValue().isBefore(LocalDate.now())) {
+                    if (tuNgay_date.getValue().isAfter(LocalDate.now())
+                            || denNgay_date.getValue().isBefore(LocalDate.now())) {
                         selectedKP.setTrangThai("Không hiệu lực");
                     }
                     if (KhoanPhiDAO.getInstance().update(selectedKP)) {
@@ -460,7 +479,8 @@ public class feeTypeController implements Initializable {
                 selectedKP.setDenNgay(Date.valueOf(denNgay_date.getValue()));
                 selectedKP.setTuNgay(Date.valueOf(tuNgay_date.getValue()));
                 selectedKP.setTrangThai("Đang hiệu lực");
-                if(tuNgay_date.getValue().isAfter(LocalDate.now()) || denNgay_date.getValue().isBefore(LocalDate.now())) {
+                if (tuNgay_date.getValue().isAfter(LocalDate.now())
+                        || denNgay_date.getValue().isBefore(LocalDate.now())) {
                     selectedKP.setTrangThai("Không hiệu lực");
                 }
                 if (KhoanPhiDAO.getInstance().update(selectedKP)) {
@@ -480,7 +500,7 @@ public class feeTypeController implements Initializable {
     @FXML
     void xoaKhoanPhi(ActionEvent event) {
         selectedKP = statsTable.getSelectionModel().getSelectedItem();
-        if(selectedKP == null) {
+        if (selectedKP == null) {
             AlertMessage alert = new AlertMessage();
             alert.errorMessage("Bạn chưa chọn khoản phí!");
         } else {
@@ -498,13 +518,20 @@ public class feeTypeController implements Initializable {
     }
 
     public void clearInfo() {
-        if(!tenKhoan_tf.getText().isEmpty()) tenKhoan_tf.clear();
-        if(!dinhMuc_tf.getText().isEmpty()) dinhMuc_tf.clear();
-        if(tuNgay_date.getValue() != null) tuNgay_date.setValue(null);
-        if(denNgay_date.getValue() != null) denNgay_date.setValue(null);
-        if(!maHo_tf.getText().isEmpty()) maHo_tf.clear();
-        if(!tenKhoan_tf1.getText().isEmpty()) tenKhoan_tf1.clear();
-        if(!dinhMuc_tf1.getText().isEmpty()) dinhMuc_tf1.clear();
+        if (!tenKhoan_tf.getText().isEmpty())
+            tenKhoan_tf.clear();
+        if (!dinhMuc_tf.getText().isEmpty())
+            dinhMuc_tf.clear();
+        if (tuNgay_date.getValue() != null)
+            tuNgay_date.setValue(null);
+        if (denNgay_date.getValue() != null)
+            denNgay_date.setValue(null);
+        if (!maHo_tf.getText().isEmpty())
+            maHo_tf.clear();
+        if (!tenKhoan_tf1.getText().isEmpty())
+            tenKhoan_tf1.clear();
+        if (!dinhMuc_tf1.getText().isEmpty())
+            dinhMuc_tf1.clear();
     }
 
     public void refreshStatsTable() {
@@ -559,8 +586,9 @@ public class feeTypeController implements Initializable {
         rotate.setByAngle(360);
         rotate.play();
 
-        if (khoanThuDialog != null) khoanThuDialog.setVisible(false);
-        if(search_cb != null) {
+        if (khoanThuDialog != null)
+            khoanThuDialog.setVisible(false);
+        if (search_cb != null) {
             search_cb.setValue(searchOptionList.get(0));
             search_cb.setItems(searchOptionList);
         }

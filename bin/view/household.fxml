@@ -63,7 +63,7 @@
                   <TextField fx:id="maHo_tf" disable="true" editable="false" layoutX="198.0" layoutY="119.0" prefHeight="51.0" prefWidth="308.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
                   <TextField fx:id="phuong_tf" layoutX="290.0" layoutY="254.0" prefHeight="51.0" prefWidth="453.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
                   <TextField fx:id="quan_tf" layoutX="232.0" layoutY="325.0" prefHeight="51.0" prefWidth="513.0" styleClass="functionDetailInfo" stylesheets="@style.css" />
-                  <TableView fx:id="nhanKhauTable" layoutX="770.0" layoutY="53.0" onMouseClicked="#getItemNK" prefHeight="405.0" prefWidth="531.0">
+                  <TableView fx:id="nhanKhauTable" layoutX="770.0" layoutY="53.0" prefHeight="405.0" prefWidth="531.0">
                     <columns>
                       <TableColumn fx:id="nhanKhauID_col" prefWidth="146.0" styleClass="tableAtrb" text="ID" />
                       <TableColumn fx:id="nhanKhauName_col" prefWidth="383.800048828125" styleClass="tableAtrb" text="Họ tên" />
@@ -107,7 +107,7 @@
             </Pane>
          </children>
       </Pane>
-      <Pane fx:id="tamTruDialogPane" layoutX="257.0" layoutY="120.0" prefHeight="409.0" prefWidth="895.0" styleClass="dialog">
+      <Pane fx:id="tamTruDialogPane" layoutX="257.0" layoutY="120.0" prefHeight="409.0" prefWidth="895.0" styleClass="dialog" visible="false">
          <children>
             <Pane prefHeight="401.0" prefWidth="892.0">
                <children>

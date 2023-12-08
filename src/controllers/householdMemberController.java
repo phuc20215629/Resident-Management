@@ -11,9 +11,11 @@ import application.authentication.AlertMessage;
 import application.dao.HoKhauDAO;
 import application.dao.NhanKhauDAO;
 import application.dao.TamTruDAO;
+import application.dao.TamVangDAO;
 import application.model.HoKhau;
 import application.model.NhanKhau;
 import application.model.TamTru;
+import application.model.TamVang;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
@@ -94,6 +96,9 @@ public class householdMemberController implements Initializable {
 
     @FXML
     private DatePicker ngayChuyenDi_date;
+
+    @FXML
+    private DatePicker ngayChuyenVe_date;
 
     @FXML
     private DatePicker ngaySinh_date;
@@ -259,6 +264,7 @@ public class householdMemberController implements Initializable {
                                                                                                    // xóa
                     hk.setIdChuHo(0);
                     hk.setTenChuHo("");
+                    hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hk.getIdHoKhau()));
                     HoKhauDAO.getInstance().update(hk);
                     if (NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
                         AlertMessage alert = new AlertMessage();
@@ -306,7 +312,7 @@ public class householdMemberController implements Initializable {
             nhanKhauPane2.setVisible(false);
             menu.setVisible(false);
         }
-        //Sua nhan khau
+        // Sua nhan khau
         if (!nhanKhauPane1.isVisible() && sua_btn.isArmed()) {
             NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
             if (selectedNK == null) {
@@ -335,7 +341,7 @@ public class householdMemberController implements Initializable {
                 nhanKhauPane1.setVisible(true);
                 menu.setVisible(false);
             }
-        } else if (themNk_btn.isArmed()) {  //Them nhan khau
+        } else if (themNk_btn.isArmed()) { // Them nhan khau
             dangSuaNK = false;
             nhanKhauPane1.setVisible(true);
             menu.setVisible(false);
@@ -345,12 +351,10 @@ public class householdMemberController implements Initializable {
     @FXML
     public void moNhanKhauDialog2(ActionEvent event) {
         if (!nhanKhauPane2.isVisible()) {
-            if (dangSuaNK) {    //Sua nhan khau
-                tuNgayTamTru_date.setEditable(true);
-                denNgayTamTru_date.setEditable(true);
-                noiThuongTru_tf.setEditable(true);
-                ngayChuyenDi_date.setEditable(true);
-                noiChuyenDi_tf.setEditable(true);
+            if (dangSuaNK) { // Sua nhan khau
+                nhanKhauPane2.setVisible(true);
+                nhanKhauPane1.setVisible(false);
+                menu.setVisible(false);
 
                 NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
                 cccd_tf.setText(selectedNK.getCccd());
@@ -359,7 +363,13 @@ public class householdMemberController implements Initializable {
                 ngayCap_date.setValue(sqlDate.toLocalDate());
                 noiCap_tf.setText(selectedNK.getNoiCapID());
                 ghiChu_tf.setText(selectedNK.getGhiChu());
-                try {
+
+                if (selectedNK.getGhiChu().equals("Tam tru")) {
+
+                    tuNgayTamTru_date.setEditable(true);
+                    denNgayTamTru_date.setEditable(true);
+                    noiThuongTru_tf.setEditable(true);
+
                     TamTru tt = TamTruDAO.getInstance().selectByNKID(selectedNK.getId());
                     if (tt != null) {
                         tuNgayTamTru_date.setValue(tt.getTuNgayDangKy().toLocalDate());
@@ -367,19 +377,30 @@ public class householdMemberController implements Initializable {
                         noiThuongTru_tf.setText(tt.getDiaChiTruocChuyenDen());
                         idHoKhauThuongTru_tf.setText(Integer.toString(tt.getIdHoKhau()));
                     }
-                } catch (Exception e) {
-                    System.out.println("Khong dang ky tam tru");
-                } finally {
-                    nhanKhauPane2.setVisible(true);
-                    nhanKhauPane1.setVisible(false);
-                    menu.setVisible(false);
                 }
-            } else {    //Them nhan khau
+                if (selectedNK.getGhiChu().equals("Tam vang")) {
+
+                    ngayChuyenDi_date.setEditable(true);
+                    ngayChuyenVe_date.setEditable(true);
+                    noiChuyenDi_tf.setEditable(true);
+
+                    TamVang tv = TamVangDAO.getInstance().selectByNKID(selectedNK.getId());
+                    if (tv != null) {
+                        ngayChuyenDi_date.setValue(tv.getTuNgayDangKy().toLocalDate());
+                        ngayChuyenVe_date.setValue(tv.getDenNgayDangKy().toLocalDate());
+                        noiChuyenDi_tf.setText(tv.getDiaChiChuyenDen());
+                    }
+                }
+            } else { // Them nhan khau
                 tuNgayTamTru_date.setEditable(false);
                 denNgayTamTru_date.setEditable(false);
                 noiThuongTru_tf.setEditable(false);
                 ngayChuyenDi_date.setEditable(false);
                 noiChuyenDi_tf.setEditable(false);
+                ngayChuyenDi_date.setEditable(false);
+                ngayChuyenVe_date.setEditable(false);
+                noiChuyenDi_tf.setEditable(false);
+                ghiChu_tf.setEditable(false);
 
                 nhanKhauPane2.setVisible(true);
                 nhanKhauPane1.setVisible(false);
@@ -387,7 +408,6 @@ public class householdMemberController implements Initializable {
             }
         }
     }
-
 
     @FXML
     public void luuNhanKhau(ActionEvent event) {
@@ -412,27 +432,71 @@ public class householdMemberController implements Initializable {
                 selectedNK.setNgayCapID(Date.valueOf(ngayCap_date.getValue()));
                 selectedNK.setNoiCapID(noiCap_tf.getText());
                 selectedNK.setGhiChu(ghiChu_tf.getText());
-
-                if (tuNgayTamTru_date.getValue().plusDays(30).isAfter(denNgayTamTru_date.getValue())) {
-                    AlertMessage alert = new AlertMessage();
-                    alert.errorMessage("Số ngày tạm trú nhỏ nhất là 30 ngày!");
-                } else {
-                    TamTru tt = new TamTru();
-                    tt.setIdNhanKhau(selectedNK.getId());
-                    tt.setDenNgayDangKy(Date.valueOf(denNgayTamTru_date.getValue()));
-                    tt.setTuNgayDangKy(Date.valueOf(tuNgayTamTru_date.getValue()));
-                    tt.setDiaChiTruocChuyenDen(noiThuongTru_tf.getText());
-                    if (tuNgayTamTru_date.getValue().isAfter(LocalDate.now())
-                            || denNgayTamTru_date.getValue().isBefore(LocalDate.now())) { // Neu sau khi sua ngay tam
-                                                                                          // tru khong hieu luc thi chua
-                                                                                          // them vao ho khau
-                        selectedNK.setHoKhauID(0);
-                        int hkID = Integer.parseInt(idHoKhauThuongTru_tf.getText());
-                        HoKhau hk = HoKhauDAO.getInstance().selectById(hkID);
-                        hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hkID));
-                        HoKhauDAO.getInstance().update(hk);
+                if (ghiChu_tf.getText().equals("Tam tru")) {
+                    if (tuNgayTamTru_date.getValue().plusDays(30).isAfter(denNgayTamTru_date.getValue())) {
+                        AlertMessage alert = new AlertMessage();
+                        alert.errorMessage("Số ngày tạm trú nhỏ nhất là 30 ngày!");
+                    } else {
+                        TamTru tt = new TamTru();
+                        tt.setIdNhanKhau(selectedNK.getId());
+                        tt.setDenNgayDangKy(Date.valueOf(denNgayTamTru_date.getValue()));
+                        tt.setTuNgayDangKy(Date.valueOf(tuNgayTamTru_date.getValue()));
+                        tt.setDiaChiTruocChuyenDen(noiThuongTru_tf.getText());
+                        TamTruDAO.getInstance().update(tt);
+                        if (tuNgayTamTru_date.getValue().isAfter(LocalDate.now())
+                                || denNgayTamTru_date.getValue().isBefore(LocalDate.now())) { // Neu sau khi sua, ngay
+                                                                                              // tam tru khong hieu luc
+                                                                                              // thi chua them vao ho
+                                                                                              // khau
+                            selectedNK.setHoKhauID(0);
+                            int hkID = Integer.parseInt(idHoKhauThuongTru_tf.getText());
+                            HoKhau hk = HoKhauDAO.getInstance().selectById(hkID);
+                            hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hkID));
+                            HoKhauDAO.getInstance().update(hk);
+                        }
+                        if (NhanKhauDAO.getInstance().update(selectedNK)) {
+                            AlertMessage alert = new AlertMessage();
+                            alert.successMessage("Sửa nhân khẩu thành công!");
+                            dongNhanKhauDialog(event);
+                        } else {
+                            AlertMessage alert = new AlertMessage();
+                            alert.errorMessage("Sửa nhân khẩu không thành công!");
+                        }
                     }
-                    if (NhanKhauDAO.getInstance().update(selectedNK) && TamTruDAO.getInstance().update(tt)) {
+                }
+                if (ghiChu_tf.getText().equals("Tam vang")) {
+                    if (ngayChuyenDi_date.getValue().isAfter(ngayChuyenVe_date.getValue())) {
+                        AlertMessage alert = new AlertMessage();
+                        alert.errorMessage("Số ngày tạm vắng nhỏ nhất là 12 tháng!");
+                    } else {
+                        TamVang tv = new TamVang();
+                        tv.setIdNhanKhau(selectedNK.getId());
+                        tv.setDenNgayDangKy(Date.valueOf(ngayChuyenVe_date.getValue()));
+                        tv.setTuNgayDangKy(Date.valueOf(ngayChuyenDi_date.getValue()));
+                        tv.setDiaChiChuyenDen(noiChuyenDi_tf.getText());
+                        TamVangDAO.getInstance().update(tv);
+                        if (ngayChuyenDi_date.getValue().isAfter(LocalDate.now())
+                                || ngayChuyenVe_date.getValue().isBefore(LocalDate.now())) { // Neu sau khi sua, ngay
+                                                                                             // tam vang chua hieu luc
+                                                                                             // thi chua cap nhat tam vang
+                            selectedNK.setHoKhauID(tv.getIdHoKhau());
+                            selectedNK.setGhiChu("");
+                            int hkID = TamVangDAO.getInstance().selectByNKID(selectedNK.getId()).getIdHoKhau();
+                            HoKhau hk = HoKhauDAO.getInstance().selectById(hkID);
+                            hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hkID));
+                            HoKhauDAO.getInstance().update(hk);
+                        }
+                        if (NhanKhauDAO.getInstance().update(selectedNK)) {
+                            AlertMessage alert = new AlertMessage();
+                            alert.successMessage("Sửa nhân khẩu thành công!");
+                            dongNhanKhauDialog(event);
+                        } else {
+                            AlertMessage alert = new AlertMessage();
+                            alert.errorMessage("Sửa nhân khẩu không thành công!");
+                        }
+                    }
+                } else {    //Nhan khau khong tam tru hay tam vang
+                    if (NhanKhauDAO.getInstance().update(selectedNK)) {
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Sửa nhân khẩu thành công!");
                         dongNhanKhauDialog(event);
@@ -497,6 +561,11 @@ public class householdMemberController implements Initializable {
         cccd_tf.clear();
         noiCap_tf.clear();
         ngayCap_date.setValue(null);
+        tuNgayTamTru_date.setValue(null);
+        denNgayTamTru_date.setValue(null);
+        ngayChuyenDi_date.setValue(null);
+        ngayChuyenVe_date.setValue(null);
+        noiChuyenDi_tf.clear();
         dangSuaNK = false;
         search_tf.clear();
         ghiChu_tf.clear();

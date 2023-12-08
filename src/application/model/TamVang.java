@@ -4,7 +4,8 @@ import java.sql.Date;
 
 public class TamVang {
     private int maTamVang;
-    private int id;
+    private int idNhanKhau;
+	private int idHoKhau;
     private Date tuNgayDangKy;
 	private Date denNgayDangKy;
 	private String diaChiChuyenDen;
@@ -15,12 +16,18 @@ public class TamVang {
 	public void setMaTamVang(int maTamVang) {
 		this.maTamVang = maTamVang;
 	}
-	public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getIdHoKhau() {
+		return idHoKhau;
+	}
+	public void setIdHoKhau(int idHoKhau) {
+		this.idHoKhau = idHoKhau;
+	}
+	public int getIdNhanKhau() {
+		return idNhanKhau;
+	}
+	public void setIdNhanKhau(int idNhanKhau) {
+		this.idNhanKhau = idNhanKhau;
+	}
 	public Date getDenNgayDangKy() {
 		return denNgayDangKy;
 	}
@@ -40,18 +47,21 @@ public class TamVang {
 		this.diaChiChuyenDen = diaChiChuyenDen;
 	}
 	
-	public TamVang(int maTamVang, int id, Date tuNgayDangKy, Date denNgayDangKy, String diaChi) {
-		this.maTamVang = maTamVang;
-		this.id = id;
+	public TamVang(int idNhanKhau, int idHoKhau, Date tuNgayDangKy, Date denNgayDangKy, String diaChiChuyenDen) {
+		this.idNhanKhau = idNhanKhau;
+		this.idHoKhau = idHoKhau;
 		this.tuNgayDangKy = tuNgayDangKy;
 		this.denNgayDangKy = denNgayDangKy;
-		this.diaChiChuyenDen = diaChi;
+		this.diaChiChuyenDen = diaChiChuyenDen;
 	}
-	public TamVang(int id, Date tuNgayDangKy, Date denNgayDangKy, String diaChi) {
-		this.id = id;
+	public TamVang(int maTamVang, int idNhanKhau, int idHoKhau, Date tuNgayDangKy, Date denNgayDangKy,
+			String diaChiChuyenDen) {
+		this.maTamVang = maTamVang;
+		this.idNhanKhau = idNhanKhau;
+		this.idHoKhau = idHoKhau;
 		this.tuNgayDangKy = tuNgayDangKy;
 		this.denNgayDangKy = denNgayDangKy;
-		this.diaChiChuyenDen = diaChi;
+		this.diaChiChuyenDen = diaChiChuyenDen;
 	}
 	public TamVang() {
 		super();
