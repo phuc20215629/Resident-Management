@@ -166,4 +166,20 @@ public class HoKhauDAO implements DAOInterface<HoKhau>{
         }
         return 0;
     }
+
+    public int getSoThanhVien(int id) {
+        try {
+            Connection connection =JDBCUtil.getConnection();
+            Statement st = connection.createStatement();
+            String query = "SELECT COUNT(DISTINCT ID) AS CNT FROM NHANKHAU WHERE HoKhauID = " + id;
+            ResultSet rs = st.executeQuery(query);
+            if(rs.next()){
+                int count = rs.getInt("CNT");
+                return count;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

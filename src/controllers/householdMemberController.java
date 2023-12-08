@@ -3,13 +3,17 @@ package controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import application.authentication.AlertMessage;
 import application.dao.HoKhauDAO;
 import application.dao.NhanKhauDAO;
+import application.dao.TamTruDAO;
 import application.model.HoKhau;
 import application.model.NhanKhau;
+import application.model.TamTru;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
@@ -31,6 +35,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -40,16 +45,10 @@ public class householdMemberController implements Initializable {
     private Button back1_btn;
 
     @FXML
-    private Button back2_btn;
-
-    @FXML
-    private Button xoa_btn;
-
-    @FXML
-    private ChoiceBox<String> gioiTinh_cb;
-
-    @FXML
     private TextField biDanh_tf;
+
+    @FXML
+    private TextField ghiChu_tf;
 
     @FXML
     private TextField cccd_tf;
@@ -58,16 +57,13 @@ public class householdMemberController implements Initializable {
     private TextField danToc_tf;
 
     @FXML
+    private DatePicker denNgayTamTru_date;
+
+    @FXML
     private Button find_btn;
 
     @FXML
-    private Button sua_btn;
-
-    @FXML
-    private Button themNk_btn;
-
-    @FXML
-    private TextField ghiChu_tf;
+    private ChoiceBox<String> gioiTinh_cb;
 
     @FXML
     private ImageView gradient;
@@ -79,7 +75,10 @@ public class householdMemberController implements Initializable {
     private ImageView home;
 
     @FXML
-    private Label household;
+    private Label houseHold;
+
+    @FXML
+    private TextField idHoKhauThuongTru_tf;
 
     @FXML
     private Button logout;
@@ -88,16 +87,13 @@ public class householdMemberController implements Initializable {
     private Button luuNK_btn;
 
     @FXML
-    private Label member;
+    private VBox menu;
 
     @FXML
     private DatePicker ngayCap_date;
 
     @FXML
     private DatePicker ngayChuyenDi_date;
-
-    @FXML
-    private DatePicker ngayDangKi_date;
 
     @FXML
     private DatePicker ngaySinh_date;
@@ -109,13 +105,13 @@ public class householdMemberController implements Initializable {
     private TextField nguyenQuan_tf;
 
     @FXML
+    private Label nhanKhau;
+
+    @FXML
     private Pane nhanKhauPane1;
 
     @FXML
     private Pane nhanKhauPane2;
-
-    @FXML
-    private Pane nhanKhauPane3;
 
     @FXML
     private TextField noiCap_tf;
@@ -145,6 +141,18 @@ public class householdMemberController implements Initializable {
     private Label stat;
 
     @FXML
+    private Button sua_btn;
+
+    @FXML
+    private Button themNk_btn;
+
+    @FXML
+    private DatePicker tuNgayTamTru_date;
+
+    @FXML
+    private Button xoa_btn;
+
+    @FXML
     private TableView<NhanKhau> nhanKhauTable;
     @FXML
     private TableColumn<NhanKhau, String> tenNhanKhauCol;
@@ -157,10 +165,11 @@ public class householdMemberController implements Initializable {
     ObservableList<String> nhanKhauList = FXCollections.observableArrayList("Họ tên", "Mã hộ");
     ObservableList<String> gioiTinhList = FXCollections.observableArrayList("Giới tính", "Nam", "Nữ");
 
+    // External section
     @FXML
     public void hoKhauView(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/household.fxml"));
-        Stage window = (Stage) household.getScene().getWindow();
+        Stage window = (Stage) houseHold.getScene().getWindow();
         Scene s = new Scene(root, 1400, 800);
         s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         window.setScene(s);
@@ -169,7 +178,7 @@ public class householdMemberController implements Initializable {
     @FXML
     public void nhanKhauView(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/householdMember.fxml"));
-        Stage window = (Stage) member.getScene().getWindow();
+        Stage window = (Stage) nhanKhau.getScene().getWindow();
         Scene s = new Scene(root, 1400, 800);
         s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         window.setScene(s);
@@ -202,6 +211,7 @@ public class householdMemberController implements Initializable {
         window.setScene(s);
     }
 
+    // Internal section
     @FXML
     void timNhanKhau(ActionEvent event) {
         if (search_tf.getText() != "") {
@@ -210,12 +220,7 @@ public class householdMemberController implements Initializable {
                 try {
                     maHo = Integer.parseInt(search_tf.getText());
                     if (HoKhauDAO.getInstance().selectById(maHo) != null) {
-                        nhanKhauTableList = FXCollections
-                                .observableArrayList(NhanKhauDAO.getInstance().selectByHKId(maHo));
-                        idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
-                        idNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
-                        tenNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, String>("hoTen"));
-                        nhanKhauTable.setItems(nhanKhauTableList);
+                        refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(maHo));
                     } else {
                         AlertMessage alert = new AlertMessage();
                         alert.errorMessage("Không tìm thấy hộ khẩu!");
@@ -229,11 +234,7 @@ public class householdMemberController implements Initializable {
             else {
                 String ten = search_tf.getText();
                 if (!NhanKhauDAO.getInstance().selectByTen(ten).isEmpty()) {
-                    nhanKhauTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().selectByTen(ten));
-                    idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
-                    idNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
-                    tenNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, String>("hoTen"));
-                    nhanKhauTable.setItems(nhanKhauTableList);
+                    refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByTen(ten));
                 } else {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Không tìm thấy tên chủ hộ!");
@@ -241,7 +242,7 @@ public class householdMemberController implements Initializable {
                 }
             }
         } else {
-            refreshNhanKhauTable();
+            refreshNhanKhauTable(NhanKhauDAO.getInstance().selectAll());
         }
     }
 
@@ -252,21 +253,28 @@ public class householdMemberController implements Initializable {
             AlertMessage alert = new AlertMessage();
             alert.errorMessage("Bạn chưa chọn nhân khẩu!");
         } else {
-            if(selectedNK.getLaChuHo() == 1) {
+            if (selectedNK.getLaChuHo() == 1) {
                 HoKhau hk = new HoKhau();
-                if((hk = HoKhauDAO.getInstance().selectById(selectedNK.getHoKhauID())) != null) { //TH hộ khẩu chưa bị xóa
+                if ((hk = HoKhauDAO.getInstance().selectById(selectedNK.getHoKhauID())) != null) { // TH hộ khẩu chưa bị
+                                                                                                   // xóa
                     hk.setIdChuHo(0);
                     hk.setTenChuHo("");
                     HoKhauDAO.getInstance().update(hk);
-                    if(NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
+                    if (NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
                         AlertMessage alert = new AlertMessage();
-                        alert.successMessage("Bạn đã xóa chủ hộ thành công, hãy thêm chủ hộ mới vào hộ khẩu có ID = " + hk.getIdHoKhau() + "!");
+                        alert.successMessage("Bạn đã xóa chủ hộ thành công, hãy thêm chủ hộ mới vào hộ khẩu có ID = "
+                                + hk.getIdHoKhau() + "!");
+                        try {
+                            hoKhauView(null); // Chuyen toi ho khau de them chu ho moi
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         AlertMessage alert = new AlertMessage();
                         alert.errorMessage("Xóa chủ hộ không thành công!");
                     }
-                } else {    //TH hộ khẩu đã bị xóa từ trước
-                    if(NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
+                } else { // TH hộ khẩu đã bị xóa từ trước
+                    if (NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Bạn đã xóa chủ hộ thành công!");
                     } else {
@@ -274,27 +282,31 @@ public class householdMemberController implements Initializable {
                         alert.errorMessage("Xóa chủ hộ không thành công!");
                     }
                 }
-            } else {    //Khong la chu ho
-                if(NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
+            } else { // Khong la chu ho
+                TamTru tt = TamTruDAO.getInstance().selectByNKID(selectedNK.getId());
+                if (NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())
+                        && TamTruDAO.getInstance().deleteByID(tt.getMaTamTru())) {
                     AlertMessage alert = new AlertMessage();
                     alert.successMessage("Bạn đã xóa nhân khẩu thành công!");
                 } else {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Xóa nhân khẩu không thành công!");
                 }
-            } 
+            }
         }
-        refreshNhanKhauTable();
+        refreshNhanKhauTable(NhanKhauDAO.getInstance().selectAll());
     }
 
     public boolean dangSuaNK = false;
 
     @FXML
     public void moNhanKhauDialog(ActionEvent event) {
-        if(!nhanKhauPane1.isVisible() && back1_btn.isArmed()) {
+        if (!nhanKhauPane1.isVisible() && back1_btn.isArmed()) {
             nhanKhauPane1.setVisible(true);
             nhanKhauPane2.setVisible(false);
+            menu.setVisible(false);
         }
+        //Sua nhan khau
         if (!nhanKhauPane1.isVisible() && sua_btn.isArmed()) {
             NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
             if (selectedNK == null) {
@@ -303,7 +315,7 @@ public class householdMemberController implements Initializable {
             } else {
                 dangSuaNK = true;
                 hoTen_tf.setText(selectedNK.getHoTen());
-                if(selectedNK.getGioiTinh().equals("Nam")) {
+                if (selectedNK.getGioiTinh().equals("Nam")) {
                     gioiTinh_cb.setValue(gioiTinhList.get(1));
                 } else {
                     gioiTinh_cb.setValue(gioiTinhList.get(2));
@@ -321,63 +333,71 @@ public class householdMemberController implements Initializable {
                 noiLamViec_tf.setText(selectedNK.getNoiLamViec());
 
                 nhanKhauPane1.setVisible(true);
-            } 
-        } else if (themNk_btn.isArmed()) {
+                menu.setVisible(false);
+            }
+        } else if (themNk_btn.isArmed()) {  //Them nhan khau
+            dangSuaNK = false;
             nhanKhauPane1.setVisible(true);
+            menu.setVisible(false);
         }
     }
 
     @FXML
     public void moNhanKhauDialog2(ActionEvent event) {
-        if(!nhanKhauPane2.isVisible() && back2_btn.isArmed()) {
-            nhanKhauPane2.setVisible(true);
-            nhanKhauPane3.setVisible(false);
-        }
         if (!nhanKhauPane2.isVisible()) {
-            if (dangSuaNK) {
+            if (dangSuaNK) {    //Sua nhan khau
+                tuNgayTamTru_date.setEditable(true);
+                denNgayTamTru_date.setEditable(true);
+                noiThuongTru_tf.setEditable(true);
+                ngayChuyenDi_date.setEditable(true);
+                noiChuyenDi_tf.setEditable(true);
+
                 NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
                 cccd_tf.setText(selectedNK.getCccd());
 
                 Date sqlDate = Date.valueOf(selectedNK.getNgayCapID().toString());
                 ngayCap_date.setValue(sqlDate.toLocalDate());
                 noiCap_tf.setText(selectedNK.getNoiCapID());
-
-                // Chua lam phan dang ky thuong tru
-
-                nhanKhauPane2.setVisible(true);
-                nhanKhauPane1.setVisible(false);
-            } else {
-                nhanKhauPane2.setVisible(true);
-                nhanKhauPane1.setVisible(false);
-            }
-        }
-    }
-
-    @FXML
-    public void moNhanKhauDialog3(ActionEvent event) {
-        if (!nhanKhauPane3.isVisible()) {
-            if (dangSuaNK) {
-                NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
                 ghiChu_tf.setText(selectedNK.getGhiChu());
+                try {
+                    TamTru tt = TamTruDAO.getInstance().selectByNKID(selectedNK.getId());
+                    if (tt != null) {
+                        tuNgayTamTru_date.setValue(tt.getTuNgayDangKy().toLocalDate());
+                        denNgayTamTru_date.setValue(tt.getDenNgayDangKy().toLocalDate());
+                        noiThuongTru_tf.setText(tt.getDiaChiTruocChuyenDen());
+                        idHoKhauThuongTru_tf.setText(Integer.toString(tt.getIdHoKhau()));
+                    }
+                } catch (Exception e) {
+                    System.out.println("Khong dang ky tam tru");
+                } finally {
+                    nhanKhauPane2.setVisible(true);
+                    nhanKhauPane1.setVisible(false);
+                    menu.setVisible(false);
+                }
+            } else {    //Them nhan khau
+                tuNgayTamTru_date.setEditable(false);
+                denNgayTamTru_date.setEditable(false);
+                noiThuongTru_tf.setEditable(false);
+                ngayChuyenDi_date.setEditable(false);
+                noiChuyenDi_tf.setEditable(false);
 
-                nhanKhauPane3.setVisible(true);
-                nhanKhauPane2.setVisible(false);
-            } else {
-                nhanKhauPane3.setVisible(true);
-                nhanKhauPane2.setVisible(false);
+                nhanKhauPane2.setVisible(true);
+                nhanKhauPane1.setVisible(false);
+                menu.setVisible(false);
             }
         }
     }
+
 
     @FXML
     public void luuNhanKhau(ActionEvent event) {
-        //Sửa nhân khẩu
+        // Sửa nhân khẩu
         if (dangSuaNK) {
             NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
             selectedNK.setHoTen(hoTen_tf.getText());
             selectedNK.setBiDanh(biDanh_tf.getText());
             selectedNK.setQhChuHo(quanHe_tf.getText());
-            if(gioiTinh_cb.getValue().equals("Giới tính")) {
+            if (gioiTinh_cb.getValue().equals("Giới tính")) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa nhập giới tính!");
             } else {
@@ -393,23 +413,43 @@ public class householdMemberController implements Initializable {
                 selectedNK.setNoiCapID(noiCap_tf.getText());
                 selectedNK.setGhiChu(ghiChu_tf.getText());
 
-                if (NhanKhauDAO.getInstance().update(selectedNK)) {
+                if (tuNgayTamTru_date.getValue().plusDays(30).isAfter(denNgayTamTru_date.getValue())) {
                     AlertMessage alert = new AlertMessage();
-                    alert.successMessage("Sửa nhân khẩu thành công!");
-                    dongNhanKhauDialog(event);
+                    alert.errorMessage("Số ngày tạm trú nhỏ nhất là 30 ngày!");
                 } else {
-                    AlertMessage alert = new AlertMessage();
-                    alert.errorMessage("Sửa nhân khẩu không thành công!");
+                    TamTru tt = new TamTru();
+                    tt.setIdNhanKhau(selectedNK.getId());
+                    tt.setDenNgayDangKy(Date.valueOf(denNgayTamTru_date.getValue()));
+                    tt.setTuNgayDangKy(Date.valueOf(tuNgayTamTru_date.getValue()));
+                    tt.setDiaChiTruocChuyenDen(noiThuongTru_tf.getText());
+                    if (tuNgayTamTru_date.getValue().isAfter(LocalDate.now())
+                            || denNgayTamTru_date.getValue().isBefore(LocalDate.now())) { // Neu sau khi sua ngay tam
+                                                                                          // tru khong hieu luc thi chua
+                                                                                          // them vao ho khau
+                        selectedNK.setHoKhauID(0);
+                        int hkID = Integer.parseInt(idHoKhauThuongTru_tf.getText());
+                        HoKhau hk = HoKhauDAO.getInstance().selectById(hkID);
+                        hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hkID));
+                        HoKhauDAO.getInstance().update(hk);
+                    }
+                    if (NhanKhauDAO.getInstance().update(selectedNK) && TamTruDAO.getInstance().update(tt)) {
+                        AlertMessage alert = new AlertMessage();
+                        alert.successMessage("Sửa nhân khẩu thành công!");
+                        dongNhanKhauDialog(event);
+                    } else {
+                        AlertMessage alert = new AlertMessage();
+                        alert.errorMessage("Sửa nhân khẩu không thành công!");
+                    }
                 }
             }
-        } //Thêm nhân khẩu 
+        } // Thêm nhân khẩu
         else {
             NhanKhau newNK = new NhanKhau();
             if (luuNK_btn.isArmed()) {
                 newNK.setHoTen(hoTen_tf.getText());
                 newNK.setBiDanh(biDanh_tf.getText());
                 newNK.setQhChuHo(quanHe_tf.getText());
-                if(gioiTinh_cb.getValue().equals("Giới tính")) {
+                if (gioiTinh_cb.getValue().equals("Giới tính")) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Bạn chưa nhập giới tính!");
                 } else {
@@ -424,7 +464,6 @@ public class householdMemberController implements Initializable {
                         newNK.setCccd(cccd_tf.getText());
                         newNK.setNgayCapID(Date.valueOf(ngayCap_date.getValue()));
                         newNK.setNoiCapID(noiCap_tf.getText());
-                        newNK.setGhiChu(ghiChu_tf.getText());
 
                         if (NhanKhauDAO.getInstance().insert(newNK)) {
                             AlertMessage alert = new AlertMessage();
@@ -458,15 +497,17 @@ public class householdMemberController implements Initializable {
         cccd_tf.clear();
         noiCap_tf.clear();
         ngayCap_date.setValue(null);
-        ghiChu_tf.clear();
-        nhanKhauPane3.setVisible(false);
         dangSuaNK = false;
         search_tf.clear();
-        refreshNhanKhauTable();
+        ghiChu_tf.clear();
+        refreshNhanKhauTable(NhanKhauDAO.getInstance().selectAll());
+        menu.setVisible(true);
+        nhanKhauPane2.setVisible(false);
+        nhanKhauPane1.setVisible(false);
     }
 
-    public void refreshNhanKhauTable() {
-        nhanKhauTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().selectAll());
+    public void refreshNhanKhauTable(ArrayList<NhanKhau> list) {
+        nhanKhauTableList = FXCollections.observableArrayList(list);
         idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
         idNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
         tenNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, String>("hoTen"));
@@ -483,11 +524,7 @@ public class householdMemberController implements Initializable {
         rotate.setByAngle(360);
         rotate.play();
 
-        nhanKhauTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().selectAll());
-        idNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
-        tenNhanKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, String>("hoTen"));
-        idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
-        nhanKhauTable.setItems(nhanKhauTableList);
+        refreshNhanKhauTable(NhanKhauDAO.getInstance().selectAll());
 
         gioiTinh_cb.setValue(gioiTinhList.get(0));
         gioiTinh_cb.setItems(gioiTinhList);
@@ -500,8 +537,6 @@ public class householdMemberController implements Initializable {
             nhanKhauPane1.setVisible(false);
         if (nhanKhauPane2 != null)
             nhanKhauPane2.setVisible(false);
-        if (nhanKhauPane3 != null)
-            nhanKhauPane3.setVisible(false);
     }
 
 }

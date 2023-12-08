@@ -83,6 +83,22 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
         return true;
     }
 
+    public boolean deleteByHKID(int id){
+        try {
+            Connection connection = JDBCUtil.getConnection();
+            Statement st = connection.createStatement();
+            String sql="DELETE FROM GIAODICH "+
+                    "WHERE HoKhauID = "+ id + ";";
+            int ans = st.executeUpdate(sql);
+            JDBCUtil.closeConnection(connection);
+            return ans > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+
     @Override
     public ArrayList<GiaoDich> selectAll() {
         ArrayList<GiaoDich> list= new ArrayList<GiaoDich>();
@@ -161,6 +177,31 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
             e.printStackTrace();
         }
         return list;
+    }
+
+    public int countSoHoDaNop(Date start, Date end, String loaiPhi) {
+        try {
+            Connection connection = JDBCUtil.getConnection();
+            String query = "SELECT COUNT(DISTINCT HoKhauID) AS CNT FROM GIAODICH JOIN KHOANPHI ON GIAODICH.KhoanPhiID = KHOANPHI.KhoanPhiID" 
+                    + " WHERE KHOANPHI.LoaiKhoanPhi = '" + loaiPhi
+                    + "' AND ThoiGianGiaoDich >= '" + start
+                    + "' AND ThoiGianGiaoDich <= '" + end + "';";
+            if(loaiPhi.equals("Tat ca")) {
+                query = "SELECT COUNT(DISTINCT HoKhauID) AS CNT FROM GIAODICH JOIN KHOANPHI ON GIAODICH.KhoanPhiID = KHOANPHI.KhoanPhiID" 
+                    + " WHERE ThoiGianGiaoDich >= '" + start
+                    + "' AND ThoiGianGiaoDich <= '" + end + "';";
+            }
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()){
+                int count = rs.getInt("CNT");
+                return count;
+            }
+            JDBCUtil.closeConnection(connection);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
     
     public ArrayList<GiaoDich> selectByHKID(int id){

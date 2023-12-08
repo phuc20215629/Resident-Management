@@ -162,6 +162,15 @@
 	-fx-background-color: white;
 }
 
+#submit_btn1{
+	-fx-background-color: #4776E6;
+}
+
+#submit_btn1:hover{
+	-fx-text-fill:#4776E6;
+	-fx-background-color: white;
+}
+
 #minus_btn{
 	-fx-background-color: #EB3349;
 	-fx-background-radius: 50px;
@@ -265,18 +274,26 @@
 }
 
 #split{
-	-fx-background-color: gray;
+	-fx-background-color: F4BF96;
 }
 #split:hover{
-	-fx-text-fill:gray;
+	-fx-text-fill:F4BF96;
 	-fx-background-color: white;
 }
 
 #moveTemp{
-	-fx-background-color: sienna;
+	-fx-background-color: #CE5A67;
 }
 #moveTemp:hover{
-	-fx-text-fill: sienna;
+	-fx-text-fill: #CE5A67;
+	-fx-background-color: white;
+}
+
+#moveTemp1{
+	-fx-background-color: #8ACDD7;
+}
+#moveTemp1:hover{
+	-fx-text-fill: #8ACDD7;
 	-fx-background-color: white;
 }
 
@@ -313,14 +330,15 @@
 }
 
 .functionInsideTitle{
-	-fx-font-size: 30px;
+	-fx-font-size: 35px;
 	-fx-text-alignment:left;
 	-fx-background-radius: 12px;
-	-fx-font-weight: 500;
+	-fx-font-weight: 300;
+	-fx-font-color: #D7DDE8;
 }
 .functionInsideTitle:hover{
 	-fx-background-color: orange;
-	-fx-font-weight: 700;
+	-fx-font-size: 40px;
 	-fx-cursor:hand;
 }
 

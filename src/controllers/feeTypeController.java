@@ -11,6 +11,7 @@ import application.dao.GiaoDichDAO;
 import application.dao.HoKhauDAO;
 import application.dao.KhoanPhiDAO;
 import application.model.GiaoDich;
+import application.model.HoKhau;
 import application.model.KhoanPhi;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -37,6 +38,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class feeTypeController implements Initializable {
+
+    @FXML
+    private Button dongPhiVS_btn;
+
+    @FXML
+    private Button dongPhi_btn;
 
     @FXML
     private Pane dongPhiDialog;
@@ -171,24 +178,48 @@ public class feeTypeController implements Initializable {
         }
     }
 
+    boolean dongPhi = false;    //dongPhi == false khi dong phi ve sinh, dongPhi == true khi dong phi khac
     @FXML
     void moDongPhiDialog(ActionEvent event) {
-        selectedKP = statsTable.getSelectionModel().getSelectedItem();
-        if(selectedKP == null) {
-            AlertMessage alert = new AlertMessage();
-            alert.errorMessage("Bạn chưa chọn khoản phí!");
-        } else {
-            if(selectedKP.getTrangThai().equals("Không hiệu lực")) {
+        if(dongPhi_btn.isArmed()) {
+            dongPhi = true;
+            selectedKP = statsTable.getSelectionModel().getSelectedItem();
+            if(selectedKP == null) {
                 AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Khoản phí không hiệu lực!");
+                alert.errorMessage("Bạn chưa chọn khoản phí!");
             } else {
-                dongPhiDialog.setVisible(true);
-                tenKhoan_tf1.setText(selectedKP.getTenKhoanPhi());
-                if(selectedKP.getLoaiPhi().equals("Bat buoc")) {
-                    dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien()));
-                    dinhMuc_tf1.setEditable(false);
+                if(selectedKP.getTrangThai().equals("Không hiệu lực")) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("Khoản phí không hiệu lực!");
+                } else {
+                    dongPhiDialog.setVisible(true);
+                    tenKhoan_tf1.setText(selectedKP.getTenKhoanPhi());
+                    if(selectedKP.getLoaiPhi().equals("Bat buoc")) {
+                        dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien()));
+                        dinhMuc_tf1.setEditable(false);
+                    }
                 }
             }
+        } else if(dongPhiVS_btn.isArmed()) {
+            dongPhi = false;
+            dongPhiDialog.setVisible(true);
+            tenKhoan_tf1.setText("Phí vệ sinh năm " + LocalDate.now().getYear());
+            tenKhoan_tf1.setEditable(false);
+            dinhMuc_tf1.setEditable(false);
+            maHo_tf.textProperty().addListener((observable, oldValue, newValue) -> {
+                int maHo = 0;
+                try {
+                    maHo = Integer.parseInt(newValue);
+                    HoKhau hk = HoKhauDAO.getInstance().selectById(maHo);
+                    if(hk != null) {
+                        dinhMuc_tf1.setText(Integer.toString(hk.getSoThanhVien() * 6000));
+                    } else {
+                        dinhMuc_tf1.setText("");
+                    }
+                } catch (Exception e) {
+                    
+                }
+            });
         }
     }
 
@@ -200,57 +231,71 @@ public class feeTypeController implements Initializable {
 
     @FXML
     void nopPhi(ActionEvent event) {
-        if(selectedKP.getLoaiPhi().equals("Khong bat buoc")) {
-            if(maHo_tf.getText().isBlank() || dinhMuc_tf1.getText().isBlank()) {
-                AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Bạn chưa nhập đủ thông tin!");
-            } else {
-                try {
-                    int maHo = Integer.parseInt(maHo_tf.getText());
-                    if(HoKhauDAO.getInstance().selectById(maHo) != null) {
-                        int soTien = Integer.parseInt(dinhMuc_tf1.getText());
-                        Date now = Date.valueOf(LocalDate.now());
-                        GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now, selectedKP.getTenKhoanPhi()));
-
-                        AlertMessage alert = new AlertMessage();
-                        alert.successMessage("Nộp phí thành công!");
-                        dongDongPhiDialog(event);
-                    } else {
-                        AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Hộ khẩu không tồn tại!");
-                    }
-                } catch (Exception e) {
+        if(dongPhi) {   //dong phi khac
+            if(selectedKP.getLoaiPhi().equals("Khong bat buoc")) {
+                if(maHo_tf.getText().isBlank() || dinhMuc_tf1.getText().isBlank()) {
                     AlertMessage alert = new AlertMessage();
-                    alert.errorMessage("ID và số tiền phải là số!");
-                }
-            }
-        } else {
-            if(maHo_tf.getText().isBlank()) {
-                AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Bạn chưa nhập đủ thông tin!");
-            } else {
-                try {
-                    int maHo = Integer.parseInt(maHo_tf.getText());
-                    if(HoKhauDAO.getInstance().selectById(maHo) != null) {
-                        if(GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) {   //Hộ khẩu đã đóng khoản phí bắt buộc 1 lần thì không được đóng nữa
+                    alert.errorMessage("Bạn chưa nhập đủ thông tin!");
+                } else {
+                    try {
+                        int maHo = Integer.parseInt(maHo_tf.getText());
+                        if(HoKhauDAO.getInstance().selectById(maHo) != null) {
+                            int soTien = Integer.parseInt(dinhMuc_tf1.getText());
                             Date now = Date.valueOf(LocalDate.now());
-                            GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), selectedKP.getSoTien(), maHo, now, selectedKP.getTenKhoanPhi()));
+                            GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now, selectedKP.getTenKhoanPhi()));
 
                             AlertMessage alert = new AlertMessage();
                             alert.successMessage("Nộp phí thành công!");
                             dongDongPhiDialog(event);
                         } else {
                             AlertMessage alert = new AlertMessage();
-                            alert.errorMessage("Hộ khẩu đã đóng phí này rồi!");
-                        } 
-                    } else {
+                            alert.errorMessage("Hộ khẩu không tồn tại!");
+                        }
+                    } catch (Exception e) {
                         AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Hộ khẩu không tồn tại!");
+                        alert.errorMessage("ID và số tiền phải là số!");
                     }
-                } catch (Exception e) {
-                    AlertMessage alert = new AlertMessage();
-                    alert.errorMessage("ID phải là số!");
                 }
+            } else {
+                if(maHo_tf.getText().isBlank()) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("Bạn chưa nhập đủ thông tin!");
+                } else {
+                    try {
+                        int maHo = Integer.parseInt(maHo_tf.getText());
+                        if(HoKhauDAO.getInstance().selectById(maHo) != null) {
+                            if(GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) {   //Hộ khẩu đã đóng khoản phí bắt buộc 1 lần thì không được đóng nữa
+                                Date now = Date.valueOf(LocalDate.now());
+                                GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), selectedKP.getSoTien(), maHo, now, selectedKP.getTenKhoanPhi()));
+
+                                AlertMessage alert = new AlertMessage();
+                                alert.successMessage("Nộp phí thành công!");
+                                dongDongPhiDialog(event);
+                            } else {
+                                AlertMessage alert = new AlertMessage();
+                                alert.errorMessage("Hộ khẩu đã đóng phí này rồi!");
+                            } 
+                        } else {
+                            AlertMessage alert = new AlertMessage();
+                            alert.errorMessage("Hộ khẩu không tồn tại!");
+                        }
+                    } catch (Exception e) {
+                        AlertMessage alert = new AlertMessage();
+                        alert.errorMessage("ID phải là số!");
+                    }
+                }
+            }
+        } else {    //dong phi ve sinh
+            if(dinhMuc_tf1.getText().isBlank()) {   //TH nhap ID ho khau sai dinh dang hoac khong tim thay ID ho khau
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("ID hộ khẩu không hợp lệ!");
+            } else {
+                Date now = Date.valueOf(LocalDate.now());
+                GiaoDichDAO.getInstance().insert(new GiaoDich(1, Integer.parseInt(dinhMuc_tf1.getText()), Integer.parseInt(maHo_tf.getText()), now, KhoanPhiDAO.getInstance().selectById(1).getTenKhoanPhi()));
+                
+                AlertMessage alert = new AlertMessage();
+                alert.successMessage("Nộp phí vệ sinh thành công!");
+                dongDongPhiDialog(event);
             }
         }
     }
@@ -463,12 +508,6 @@ public class feeTypeController implements Initializable {
     }
 
     public void refreshStatsTable() {
-        // ArrayList<KhoanPhi> list = KhoanPhiDAO.getInstance().selectAll();
-        // for(KhoanPhi kp : list) {
-        //     if(kp.getDenNgay().toLocalDate().isBefore(LocalDate.now())) {
-        //         list.remove(kp);
-        //     }
-        // }
         statsTableList = FXCollections.observableArrayList(KhoanPhiDAO.getInstance().selectAll());
         id_col.setCellValueFactory(new PropertyValueFactory<KhoanPhi, Integer>("maKhoanPhi"));
         tenKhoanPhi_col.setCellValueFactory(new PropertyValueFactory<KhoanPhi, String>("tenKhoanPhi"));

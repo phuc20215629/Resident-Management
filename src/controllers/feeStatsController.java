@@ -103,6 +103,7 @@ public class feeStatsController implements Initializable {
 		LocalDate denNgay = denNgay_date.getValue();
 		ArrayList<GiaoDich> list = new ArrayList<>();
 
+		int soHoDaNop = 0;
 		if (tuNgay == null || denNgay == null) {
 			tuNgay = LocalDate.now().minusDays(1);
 			denNgay = LocalDate.now().plusDays(1);
@@ -112,21 +113,25 @@ public class feeStatsController implements Initializable {
 		if (loaiPhi_cb.getValue().equals("Bắt buộc")) {
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
 					Date.valueOf(denNgay), "Bat buoc");
+			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
+					Date.valueOf(denNgay), "Bat buoc");
 			refreshTimMaHoTable(list);
 		} else if(loaiPhi_cb.getValue().equals("Không bắt buộc")){
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
+					Date.valueOf(denNgay), "Khong bat buoc");
+			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
 					Date.valueOf(denNgay), "Khong bat buoc");
 			refreshTimMaHoTable(list);
 		} else {
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
 					Date.valueOf(denNgay), "Tat ca");
+			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
+					Date.valueOf(denNgay), "Tat ca");
 			refreshTimMaHoTable(list);
 		}
-		long tongThu = 0;
-		int soHoDaNop = 0;
+		long tongThu = 0; 
 		for(GiaoDich gd : list) {
 			tongThu += (long)gd.getSoTien();
-			++soHoDaNop;
 		}
 		tongThu_tf.setText(Long.toString(tongThu));
 		soHoDaNop_tf.setText(Integer.toString(soHoDaNop));

@@ -29,6 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -50,13 +51,13 @@ public class householdStatsController implements Initializable {
     private ImageView home;
 
     @FXML
-    private Label household;
+    private Label houseHold;
 
     @FXML
     private Button logout;
 
     @FXML
-    private Label member;
+    private Label nhanKhau;
 
     @FXML
     private TextField soLuong_tf;
@@ -84,16 +85,19 @@ public class householdStatsController implements Initializable {
 
     @FXML
     private TableColumn<NhanKhau, ArrayList<String>> hoTenCol;
+    
+    @FXML
+    private VBox menu;
 
     ObservableList<NhanKhau> statsTableList;
     ObservableList<String> gioiTinhList = FXCollections.observableArrayList("Tất cả","Nam", "Nữ");
-	ObservableList<String> doTuoiList = FXCollections.observableArrayList("Tất cả","Mầm non", "Mẫu giáo", "Cấp 1", "Cấp 2", "Cấp 3","Lao động", "Nghỉ hưu");
+	ObservableList<String> doTuoiList = FXCollections.observableArrayList("Tất cả","Mầm non", "Cấp 1", "Cấp 2", "Cấp 3","Lao động", "Nghỉ hưu");
     ObservableList<String> trangThaiList = FXCollections.observableArrayList("Tất cả", "Tạm vắng", "Tạm trú");
 
     @FXML
     public void hoKhauView(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/household.fxml"));
-		Stage window = (Stage)household.getScene().getWindow();
+		Stage window = (Stage)houseHold.getScene().getWindow();
 		Scene s = new Scene(root,1400,800);
 		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
 		window.setScene(s);
@@ -102,7 +106,7 @@ public class householdStatsController implements Initializable {
     @FXML
     public void nhanKhauView(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/householdMember.fxml"));
-		Stage window = (Stage)member.getScene().getWindow();
+		Stage window = (Stage)nhanKhau.getScene().getWindow();
 		Scene s = new Scene(root,1400,800);
 		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
 		window.setScene(s);
