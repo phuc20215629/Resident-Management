@@ -9,25 +9,26 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class NhanKhauDAO implements DAOInterface<NhanKhau> {
-    public static NhanKhauDAO getInstance(){
+    public static NhanKhauDAO getInstance() {
         return new NhanKhauDAO();
     }
-    
+
     @Override
     public boolean insert(NhanKhau t) {
         try {
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String sql = "INSERT INTO NHANKHAU( HoKhauID, QuanHeVoiChuHo, "
-                        + "HoTen, BiDanh, GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, NgheNghiep,"
-                        + " NoiLamViec, NgayCapID, NoiCapID, CCCD, ghiChu)"
-                        + " VALUES(" + t.getHoKhauID()+ ", '" + t.getQhChuHo() 
-                        + "', '"  + t.getHoTen() + "', '"
-                        + t.getBiDanh() + "', '" + t.getGioiTinh() + "', '"
-                        + t.getNgaySinh() + "', '" + t.getNoiSinh() + "', '" 
-                        + t.getNguyenQuan() +"', '" + t.getDanToc() + "', '" 
-                        + t.getNgheNghiep() + "', '" + t.getNoiLamViec() + "', '" 
-                        + t.getNgayCapID()+ "', '" + t.getNoiCapID() + "', '" + t.getCccd() + "', '" + t.getGhiChu() + "');" ;
+                    + "HoTen, BiDanh, GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, NgheNghiep,"
+                    + " NoiLamViec, NgayCapID, NoiCapID, CCCD, ghiChu)"
+                    + " VALUES(" + t.getHoKhauID() + ", '" + t.getQhChuHo()
+                    + "', '" + t.getHoTen() + "', '"
+                    + t.getBiDanh() + "', '" + t.getGioiTinh() + "', '"
+                    + t.getNgaySinh() + "', '" + t.getNoiSinh() + "', '"
+                    + t.getNguyenQuan() + "', '" + t.getDanToc() + "', '"
+                    + t.getNgheNghiep() + "', '" + t.getNoiLamViec() + "', '"
+                    + t.getNgayCapID() + "', '" + t.getNoiCapID() + "', '" + t.getCccd() + "', '" + t.getGhiChu()
+                    + "');";
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
             return ans > 0;
@@ -43,22 +44,22 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String sql = "UPDATE NHANKHAU " +
-                        "SET HoKhauID = " + t.getHoKhauID()
-                        + ", QuanHeVoiChuHo = '" + t.getQhChuHo() 
-                        + "', HoTen = '" + t.getHoTen()
-                        + "', BiDanh = '" + t.getBiDanh()
-                        + "', GioiTinh = '" + t.getGioiTinh()
-                        + "', NgaySinh = '" + t.getNgaySinh()
-                        + "', NoiSinh = '" + t.getNoiSinh()
-                        + "', NguyenQuan = '" + t.getNguyenQuan()
-                        + "', DanToc = '" + t.getDanToc()
-                        + "', NgheNghiep = '" + t.getNgheNghiep()
-                        + "', NoiLamViec = '" + t.getNoiLamViec()
-                        + "', NgayCapID = '" + t.getNgayCapID()
-                        + "', NoiCapID = '" + t.getNoiCapID()
-                        + "', ghiChu = '" + t.getGhiChu()
-                        + "', LaChuHo = " + t.getLaChuHo()
-                        + " WHERE ID = " + t.getId() + ";" ;
+                    "SET HoKhauID = " + t.getHoKhauID()
+                    + ", QuanHeVoiChuHo = '" + t.getQhChuHo()
+                    + "', HoTen = '" + t.getHoTen()
+                    + "', BiDanh = '" + t.getBiDanh()
+                    + "', GioiTinh = '" + t.getGioiTinh()
+                    + "', NgaySinh = '" + t.getNgaySinh()
+                    + "', NoiSinh = '" + t.getNoiSinh()
+                    + "', NguyenQuan = '" + t.getNguyenQuan()
+                    + "', DanToc = '" + t.getDanToc()
+                    + "', NgheNghiep = '" + t.getNgheNghiep()
+                    + "', NoiLamViec = '" + t.getNoiLamViec()
+                    + "', NgayCapID = '" + t.getNgayCapID()
+                    + "', NoiCapID = '" + t.getNoiCapID()
+                    + "', ghiChu = '" + t.getGhiChu()
+                    + "', LaChuHo = " + t.getLaChuHo()
+                    + " WHERE ID = " + t.getId() + ";";
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
             return ans > 0;
@@ -74,10 +75,10 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String sql = "DELETE FROM NHANKHAU " +
-                            "WHERE ID = " + id + ";";
+                    "WHERE ID = " + id + ";";
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
-            return ans>0;
+            return ans > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,11 +89,11 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
     public ArrayList<NhanKhau> selectAll() {
         ArrayList<NhanKhau> li = new ArrayList<NhanKhau>();
         try {
-            Connection connection =JDBCUtil.getConnection();
+            Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = "SELECT * FROM NHANKHAU";
             ResultSet rs = st.executeQuery(query);
-            while(rs.next()){
+            while (rs.next()) {
                 int MaHoKhau = rs.getInt("HoKhauID");
                 String QHChuHo = rs.getString("QuanHeVoiChuHo");
                 int ID = rs.getInt("ID");
@@ -110,8 +111,8 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
                 String NoiCapID = rs.getString("NoiCapID");
                 int laChuHo = rs.getInt("LaChuHo");
                 String ghiChu = rs.getString("ghiChu");
-                NhanKhau t = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh, 
-                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, 
+                NhanKhau t = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh,
+                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc,
                         NgheNghiep, NoiLamViec, NgayCapID, NoiCapID, ghiChu);
                 li.add(t);
             }
@@ -124,11 +125,11 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
     public ArrayList<NhanKhau> selectGroupByHKID() {
         ArrayList<NhanKhau> li = new ArrayList<NhanKhau>();
         try {
-            Connection connection =JDBCUtil.getConnection();
+            Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = "SELECT * FROM NHANKHAU ORDER BY HoKhauID";
             ResultSet rs = st.executeQuery(query);
-            while(rs.next()){
+            while (rs.next()) {
                 int MaHoKhau = rs.getInt("HoKhauID");
                 String QHChuHo = rs.getString("QuanHeVoiChuHo");
                 int ID = rs.getInt("ID");
@@ -146,8 +147,8 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
                 String NoiCapID = rs.getString("NoiCapID");
                 int laChuHo = rs.getInt("LaChuHo");
                 String ghiChu = rs.getString("ghiChu");
-                NhanKhau t = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh, 
-                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, 
+                NhanKhau t = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh,
+                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc,
                         NgheNghiep, NoiLamViec, NgayCapID, NoiCapID, ghiChu);
                 li.add(t);
             }
@@ -161,11 +162,11 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
     public NhanKhau selectById(int id) {
         NhanKhau u = null;
         try {
-            Connection connection =JDBCUtil.getConnection();
+            Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = "SELECT * FROM NHANKHAU WHERE ID = " + id + ";";
             ResultSet rs = st.executeQuery(query);
-            if(rs.next()) {
+            if (rs.next()) {
                 int MaHoKhau = rs.getInt("HoKhauID");
                 String QHChuHo = rs.getString("QuanHeVoiChuHo");
                 int ID = rs.getInt("ID");
@@ -183,24 +184,24 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
                 String NoiCapID = rs.getString("NoiCapID");
                 int laChuHo = rs.getInt("LaChuHo");
                 String ghiChu = rs.getString("ghiChu");
-                u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh, 
-                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, 
+                u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh,
+                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc,
                         NgheNghiep, NoiLamViec, NgayCapID, NoiCapID, ghiChu);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return u;
-    }  
-    
+    }
+
     public ArrayList<NhanKhau> selectByHKId(int idHoKhau) {
         ArrayList<NhanKhau> list = new ArrayList<>();
         try {
-            Connection connection =JDBCUtil.getConnection();
+            Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = "SELECT * FROM NHANKHAU WHERE HoKhauID = " + idHoKhau + ";";
             ResultSet rs = st.executeQuery(query);
-            while(rs.next()) {
+            while (rs.next()) {
                 int MaHoKhau = rs.getInt("HoKhauID");
                 String QHChuHo = rs.getString("QuanHeVoiChuHo");
                 int ID = rs.getInt("ID");
@@ -218,11 +219,11 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
                 String NoiCapID = rs.getString("NoiCapID");
                 int laChuHo = rs.getInt("LaChuHo");
                 String ghiChu = rs.getString("ghiChu");
-                NhanKhau u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh, 
-                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, 
+                NhanKhau u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh,
+                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc,
                         NgheNghiep, NoiLamViec, NgayCapID, NoiCapID, ghiChu);
                 list.add(u);
-            }   
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -232,11 +233,11 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
     public ArrayList<NhanKhau> selectByTen(String ten) {
         ArrayList<NhanKhau> list = new ArrayList<>();
         try {
-            Connection connection =JDBCUtil.getConnection();
+            Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = "SELECT * FROM NHANKHAU WHERE HoTen = '" + ten + "';";
             ResultSet rs = st.executeQuery(query);
-            while(rs.next()) {
+            while (rs.next()) {
                 int MaHoKhau = rs.getInt("HoKhauID");
                 String QHChuHo = rs.getString("QuanHeVoiChuHo");
                 int ID = rs.getInt("ID");
@@ -254,31 +255,64 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
                 String NoiCapID = rs.getString("NoiCapID");
                 int laChuHo = rs.getInt("LaChuHo");
                 String ghiChu = rs.getString("ghiChu");
-                NhanKhau u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh, 
-                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, 
+                NhanKhau u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh,
+                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc,
                         NgheNghiep, NoiLamViec, NgayCapID, NoiCapID, ghiChu);
-                list.add(u) ;
-            }   
+                list.add(u);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
     }
 
-    public ArrayList<NhanKhau> thongKe(int soLuong, String gioiTinh, int tuTuoi, int denTuoi, String trangThai, Date tuNgay, Date denNgay) {
+    public ArrayList<NhanKhau> thongKe(int soLuong, String gioiTinh, int tuTuoi, int denTuoi, String trangThai,
+            Date tuNgay, Date denNgay) {
         ArrayList<NhanKhau> list = new ArrayList<>();
         try {
-            Connection connection =JDBCUtil.getConnection();
+            Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = new String();
-            if(gioiTinh.equals("Tất cả")) {
-                query = "SELECT TOP " + soLuong +  " * FROM NHANKHAU WHERE (2023 - YEAR(NGAYSINH)) BETWEEN " + tuTuoi + " AND " + denTuoi;
-            }
-            else {
-                query = "SELECT TOP " + soLuong +  " * FROM NHANKHAU WHERE (2023 - YEAR(NGAYSINH)) BETWEEN " + tuTuoi + " AND " + denTuoi + " AND GioiTinh = '" + gioiTinh + " '";
+            if (trangThai.equals("Tất cả")) {
+                if (gioiTinh.equals("Tất cả")) {
+                    query = "SELECT TOP " + soLuong + " * FROM NHANKHAU WHERE (2023 - YEAR(NGAYSINH)) BETWEEN " + tuTuoi
+                            + " AND " + denTuoi;
+                } else {
+                    query = "SELECT TOP " + soLuong + " * FROM NHANKHAU WHERE (2023 - YEAR(NGAYSINH)) BETWEEN " + tuTuoi
+                            + " AND " + denTuoi + " AND GioiTinh = '" + gioiTinh + " '";
+                }
+            } else if (trangThai.equals("Tạm vắng")) {
+                if (gioiTinh.equals("Tất cả")) {
+                    query = "SELECT TOP " + soLuong
+                            + " * FROM NHANKHAU JOIN TAMVANG ON NHANKHAU.ID = TAMVANG.idNhanKhau WHERE (2023 - YEAR(NGAYSINH)) BETWEEN "
+                            + tuTuoi
+                            + " AND " + denTuoi + " AND TAMVANG.tuNgayDangKy >= '" + tuNgay
+                            + "' AND TAMVANG.denNgayDangKy <= '" + denNgay + "'";
+                } else {
+                    query = "SELECT TOP " + soLuong
+                            + " * FROM NHANKHAU JOIN TAMVANG ON NHANKHAU.ID = TAMVANG.idNhanKhau WHERE (2023 - YEAR(NGAYSINH)) BETWEEN "
+                            + tuTuoi
+                            + " AND " + denTuoi + " AND GioiTinh = '" + gioiTinh + " '"
+                            + " AND TAMVANG.tuNgayDangKy >= '" + tuNgay + "' AND TAMVANG.denNgayDangKy <= '" + denNgay
+                            + "'";
+                }
+            } else if (trangThai.equals("Tạm trú")) {
+                if (gioiTinh.equals("Tất cả")) {
+                    query = "SELECT TOP " + soLuong
+                            + " * FROM NHANKHAU JOIN TAMTRU ON NHANKHAU.ID = TAMTRU.idNhanKhau WHERE (2023 - YEAR(NGAYSINH)) BETWEEN "
+                            + tuTuoi
+                            + " AND " + denTuoi + " AND TAMTRU.tuNgayDangKy >= '" + tuNgay
+                            + "' AND TAMTRU.denNgayDangKy <= '" + denNgay + "'";
+                } else {
+                    query = "SELECT TOP " + soLuong
+                            + " * FROM NHANKHAU JOIN TAMTRU ON NHANKHAU.ID = TAMTRU.idNhanKhau WHERE (2023 - YEAR(NGAYSINH)) BETWEEN "
+                            + tuTuoi
+                            + " AND " + denTuoi + " AND GioiTinh = '" + gioiTinh + "' AND TAMTRU.tuNgayDangKy >= '"
+                            + tuNgay + "' AND TAMTRU.denNgayDangKy <= '" + denNgay + "'";
+                }
             }
             ResultSet rs = st.executeQuery(query);
-            while(rs.next()) {
+            while (rs.next()) {
                 int MaHoKhau = rs.getInt("HoKhauID");
                 String QHChuHo = rs.getString("QuanHeVoiChuHo");
                 int ID = rs.getInt("ID");
@@ -296,11 +330,11 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
                 String NoiCapID = rs.getString("NoiCapID");
                 int laChuHo = rs.getInt("LaChuHo");
                 String ghiChu = rs.getString("ghiChu");
-                NhanKhau u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh, 
-                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc, 
+                NhanKhau u = new NhanKhau(MaHoKhau, QHChuHo, laChuHo, ID, cccd, HoTen, BiDanh,
+                        GioiTinh, NgaySinh, NoiSinh, NguyenQuan, DanToc,
                         NgheNghiep, NoiLamViec, NgayCapID, NoiCapID, ghiChu);
-                list.add(u) ;
-            }   
+                list.add(u);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

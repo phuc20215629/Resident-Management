@@ -46,8 +46,8 @@
             <Image url="@../assets/home.png" />
          </image>
       </ImageView>
-      <ChoiceBox fx:id="gioiTinh_cb" layoutX="1147.0" layoutY="93.0" prefHeight="44.0" prefWidth="172.0" styleClass="dropdown_search" />
-      <ChoiceBox fx:id="doTuoi_cb" layoutX="1146.0" layoutY="187.0" prefHeight="44.0" prefWidth="172.0" styleClass="dropdown_search" />
+      <ChoiceBox fx:id="gioiTinh_cb" layoutX="1123.0" layoutY="93.0" prefHeight="44.0" prefWidth="207.0" styleClass="dropdown_search" />
+      <ChoiceBox fx:id="doTuoi_cb" layoutX="1123.0" layoutY="187.0" prefHeight="44.0" prefWidth="207.0" styleClass="dropdown_search" />
       <Label layoutX="1122.0" layoutY="55.0" styleClass="functionDetailTitle" text="Giới tính">
          <font>
             <Font size="22.0" />
@@ -69,7 +69,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="trangThai_cb" layoutX="1146.0" layoutY="342.0" prefHeight="44.0" prefWidth="172.0" styleClass="dropdown_search" />
+      <ChoiceBox fx:id="trangThai_cb" layoutX="1123.0" layoutY="342.0" prefHeight="44.0" prefWidth="207.0" styleClass="dropdown_search" />
       <VBox fx:id="menu" layoutX="19.0" layoutY="151.0" prefHeight="194.0" prefWidth="320.0" spacing="20.0">
          <children>
             <Label fx:id="houseHold" onMouseClicked="#hoKhauView" prefHeight="51.0" prefWidth="233.0" styleClass="functionInsideTitle" text=" Hộ khẩu">

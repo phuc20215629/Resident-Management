@@ -22,7 +22,7 @@
          </image>
       </ImageView>
       <Button id="button_logout" fx:id="logout" layoutX="65.0" layoutY="720.0" mnemonicParsing="false" onAction="#logoutView" stylesheets="@style.css" text="Đăng xuất" />
-      <TableView id="feeTable" fx:id="nhanKhauTable" layoutX="299.0" layoutY="54.0" prefHeight="588.0" prefWidth="1050.0">
+      <TableView id="feeTable" fx:id="nhanKhauTable" layoutX="299.0" layoutY="54.0" prefHeight="588.0" prefWidth="1077.0">
          <columns>
             <TableColumn fx:id="idNhanKhauCol" prefWidth="177.33334350585938" styleClass="tableAtrb" text="ID" />
             <TableColumn fx:id="tenNhanKhauCol" prefWidth="621.6666564941406" styleClass="tableAtrb" text="Họ tên" />
@@ -30,7 +30,7 @@
          </columns>
       </TableView>
       <Button id="editPerson" fx:id="sua_btn" layoutX="1009.0" layoutY="672.0" mnemonicParsing="false" onAction="#moNhanKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Sửa" />
-      <Button id="addPerson" fx:id="themNk_btn" layoutX="1115.0" layoutY="672.0" mnemonicParsing="false" onAction="#moNhanKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Thêm nhân khẩu" />
+      <Button id="addPerson" fx:id="themNk_btn" layoutX="1115.0" layoutY="672.0" mnemonicParsing="false" onAction="#moNhanKhauDialog" prefHeight="61.0" prefWidth="262.0" styleClass="mybutton" stylesheets="@style.css" text="Thêm nhân khẩu" />
       <ImageView id="button_home" fx:id="home" fitHeight="62.0" fitWidth="69.0" layoutX="92.0" layoutY="635.0" onMouseClicked="#home">
          <image>
             <Image url="@../assets/home.png" />

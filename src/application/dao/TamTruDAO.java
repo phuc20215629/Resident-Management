@@ -17,7 +17,7 @@ public class TamTruDAO {
 
     public boolean insert(TamTru tamTru) {
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "INSERT INTO TamTru (idNhanKhau, idHoKhau, tuNgayDangKy, denNgayDangKy, diaChiTruocChuyenDen) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO TAMTRU (idNhanKhau, idHoKhau, tuNgayDangKy, denNgayDangKy, diaChiTruocChuyenDen) VALUES (?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, tamTru.getIdNhanKhau());
@@ -37,7 +37,7 @@ public class TamTruDAO {
 
     public boolean update(TamTru tamTru) {
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "UPDATE TamTrU " +
+            String sql = "UPDATE TAMTRU " +
                     "SET tuNgayDangKy = ?, denNgayDangKy = ?, diaChiTruocChuyenDen = ? "
                     + "WHERE idNhanKhau = ?";
 
@@ -56,12 +56,28 @@ public class TamTruDAO {
         }
     }
 
-    public boolean deleteByID(int maTamTru) {
+    public boolean deleteByHKID(int idHk) {
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "DELETE FROM TamTru WHERE maTamTru = ?";
+            String sql = "DELETE FROM TAMTRU WHERE idHoKhau = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setInt(1, maTamTru);
+                preparedStatement.setInt(1, idHk);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteByNKID(int idNk) {
+        try (Connection connection = JDBCUtil.getConnection()) {
+            String sql = "DELETE FROM TAMTRU WHERE idNhanKhau = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, idNk);
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 return rowsAffected > 0;
@@ -74,20 +90,19 @@ public class TamTruDAO {
 
     public boolean deleteByTimeNotEffective() {
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT idNhanKhau FROM TamTru WHERE denNgayDangKy < CURRENT_TIMESTAMP";
+            String sql = "SELECT idNhanKhau FROM TAMTRU WHERE denNgayDangKy < CURRENT_TIMESTAMP";
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 int idNhanKhau = rs.getInt("idNhanKhau");
-                System.out.println(idNhanKhau);
                 HoKhau hk = HoKhauDAO.getInstance()
                         .selectById(NhanKhauDAO.getInstance().selectById(idNhanKhau).getHoKhauID());
                 NhanKhauDAO.getInstance().deleteByID(idNhanKhau);
                 hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hk.getIdHoKhau()));
                 HoKhauDAO.getInstance().update(hk);
 
-                sql = "DELETE FROM TamTru WHERE idNhanKhau = ?";
-                int rowsAffected = st.executeUpdate(sql);
+                String delSql = "DELETE FROM TAMTRU WHERE idNhanKhau = " + idNhanKhau;
+                int rowsAffected = st.executeUpdate(delSql);
                 return rowsAffected > 0;
             }
         } catch (SQLException e) {
@@ -99,7 +114,7 @@ public class TamTruDAO {
     public TamTru selectByNKID(int id) {
         TamTru tt = null;
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT * FROM TamTru WHERE idNhanKhau = " + id;
+            String sql = "SELECT * FROM TAMTRU WHERE idNhanKhau = " + id;
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -126,7 +141,7 @@ public class TamTruDAO {
         ArrayList<TamTru> danhSachTamTru = new ArrayList<>();
 
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT * FROM TamTru WHERE tuNgayDangKy <= CURRENT_TIMESTAMP AND denNgayDangKy >= CURRENT_TIMESTAMP";
+            String sql = "SELECT * FROM TAMTRU WHERE tuNgayDangKy <= CURRENT_TIMESTAMP AND denNgayDangKy >= CURRENT_TIMESTAMP";
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -150,7 +165,7 @@ public class TamTruDAO {
         ArrayList<TamTru> danhSachTamTru = new ArrayList<>();
 
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT * FROM TamTru";
+            String sql = "SELECT * FROM TAMTRU";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     ResultSet resultSet = preparedStatement.executeQuery()) {

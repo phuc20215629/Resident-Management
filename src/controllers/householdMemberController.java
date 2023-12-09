@@ -258,15 +258,17 @@ public class householdMemberController implements Initializable {
             AlertMessage alert = new AlertMessage();
             alert.errorMessage("Bạn chưa chọn nhân khẩu!");
         } else {
+            int idNhanKhau = selectedNK.getId();
             if (selectedNK.getLaChuHo() == 1) {
                 HoKhau hk = new HoKhau();
-                if ((hk = HoKhauDAO.getInstance().selectById(selectedNK.getHoKhauID())) != null) { // TH hộ khẩu chưa bị
-                                                                                                   // xóa
+                if ((hk = HoKhauDAO.getInstance().selectById(selectedNK.getHoKhauID())) != null) { // TH hộ khẩu chưa bị xóa
                     hk.setIdChuHo(0);
                     hk.setTenChuHo("");
                     hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hk.getIdHoKhau()));
                     HoKhauDAO.getInstance().update(hk);
-                    if (NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
+                    TamTruDAO.getInstance().deleteByNKID(idNhanKhau);
+                    TamVangDAO.getInstance().deleteByNKID(idNhanKhau);
+                    if (NhanKhauDAO.getInstance().deleteByID(idNhanKhau)) {
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Bạn đã xóa chủ hộ thành công, hãy thêm chủ hộ mới vào hộ khẩu có ID = "
                                 + hk.getIdHoKhau() + "!");
@@ -280,7 +282,9 @@ public class householdMemberController implements Initializable {
                         alert.errorMessage("Xóa chủ hộ không thành công!");
                     }
                 } else { // TH hộ khẩu đã bị xóa từ trước
-                    if (NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())) {
+                    TamTruDAO.getInstance().deleteByNKID(idNhanKhau);
+                    TamVangDAO.getInstance().deleteByNKID(idNhanKhau);
+                    if (NhanKhauDAO.getInstance().deleteByID(idNhanKhau)) {
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Bạn đã xóa chủ hộ thành công!");
                     } else {
@@ -289,9 +293,9 @@ public class householdMemberController implements Initializable {
                     }
                 }
             } else { // Khong la chu ho
-                TamTru tt = TamTruDAO.getInstance().selectByNKID(selectedNK.getId());
-                if (NhanKhauDAO.getInstance().deleteByID(selectedNK.getId())
-                        && TamTruDAO.getInstance().deleteByID(tt.getMaTamTru())) {
+                TamTruDAO.getInstance().deleteByNKID(idNhanKhau);
+                TamVangDAO.getInstance().deleteByNKID(idNhanKhau);
+                if (NhanKhauDAO.getInstance().deleteByID(idNhanKhau)) {
                     AlertMessage alert = new AlertMessage();
                     alert.successMessage("Bạn đã xóa nhân khẩu thành công!");
                 } else {
@@ -433,9 +437,9 @@ public class householdMemberController implements Initializable {
                 selectedNK.setNoiCapID(noiCap_tf.getText());
                 selectedNK.setGhiChu(ghiChu_tf.getText());
                 if (ghiChu_tf.getText().equals("Tam tru")) {
-                    if (tuNgayTamTru_date.getValue().plusDays(30).isAfter(denNgayTamTru_date.getValue())) {
+                    if (tuNgayTamTru_date.getValue().isAfter(denNgayTamTru_date.getValue())) {
                         AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Số ngày tạm trú nhỏ nhất là 30 ngày!");
+                        alert.errorMessage("Thời gian tạm trú không hợp lệ!");
                     } else {
                         TamTru tt = new TamTru();
                         tt.setIdNhanKhau(selectedNK.getId());
@@ -463,11 +467,10 @@ public class householdMemberController implements Initializable {
                             alert.errorMessage("Sửa nhân khẩu không thành công!");
                         }
                     }
-                }
-                if (ghiChu_tf.getText().equals("Tam vang")) {
+                } else if (ghiChu_tf.getText().equals("Tam vang")) {
                     if (ngayChuyenDi_date.getValue().isAfter(ngayChuyenVe_date.getValue())) {
                         AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Số ngày tạm vắng nhỏ nhất là 12 tháng!");
+                        alert.errorMessage("Thời gian tạm vắng không hợp lệ!");
                     } else {
                         TamVang tv = new TamVang();
                         tv.setIdNhanKhau(selectedNK.getId());
@@ -478,7 +481,8 @@ public class householdMemberController implements Initializable {
                         if (ngayChuyenDi_date.getValue().isAfter(LocalDate.now())
                                 || ngayChuyenVe_date.getValue().isBefore(LocalDate.now())) { // Neu sau khi sua, ngay
                                                                                              // tam vang chua hieu luc
-                                                                                             // thi chua cap nhat tam vang
+                                                                                             // thi chua cap nhat tam
+                                                                                             // vang
                             selectedNK.setHoKhauID(tv.getIdHoKhau());
                             selectedNK.setGhiChu("");
                             int hkID = TamVangDAO.getInstance().selectByNKID(selectedNK.getId()).getIdHoKhau();
@@ -495,7 +499,7 @@ public class householdMemberController implements Initializable {
                             alert.errorMessage("Sửa nhân khẩu không thành công!");
                         }
                     }
-                } else {    //Nhan khau khong tam tru hay tam vang
+                } else { // Nhan khau khong tam tru hay tam vang
                     if (NhanKhauDAO.getInstance().update(selectedNK)) {
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Sửa nhân khẩu thành công!");

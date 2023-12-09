@@ -37,7 +37,7 @@
             <TableColumn fx:id="ghiChuCol" prefWidth="250.00006103515625" styleClass="tableAtrb" text="Ghi chú" />
          </columns>
       </TableView>
-      <Button id="editHousehold" fx:id="change_btn" layoutX="1062.0" layoutY="666.0" mnemonicParsing="false" onAction="#moHoKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Sửa" />
+      <Button id="editHousehold" fx:id="change_btn" layoutX="1066.0" layoutY="666.0" mnemonicParsing="false" onAction="#moHoKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Sửa" />
       <Button id="addHousehold" fx:id="addHousehold_btn" layoutX="1180.0" layoutY="666.0" mnemonicParsing="false" onAction="#moHoKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Thêm Hộ" />
       <ImageView id="button_home" fx:id="home" fitHeight="62.0" fitWidth="69.0" layoutX="92.0" layoutY="635.0" onMouseClicked="#home">
          <image>

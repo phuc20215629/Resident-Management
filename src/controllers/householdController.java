@@ -353,7 +353,7 @@ public class householdController implements Initializable {
                 lichSuThayDoi_tf.setText(lichSuThayDoi);
 
                 if (Integer.parseInt(idChuHo_tf.getText()) == 0) {
-                    refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(0));
+                    refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(selectedHK.getIdHoKhau()));
                     idChuHo_tf.setText("");
                     thanhVien_lbl.setText("Thêm chủ hộ");
                 } else
@@ -456,9 +456,8 @@ public class householdController implements Initializable {
             }
             if (checkThanhVien) {
                 if (idChuHo_tf.getText().isEmpty()) {
-                    refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(0)); // TH xoa chu ho thi table dua ra
-                                                                                     // cac nhan khau chua co ho khau de
-                                                                                     // them lam chu ho moi
+                    // TH xoa chu ho thi table dua ra cac nhan khau thuoc ho khau nay de them lam chu ho moi
+                    refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(selectedHK.getIdHoKhau())); 
                     thanhVien_lbl.setText("Thêm chủ hộ");
                 } else {
                     refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(selectedHK.getIdHoKhau()));
@@ -504,7 +503,7 @@ public class householdController implements Initializable {
                         checkIDChuHo = true;
                         chuHo = nk;
                         chuHo.setLaChuHo(1);
-                        chuHo.setQhChuHo("Chủ hộ");
+                        chuHo.setQhChuHo("Chu ho");
                         break;
                     }
                 }
@@ -538,6 +537,8 @@ public class householdController implements Initializable {
             alert.errorMessage("Bạn chưa chọn hộ khẩu!");
         } else {
             int idHoKhau = selectedHK.getIdHoKhau();
+            TamTruDAO.getInstance().deleteByHKID(idHoKhau);
+            TamVangDAO.getInstance().deleteByHKID(idHoKhau);
             LichSuThayDoiDAO.getInstance().deleteByID(idHoKhau);
             GiaoDichDAO.getInstance().deleteByHKID(idHoKhau);
             if (HoKhauDAO.getInstance().deleteByID(idHoKhau)) {
@@ -775,12 +776,13 @@ public class householdController implements Initializable {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa nhập đủ thông tin!");
             }
-            if (tuNgay_date.getValue().plusDays(30).isAfter(denNgay_date.getValue())) {
+            if (tuNgay_date.getValue().isAfter(denNgay_date.getValue())) {
                 AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Số ngày tạm trú nhỏ nhất là 30!");
+                alert.errorMessage("Thời gian tạm trú không hợp lệ!");
             } else {
                 int idNK = Integer.parseInt(idTamTru_tf.getText());
                 NhanKhau nk = NhanKhauDAO.getInstance().selectById(idNK);
+                nk.setHoKhauID(selectedHK.getIdHoKhau());
                 nk.setGhiChu("Tam tru");
                 NhanKhauDAO.getInstance().update(nk);
 
@@ -875,7 +877,7 @@ public class householdController implements Initializable {
         TamTruDAO.getInstance().deleteByTimeNotEffective();
         ArrayList<TamTru> listTamTruHomNay = TamTruDAO.getInstance()
                 .selectByTimeEffective();
-        if (listTamTruHomNay != null) {
+        if (!listTamTruHomNay.isEmpty()) {
             for (TamTru tt : listTamTruHomNay) {
                 int idNk = tt.getIdNhanKhau();
                 int idHk = tt.getIdHoKhau();
@@ -915,7 +917,7 @@ public class householdController implements Initializable {
                 HoKhau hkTamVang = HoKhauDAO.getInstance().selectById(idHk);
                 hkTamVang.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(idHk));
 
-                if(nkTamVang.getLaChuHo() == 1) {
+                if (nkTamVang.getLaChuHo() == 1) {
                     NhanKhau chuHoTamThoi = NhanKhauDAO.getInstance().selectById(hkTamVang.getIdChuHo());
                     chuHoTamThoi.setLaChuHo(0);
                     chuHoTamThoi.setQhChuHo("");

@@ -15,7 +15,7 @@ public class TamVangDAO {
 
     public boolean insert(TamVang tamVang) {
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "INSERT INTO TamVang (idNhanKhau, idHoKhau, tuNgayDangKy, denNgayDangKy, diaChiChuyenDen) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO TAMVANG (idNhanKhau, idHoKhau, tuNgayDangKy, denNgayDangKy, diaChiChuyenDen) VALUES (?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, tamVang.getIdNhanKhau());
@@ -53,12 +53,28 @@ public class TamVangDAO {
         }
     }
 
-    public boolean deleteByNKID(int id) {
+    public boolean deleteByNKID(int idNk) {
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "DELETE FROM TamVang WHERE idNhanKhau = ?";
+            String sql = "DELETE FROM TAMVANG WHERE idNhanKhau = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setInt(1, id);
+                preparedStatement.setInt(1, idNk);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteByHKID(int idHk) {
+        try (Connection connection = JDBCUtil.getConnection()) {
+            String sql = "DELETE FROM TAMVANG WHERE idHoKhau = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, idHk);
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 return rowsAffected > 0;
@@ -72,7 +88,7 @@ public class TamVangDAO {
     public TamVang selectByNKID(int id) {
         TamVang tamVang = null;
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT * FROM TamVang WHERE idNhanKhau = ?";
+            String sql = "SELECT * FROM TAMVANG WHERE idNhanKhau = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, id);
@@ -97,7 +113,7 @@ public class TamVangDAO {
         ArrayList<TamVang> danhSachTamVang = new ArrayList<>();
 
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT * FROM TamVang";
+            String sql = "SELECT * FROM TAMVANG";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -125,7 +141,7 @@ public class TamVangDAO {
         ArrayList<TamVang> danhSachTamVang = new ArrayList<>();
 
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT * FROM TamVang WHERE denNgayDangKy < CURRENT_TIMESTAMP";
+            String sql = "SELECT * FROM TAMVANG WHERE denNgayDangKy < CURRENT_TIMESTAMP";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -153,7 +169,7 @@ public class TamVangDAO {
         ArrayList<TamVang> danhSachTamVang = new ArrayList<>();
 
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "SELECT * FROM TamVang WHERE tuNgayDangKy <= CURRENT_TIMESTAMP AND denNgayDangKy >= CURRENT_TIMESTAMP";
+            String sql = "SELECT * FROM TAMVANG WHERE tuNgayDangKy <= CURRENT_TIMESTAMP AND denNgayDangKy >= CURRENT_TIMESTAMP";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     ResultSet resultSet = preparedStatement.executeQuery()) {

@@ -85,58 +85,59 @@ public class householdStatsController implements Initializable {
 
     @FXML
     private TableColumn<NhanKhau, ArrayList<String>> hoTenCol;
-    
+
     @FXML
     private VBox menu;
 
     ObservableList<NhanKhau> statsTableList;
-    ObservableList<String> gioiTinhList = FXCollections.observableArrayList("Tất cả","Nam", "Nữ");
-	ObservableList<String> doTuoiList = FXCollections.observableArrayList("Tất cả","Mầm non", "Cấp 1", "Cấp 2", "Cấp 3","Lao động", "Nghỉ hưu");
+    ObservableList<String> gioiTinhList = FXCollections.observableArrayList("Tất cả", "Nam", "Nữ");
+    ObservableList<String> doTuoiList = FXCollections.observableArrayList("Tất cả", "Mầm non", "Cấp 1", "Cấp 2",
+            "Cấp 3", "Lao động", "Nghỉ hưu");
     ObservableList<String> trangThaiList = FXCollections.observableArrayList("Tất cả", "Tạm vắng", "Tạm trú");
 
     @FXML
     public void hoKhauView(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/household.fxml"));
-		Stage window = (Stage)houseHold.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
-		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-		window.setScene(s);
+        Stage window = (Stage) houseHold.getScene().getWindow();
+        Scene s = new Scene(root, 1400, 800);
+        s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+        window.setScene(s);
     }
 
     @FXML
     public void nhanKhauView(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/householdMember.fxml"));
-		Stage window = (Stage)nhanKhau.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
-		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-		window.setScene(s);
+        Stage window = (Stage) nhanKhau.getScene().getWindow();
+        Scene s = new Scene(root, 1400, 800);
+        s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+        window.setScene(s);
     }
 
     @FXML
     public void statView(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/householdStats.fxml"));
-		Stage window = (Stage)stat.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
-		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-		window.setScene(s);
+        Stage window = (Stage) stat.getScene().getWindow();
+        Scene s = new Scene(root, 1400, 800);
+        s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+        window.setScene(s);
     }
 
     @FXML
     public void home(MouseEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/functionOption.fxml"));
-		Stage window = (Stage)home.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
-		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-		window.setScene(s);
+        Stage window = (Stage) home.getScene().getWindow();
+        Scene s = new Scene(root, 1400, 800);
+        s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+        window.setScene(s);
     }
 
     @FXML
     public void logoutView(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(loginController.class.getResource("/view/login.fxml"));
-		Stage window = (Stage)logout.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
-		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-		window.setScene(s);
+        Stage window = (Stage) logout.getScene().getWindow();
+        Scene s = new Scene(root, 1400, 800);
+        s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+        window.setScene(s);
     }
 
     @FXML
@@ -153,27 +154,29 @@ public class householdStatsController implements Initializable {
             soLuong = 1000;
         }
 
-        if(doTuoi.equals("Tất cả")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, -1, 200, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
+        if (doTuoi.equals("Tất cả")) {
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, -1,
+                    200, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
+        } else if (doTuoi.equals("Mầm non")) {
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 0,
+                    5, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
+        } else if (doTuoi.equals("Cấp 1")) {
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 6,
+                    10, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
+        } else if (doTuoi.equals("Cấp 2")) {
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 11,
+                    14, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
+        } else if (doTuoi.equals("Cấp 3")) {
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 15,
+                    17, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
+        } else if (doTuoi.equals("Lao động")) {
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 18,
+                    60, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
+        } else if (doTuoi.equals("Nghỉ hưu")) {
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 61,
+                    200, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         }
-        else if (doTuoi.equals("Mầm non")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 0, 5, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
-        }
-        else if (doTuoi.equals("Cấp 1")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 6, 10, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
-        }
-        else if (doTuoi.equals("Cấp 2")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 11, 14, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
-        }
-        else if (doTuoi.equals("Cấp 3")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 15, 17, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
-        }
-        else if (doTuoi.equals("Lao động")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 18, 60, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
-        }
-        else if (doTuoi.equals("Nghỉ hưu")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 61, 200, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
-        }
+
         idCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
         idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
         hoTenCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, ArrayList<String>>("hoTen"));
@@ -184,36 +187,36 @@ public class householdStatsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         RotateTransition rotate = new RotateTransition();
-		rotate.setNode(gradient);
-		rotate.setDuration(Duration.millis(10000));
-		rotate.setCycleCount(RotateTransition.INDEFINITE);
-		rotate.setInterpolator(Interpolator.LINEAR);
-		rotate.setByAngle(360);
-		rotate.play();
+        rotate.setNode(gradient);
+        rotate.setDuration(Duration.millis(10000));
+        rotate.setCycleCount(RotateTransition.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.setByAngle(360);
+        rotate.play();
 
         statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().selectGroupByHKID());
         idCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
         idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
         hoTenCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, ArrayList<String>>("hoTen"));
         statsTable.setItems(statsTableList);
-		
-		if(gioiTinh_cb != null) {
-			gioiTinh_cb.setValue(gioiTinhList.get(0));
-			gioiTinh_cb.setItems(gioiTinhList);
-		}
-		if(doTuoi_cb != null) {
-			doTuoi_cb.setValue(doTuoiList.get(0));
-			doTuoi_cb.setItems(doTuoiList);
-		}
-        if(trangThai_cb != null) {
-			trangThai_cb.setValue(trangThaiList.get(0));
-			trangThai_cb.setItems(trangThaiList);
-		}
-        if(tuNgay_date != null) {
-            tuNgay_date.setValue(LocalDate.of(1900, 1, 1));
+
+        if (gioiTinh_cb != null) {
+            gioiTinh_cb.setValue(gioiTinhList.get(0));
+            gioiTinh_cb.setItems(gioiTinhList);
         }
-        if(denNgay_date != null) {
-            denNgay_date.setValue(LocalDate.now());
+        if (doTuoi_cb != null) {
+            doTuoi_cb.setValue(doTuoiList.get(0));
+            doTuoi_cb.setItems(doTuoiList);
+        }
+        if (trangThai_cb != null) {
+            trangThai_cb.setValue(trangThaiList.get(0));
+            trangThai_cb.setItems(trangThaiList);
+        }
+        if (tuNgay_date != null) {
+            tuNgay_date.setValue(LocalDate.now().plusDays(-1));
+        }
+        if (denNgay_date != null) {
+            denNgay_date.setValue(LocalDate.now().plusDays(1));
         }
     }
 
