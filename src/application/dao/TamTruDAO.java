@@ -17,20 +17,16 @@ public class TamTruDAO {
 
     public boolean insert(TamTru tamTru) {
         try (Connection connection = JDBCUtil.getConnection()) {
-            String sql = "INSERT INTO TAMTRU (idNhanKhau, idHoKhau, tuNgayDangKy, denNgayDangKy, diaChiTruocChuyenDen) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO TAMTRU (idNhanKhau, idHoKhau, tuNgayDangKy, denNgayDangKy, diaChiTruocChuyenDen)"
+                    + " VALUES (" + tamTru.getIdNhanKhau() + ", " + tamTru.getIdHoKhau() + ", '"
+                    + tamTru.getTuNgayDangKy() + "', '" + tamTru.getDenNgayDangKy() + "', N'"
+                    + tamTru.getDiaChiTruocChuyenDen() + "')";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setInt(1, tamTru.getIdNhanKhau());
-                preparedStatement.setInt(2, tamTru.getIdHoKhau());
-                preparedStatement.setDate(3, tamTru.getTuNgayDangKy());
-                preparedStatement.setDate(4, tamTru.getDenNgayDangKy());
-                preparedStatement.setString(5, tamTru.getDiaChiTruocChuyenDen());
-
-                int rowsAffected = preparedStatement.executeUpdate();
-                return rowsAffected > 0;
-            }
+            Statement statement = connection.createStatement();
+            int rowsAffected = statement.executeUpdate(sql);
+            return rowsAffected > 0;
         } catch (SQLException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }
@@ -38,18 +34,13 @@ public class TamTruDAO {
     public boolean update(TamTru tamTru) {
         try (Connection connection = JDBCUtil.getConnection()) {
             String sql = "UPDATE TAMTRU " +
-                    "SET tuNgayDangKy = ?, denNgayDangKy = ?, diaChiTruocChuyenDen = ? "
-                    + "WHERE idNhanKhau = ?";
+                    "SET tuNgayDangKy = '" + tamTru.getTuNgayDangKy() + "', denNgayDangKy = '"
+                    + tamTru.getDenNgayDangKy() + "', diaChiTruocChuyenDen = N'" + tamTru.getDiaChiTruocChuyenDen()
+                    + "' WHERE idNhanKhau = " + tamTru.getIdNhanKhau();
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setDate(1, tamTru.getTuNgayDangKy());
-                preparedStatement.setDate(2, tamTru.getDenNgayDangKy());
-                preparedStatement.setString(3, tamTru.getDiaChiTruocChuyenDen());
-                preparedStatement.setInt(4, tamTru.getIdNhanKhau());
-
-                int rowsAffected = preparedStatement.executeUpdate();
-                return rowsAffected > 0;
-            }
+            Statement statement = connection.createStatement();
+            int rowsAffected = statement.executeUpdate(sql);
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

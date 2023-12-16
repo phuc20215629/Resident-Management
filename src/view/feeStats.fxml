@@ -30,40 +30,40 @@
             <TableColumn fx:id="thoiGian_col" prefWidth="193.5999755859375" text="Thời gian" />
          </columns>
       </TableView>
-      <Button id="feeStats" layoutX="1166.0" layoutY="579.0" mnemonicParsing="false" onAction="#thongKe" styleClass="mybutton" text="Thống kê" />
-      <Label layoutX="1197.0" layoutY="326.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Từ ngày">
+      <Button id="feeStats" layoutX="1178.0" layoutY="579.0" mnemonicParsing="false" onAction="#thongKe" styleClass="mybutton" text="Thống kê" />
+      <Label layoutX="1206.0" layoutY="326.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Từ ngày">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Label layoutX="1190.0" layoutY="449.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Đến ngày">
+      <Label layoutX="1199.0" layoutY="449.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Đến ngày">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <DatePicker fx:id="tuNgay_date" layoutX="1143.0" layoutY="380.0" prefHeight="35.0" prefWidth="207.0" />
-      <DatePicker fx:id="denNgay_date" layoutX="1143.0" layoutY="499.0" prefHeight="35.0" prefWidth="207.0" />
+      <DatePicker fx:id="tuNgay_date" layoutX="1143.0" layoutY="380.0" prefHeight="35.0" prefWidth="238.0" />
+      <DatePicker fx:id="denNgay_date" layoutX="1143.0" layoutY="499.0" prefHeight="35.0" prefWidth="238.0" />
       <ImageView id="button_home" fx:id="home" fitHeight="62.0" fitWidth="69.0" layoutX="69.0" layoutY="645.0" onMouseClicked="#home">
          <image>
             <Image url="@../assets/home.png" />
          </image>
       </ImageView>
-      <Label fx:id="tongThu_lbl" layoutX="278.0" layoutY="54.0" styleClass="functionDetailTitle" text="Tổng thu" visible="false">
+      <Label fx:id="tongThu_lbl" layoutX="278.0" layoutY="54.0" styleClass="functionDetailTitle" text="Tổng thu">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <TextField fx:id="tongThu_tf" editable="false" layoutX="385.0" layoutY="44.0" prefHeight="51.0" prefWidth="383.0" styleClass="functionDetailInfo" visible="false">
+      <TextField fx:id="tongThu_tf" editable="false" layoutX="385.0" layoutY="44.0" prefHeight="51.0" prefWidth="383.0" styleClass="functionDetailInfo">
          <font>
             <Font size="22.0" />
          </font>
       </TextField>
-      <Label fx:id="soHoDaNop_lbl" layoutX="790.0" layoutY="52.0" styleClass="functionDetailTitle" text="Số hộ đã nộp" visible="false">
+      <Label fx:id="soHoDaNop_lbl" layoutX="790.0" layoutY="52.0" styleClass="functionDetailTitle" text="Số hộ đã nộp">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <TextField fx:id="soHoDaNop_tf" editable="false" layoutX="942.0" layoutY="40.0" prefHeight="51.0" prefWidth="116.0" styleClass="functionDetailInfo" visible="false">
+      <TextField fx:id="soHoDaNop_tf" editable="false" layoutX="942.0" layoutY="40.0" prefHeight="51.0" prefWidth="116.0" styleClass="functionDetailInfo">
          <font>
             <Font size="22.0" />
          </font>
@@ -75,12 +75,12 @@
          </cursor>
       </Button>
       <Button id="deletePerson" layoutX="934.0" layoutY="676.0" mnemonicParsing="false" onAction="#xoaGiaoDich" styleClass="mybutton" stylesheets="@style.css" text="Xóa" />
-      <Label layoutX="1198.0" layoutY="215.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Loại phí">
+      <Label layoutX="1207.0" layoutY="215.0" styleClass="functionDetailTitle" stylesheets="@style.css" text="Loại phí">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="loaiPhi_cb" layoutX="1143.0" layoutY="261.0" prefHeight="43.0" prefWidth="207.0" />
+      <ChoiceBox fx:id="loaiPhi_cb" layoutX="1143.0" layoutY="261.0" prefHeight="43.0" prefWidth="238.0" />
       <VBox fx:id="menu" layoutX="19.0" layoutY="151.0" prefHeight="194.0" prefWidth="320.0" spacing="20.0">
          <children>
             <Label fx:id="type" onMouseClicked="#typeView" prefHeight="51.0" prefWidth="251.0" styleClass="functionInsideTitle" text=" Các khoản">

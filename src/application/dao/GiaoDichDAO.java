@@ -20,7 +20,7 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String sql = "INSERT INTO GIAODICH (KhoanPhiID, SoTien, HoKhauID, ThoiGianGiaoDich, TenKhoanPhi)" +
-                    " VALUES (" + t.getMaKhoanPhi() + ", " + t.getSoTien()+ ", " + t.getMaHoKhau() + ", '" + t.getThoiGian() + "', '" + t.getTenKhoanPhi() + "');";
+                    " VALUES (" + t.getMaKhoanPhi() + ", " + t.getSoTien()+ ", " + t.getMaHoKhau() + ", '" + t.getThoiGian() + "', N'" + t.getTenKhoanPhi() + "');";
 //          ans: so dong bi thay doi trong sql
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
@@ -41,7 +41,7 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
                     ", SoTien = " + t.getSoTien()+  
                     ", HoKhauID = " + t.getMaHoKhau() +
                     ", ThoiGianGiaoDich = '" + t.getThoiGian() +
-                    "', TenKhoanPhi = '" + t.getTenKhoanPhi() +
+                    "', TenKhoanPhi = N'" + t.getTenKhoanPhi() +
                     "' WHERE GiaoDichID = " + t.getMaGiaoDich()+ ";" ;
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
@@ -152,10 +152,10 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
         try {
             Connection connection = JDBCUtil.getConnection();
             String query = "SELECT * FROM GIAODICH JOIN KHOANPHI ON GIAODICH.KhoanPhiID = KHOANPHI.KhoanPhiID" 
-                    + " WHERE KHOANPHI.LoaiKhoanPhi = '" + loaiPhi
+                    + " WHERE KHOANPHI.LoaiKhoanPhi LIKE N'" + loaiPhi
                     + "' AND ThoiGianGiaoDich >= '" + start
                     + "' AND ThoiGianGiaoDich <= '" + end + "';";
-            if(loaiPhi.equals("Tat ca")) {
+            if(loaiPhi.equals("Tất cả")) {
                 query = "SELECT * FROM GIAODICH JOIN KHOANPHI ON GIAODICH.KhoanPhiID = KHOANPHI.KhoanPhiID" 
                     + " WHERE ThoiGianGiaoDich >= '" + start
                     + "' AND ThoiGianGiaoDich <= '" + end + "';";
@@ -183,10 +183,10 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
         try {
             Connection connection = JDBCUtil.getConnection();
             String query = "SELECT COUNT(DISTINCT HoKhauID) AS CNT FROM GIAODICH JOIN KHOANPHI ON GIAODICH.KhoanPhiID = KHOANPHI.KhoanPhiID" 
-                    + " WHERE KHOANPHI.LoaiKhoanPhi = '" + loaiPhi
+                    + " WHERE KHOANPHI.LoaiKhoanPhi LIKE N'" + loaiPhi
                     + "' AND ThoiGianGiaoDich >= '" + start
                     + "' AND ThoiGianGiaoDich <= '" + end + "';";
-            if(loaiPhi.equals("Tat ca")) {
+            if(loaiPhi.equals("Tất cả")) {
                 query = "SELECT COUNT(DISTINCT HoKhauID) AS CNT FROM GIAODICH JOIN KHOANPHI ON GIAODICH.KhoanPhiID = KHOANPHI.KhoanPhiID" 
                     + " WHERE ThoiGianGiaoDich >= '" + start
                     + "' AND ThoiGianGiaoDich <= '" + end + "';";

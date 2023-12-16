@@ -21,7 +21,7 @@ public class KhoanPhiDAO implements DAOInterface<KhoanPhi> {
             int trangThai = 1;
             if(t.getTrangThai().equals("Không hiệu lực")) trangThai = 0;
             String sql = "INSERT INTO KHOANPHI (TenKhoanPhi, LoaiKhoanPhi, SoTien, TuNgay, DenNgay, TrangThai)" +
-                    " VALUES ('" + t.getTenKhoanPhi() + "', '" + t.getLoaiPhi() + "', " + t.getSoTien() + ", '" + t.getTuNgay() + "', '" + t.getDenNgay() + "', " + trangThai + ");";
+                    " VALUES (N'" + t.getTenKhoanPhi() + "', N'" + t.getLoaiPhi() + "', " + t.getSoTien() + ", '" + t.getTuNgay() + "', '" + t.getDenNgay() + "', " + trangThai + ");";
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
             return ans > 0;
@@ -39,8 +39,8 @@ public class KhoanPhiDAO implements DAOInterface<KhoanPhi> {
             int trangThai = 1;
             if(t.getTrangThai().equals("Không hiệu lực")) trangThai = 0;
             String sql = "UPDATE KHOANPHI " +
-                    "SET TenKhoanPhi = '" + t.getTenKhoanPhi() +
-                    "', LoaiKhoanPhi = '" + t.getLoaiPhi() +
+                    "SET TenKhoanPhi = N'" + t.getTenKhoanPhi() +
+                    "', LoaiKhoanPhi = N'" + t.getLoaiPhi() +
                     "', SoTien = " + t.getSoTien() +
                     ", TuNgay = '" + t.getTuNgay() +
                     "', DenNgay = '" + t.getDenNgay() + 
@@ -132,7 +132,7 @@ public class KhoanPhiDAO implements DAOInterface<KhoanPhi> {
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = "SELECT * FROM KHOANPHI"
-                    + " WHERE TenKhoanPhi = '" + ten + "';";
+                    + " WHERE TenKhoanPhi = N'" + ten + "';";
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
                 int maKhoanPhi = rs.getInt("KhoanPhiID");

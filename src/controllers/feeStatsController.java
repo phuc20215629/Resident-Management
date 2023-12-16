@@ -91,14 +91,11 @@ public class feeStatsController implements Initializable {
 	private TableColumn<GiaoDich, Date> thoiGian_col;
 
 	ObservableList<GiaoDich> timMaHoTableList;
-	ObservableList<String> loaiPhiList = FXCollections.observableArrayList("Tất cả", "Bắt buộc", "Không bắt buộc");
+	ObservableList<String> loaiPhiList = FXCollections.observableArrayList("Tất cả", "Bắt buộc", "Bắt buộc theo hộ",
+			"Bắt buộc theo người", "Không bắt buộc");
 
 	@FXML
 	void thongKe(ActionEvent event) {
-		tongThu_lbl.setVisible(true);
-		tongThu_tf.setVisible(true);
-		soHoDaNop_lbl.setVisible(true);
-		soHoDaNop_tf.setVisible(true);
 		LocalDate tuNgay = tuNgay_date.getValue();
 		LocalDate denNgay = denNgay_date.getValue();
 		ArrayList<GiaoDich> list = new ArrayList<>();
@@ -112,26 +109,26 @@ public class feeStatsController implements Initializable {
 		}
 		if (loaiPhi_cb.getValue().equals("Bắt buộc")) {
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Bat buoc");
+					Date.valueOf(denNgay), "Bắt buộc%");
 			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Bat buoc");
+					Date.valueOf(denNgay), "Bắt buộc%");
 			refreshTimMaHoTable(list);
-		} else if(loaiPhi_cb.getValue().equals("Không bắt buộc")){
+		} else if (loaiPhi_cb.getValue().equals("Tất cả")) {
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Khong bat buoc");
+					Date.valueOf(denNgay), "Tất cả");
 			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Khong bat buoc");
+					Date.valueOf(denNgay), "Tất cả");
 			refreshTimMaHoTable(list);
 		} else {
 			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Tat ca");
+					Date.valueOf(denNgay), loaiPhi_cb.getValue());
 			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Tat ca");
+					Date.valueOf(denNgay), loaiPhi_cb.getValue());
 			refreshTimMaHoTable(list);
 		}
-		long tongThu = 0; 
-		for(GiaoDich gd : list) {
-			tongThu += (long)gd.getSoTien();
+		long tongThu = 0;
+		for (GiaoDich gd : list) {
+			tongThu += (long) gd.getSoTien();
 		}
 		tongThu_tf.setText(Long.toString(tongThu));
 		soHoDaNop_tf.setText(Integer.toString(soHoDaNop));
@@ -168,7 +165,7 @@ public class feeStatsController implements Initializable {
 	@FXML
 	void xoaGiaoDich(ActionEvent event) {
 		GiaoDich selectedGD = timMaHo_table.getSelectionModel().getSelectedItem();
-		if(GiaoDichDAO.getInstance().deleteByID(selectedGD.getMaGiaoDich())) {
+		if (GiaoDichDAO.getInstance().deleteByID(selectedGD.getMaGiaoDich())) {
 			AlertMessage alert = new AlertMessage();
 			alert.successMessage("Xóa giao dịch thành công!");
 			refreshTimMaHoTable(GiaoDichDAO.getInstance().selectAll());
@@ -197,7 +194,16 @@ public class feeStatsController implements Initializable {
 		rotate.setByAngle(360);
 		rotate.play();
 
-		refreshTimMaHoTable(GiaoDichDAO.getInstance().selectAll());
+		ArrayList<GiaoDich> list = GiaoDichDAO.getInstance().selectAll();
+		refreshTimMaHoTable(list);
+		int soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(LocalDate.of(0, 1, 1)),
+				Date.valueOf(LocalDate.of(9999, 12, 31)), "Tất cả");
+		int tongThu = 0;
+		for (GiaoDich gd : list) {
+			tongThu += gd.getSoTien();
+		}
+		tongThu_tf.setText(Integer.toString(tongThu));
+		soHoDaNop_tf.setText(Integer.toString(soHoDaNop));
 		if (loaiPhi_cb != null) {
 			loaiPhi_cb.setValue(loaiPhiList.get(0));
 			loaiPhi_cb.setItems(loaiPhiList);

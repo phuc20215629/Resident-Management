@@ -10,6 +10,7 @@ public class KhoanPhi {
     private Date tuNgay;
     private Date denNgay;
     private String trangThai;
+    private String dinhMucStr;
 
     public KhoanPhi(String tenKhoanPhi, String loaiPhi, int soTien, Date tuNgay, Date denNgay, String trangThai) {
         this.tenKhoanPhi = tenKhoanPhi;
@@ -18,6 +19,13 @@ public class KhoanPhi {
         this.tuNgay = tuNgay;
         this.denNgay = denNgay;
         this.trangThai = trangThai;
+        if(loaiPhi.equals("Bắt buộc theo người")) {
+            this.dinhMucStr = Integer.toString(soTien) + "/người";
+        } else if(loaiPhi.equals("Bắt buộc theo hộ")) {
+            this.dinhMucStr = Integer.toString(soTien) + "/hộ";
+        } else {
+            this.dinhMucStr = "Không giới hạn";
+        }
     }
 
     public KhoanPhi(int maKhoanPhi, String tenKhoanPhi, String loaiPhi, int soTien, Date tuNgay, Date denNgay, String trangThai) {
@@ -28,6 +36,28 @@ public class KhoanPhi {
         this.tuNgay = tuNgay;
         this.denNgay = denNgay;
         this.trangThai = trangThai;
+        if(loaiPhi.equals("Bắt buộc theo người")) {
+            this.dinhMucStr = Integer.toString(soTien) + "/người";
+        } else if(loaiPhi.equals("Bắt buộc theo hộ")) {
+            this.dinhMucStr = Integer.toString(soTien) + "/hộ";
+        } else {
+            this.dinhMucStr = "Không giới hạn";
+        }
+    }
+
+    public String getDinhMucStr() {
+        if(loaiPhi.equals("Bắt buộc theo người")) {
+            this.dinhMucStr = Integer.toString(soTien) + "/người";
+        } else if(loaiPhi.equals("Bắt buộc theo hộ")) {
+            this.dinhMucStr = Integer.toString(soTien) + "/hộ";
+        } else {
+            this.dinhMucStr = "Không giới hạn";
+        }
+        return dinhMucStr;
+    }
+
+    public void setDinhMucStr(String dinhMucStr) {
+        this.dinhMucStr = dinhMucStr;
     }
 
     public String getTrangThai() {

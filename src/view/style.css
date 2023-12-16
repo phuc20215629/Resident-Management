@@ -23,6 +23,15 @@
 	-fx-cursor:hand;
 }
 
+#them_thanh_vien_btn{
+	-fx-background-color: #B0A695;
+}
+
+#them_thanh_vien_btn:hover{
+	-fx-background-color: white;
+	-fx-text-fill: #B0A695;
+}
+
 #deletePerson{
 	-fx-background-color: #EB3349;
 	
@@ -31,6 +40,17 @@
 #deletePerson:hover{
 	-fx-text-fill:#EB3349;
 	-fx-background-color: white;
+}
+
+#xem_btn{
+	-fx-background-color: #5FBDFF;
+	-fx-text-fill: white;
+}
+
+#xem_btn:hover{
+	-fx-background-color: rgb(255, 255, 255);
+	-fx-text-fill: #5FBDFF;
+	-fx-cursor: hand;
 }
 
 #search_btn{
@@ -330,7 +350,7 @@
 }
 
 .functionInsideTitle{
-	-fx-font-size: 35px;
+	-fx-font-size: 30px;
 	-fx-text-alignment:left;
 	-fx-background-radius: 12px;
 	-fx-font-weight: 300;
@@ -338,7 +358,7 @@
 }
 .functionInsideTitle:hover{
 	-fx-background-color: orange;
-	-fx-font-size: 40px;
+	-fx-font-size: 35px;
 	-fx-cursor:hand;
 }
 

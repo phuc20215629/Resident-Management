@@ -19,8 +19,8 @@ public class HoKhauDAO implements DAOInterface<HoKhau>{
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String sql = "INSERT INTO HOKHAU (TenChuHo, ChuHoID, SoThanhVien, SoNha, Duong, Phuong, Quan, GhiChu)" +
-                    " VALUES ('" + t.getTenChuHo() + "'," + t.getIdChuHo() + "," + t.getSoThanhVien() +
-                    ",'" + t.getSoNha() + "','" + t.getDuong() + "','" + t.getPhuong() + "','" + t.getQuan() + "','" + t.getGhiChu() + "');" ;
+                    " VALUES (N'" + t.getTenChuHo() + "'," + t.getIdChuHo() + "," + t.getSoThanhVien() +
+                    ",'" + t.getSoNha() + "',N'" + t.getDuong() + "',N'" + t.getPhuong() + "',N'" + t.getQuan() + "',N'" + t.getGhiChu() + "');" ;
             //ans: so dong bi thay doi trong sql
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
@@ -37,14 +37,14 @@ public class HoKhauDAO implements DAOInterface<HoKhau>{
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String sql = "UPDATE HOKHAU " + 
-                    "SET TenChuHo = '" + t.getTenChuHo() + 
+                    "SET TenChuHo = N'" + t.getTenChuHo() + 
                     "', ChuHoID = " + t.getIdChuHo() + 
                     ", SoThanhVien = " + t.getSoThanhVien() + 
                     ", SoNha = " + t.getSoNha() + 
-                    ", Duong = '" + t.getDuong() + 
-                    "', Phuong = '" + t.getPhuong() + 
-                    "', Quan = '" + t.getQuan() + 
-                    "', GhiChu = '" + t.getGhiChu() + 
+                    ", Duong = N'" + t.getDuong() + 
+                    "', Phuong = N'" + t.getPhuong() + 
+                    "', Quan = N'" + t.getQuan() + 
+                    "', GhiChu = N'" + t.getGhiChu() + 
                     "' WHERE HoKhauID = " + t.getIdHoKhau() + ";" ;
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
@@ -131,7 +131,7 @@ public class HoKhauDAO implements DAOInterface<HoKhau>{
             Connection connection =JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String query = "SELECT * FROM HOKHAU"
-                           + " WHERE TenChuHo = '" + ten + "';";
+                           + " WHERE TenChuHo = N'" + ten + "';";
             ResultSet rs = st.executeQuery(query);
             while(rs.next()){
                 int MaHoKhau = rs.getInt("HoKhauID");

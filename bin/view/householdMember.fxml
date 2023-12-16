@@ -108,7 +108,7 @@
       <Button id="deletePerson" layoutX="901.0" layoutY="672.0" mnemonicParsing="false" onAction="#xoaNhanKhau" styleClass="mybutton" stylesheets="@style.css" text="Xóa" fx:id="xoa_btn" />
       <VBox fx:id="menu" layoutX="19.0" layoutY="151.0" prefHeight="194.0" prefWidth="320.0" spacing="20.0">
          <children>
-            <Label fx:id="houseHold" onMouseClicked="#hoKhauView" prefHeight="51.0" prefWidth="233.0" styleClass="functionInsideTitle" text=" Hộ khẩu">
+            <Label fx:id="houseHold" onMouseClicked="#hoKhauView" prefHeight="51.0" prefWidth="233.0" styleClass="functionInsideTitle" text=" HỘ KHẨU">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
                      <image>
@@ -117,7 +117,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label fx:id="nhanKhau" onMouseClicked="#nhanKhauView" prefHeight="51.0" prefWidth="269.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" text=" Nhân khẩu">
+            <Label fx:id="nhanKhau" onMouseClicked="#nhanKhauView" prefHeight="51.0" prefWidth="269.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" text=" NHÂN KHẨU">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -126,7 +126,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" text=" Thống kê">
+            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" text=" THỐNG KÊ">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
                      <image>

@@ -227,8 +227,12 @@ public class householdMemberController implements Initializable {
                     if (HoKhauDAO.getInstance().selectById(maHo) != null) {
                         refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(maHo));
                     } else {
-                        AlertMessage alert = new AlertMessage();
-                        alert.errorMessage("Không tìm thấy hộ khẩu!");
+                        if (maHo == 0) {
+                            refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByHKId(maHo));
+                        } else {
+                            AlertMessage alert = new AlertMessage();
+                            alert.errorMessage("Không tìm thấy hộ khẩu!");
+                        }
                     }
                 } catch (Exception e) {
                     AlertMessage alert = new AlertMessage();
@@ -242,7 +246,7 @@ public class householdMemberController implements Initializable {
                     refreshNhanKhauTable(NhanKhauDAO.getInstance().selectByTen(ten));
                 } else {
                     AlertMessage alert = new AlertMessage();
-                    alert.errorMessage("Không tìm thấy tên chủ hộ!");
+                    alert.errorMessage("Không tìm thấy tên nhân khẩu!");
                     search_tf.clear();
                 }
             }
@@ -254,21 +258,22 @@ public class householdMemberController implements Initializable {
     @FXML
     void xoaNhanKhau(ActionEvent event) {
         NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
+        HoKhau hk = new HoKhau();
         if (selectedNK == null) {
             AlertMessage alert = new AlertMessage();
             alert.errorMessage("Bạn chưa chọn nhân khẩu!");
         } else {
             int idNhanKhau = selectedNK.getId();
             if (selectedNK.getLaChuHo() == 1) {
-                HoKhau hk = new HoKhau();
-                if ((hk = HoKhauDAO.getInstance().selectById(selectedNK.getHoKhauID())) != null) { // TH hộ khẩu chưa bị xóa
+                if ((hk = HoKhauDAO.getInstance().selectById(selectedNK.getHoKhauID())) != null) { // TH hộ khẩu chưa bị
+                                                                                                   // xóa
                     hk.setIdChuHo(0);
                     hk.setTenChuHo("");
-                    hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hk.getIdHoKhau()));
-                    HoKhauDAO.getInstance().update(hk);
                     TamTruDAO.getInstance().deleteByNKID(idNhanKhau);
                     TamVangDAO.getInstance().deleteByNKID(idNhanKhau);
                     if (NhanKhauDAO.getInstance().deleteByID(idNhanKhau)) {
+                        hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hk.getIdHoKhau()));
+                        HoKhauDAO.getInstance().update(hk);
                         AlertMessage alert = new AlertMessage();
                         alert.successMessage("Bạn đã xóa chủ hộ thành công, hãy thêm chủ hộ mới vào hộ khẩu có ID = "
                                 + hk.getIdHoKhau() + "!");
@@ -296,6 +301,11 @@ public class householdMemberController implements Initializable {
                 TamTruDAO.getInstance().deleteByNKID(idNhanKhau);
                 TamVangDAO.getInstance().deleteByNKID(idNhanKhau);
                 if (NhanKhauDAO.getInstance().deleteByID(idNhanKhau)) {
+                    if ((hk = HoKhauDAO.getInstance().selectById(selectedNK.getHoKhauID())) != null) { // TH hộ khẩu
+                                                                                                       // chưa bị xóa
+                        hk.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(hk.getIdHoKhau()));
+                        HoKhauDAO.getInstance().update(hk);
+                    }
                     AlertMessage alert = new AlertMessage();
                     alert.successMessage("Bạn đã xóa nhân khẩu thành công!");
                 } else {
@@ -304,6 +314,7 @@ public class householdMemberController implements Initializable {
                 }
             }
         }
+        clearInfo();
         refreshNhanKhauTable(NhanKhauDAO.getInstance().selectAll());
     }
 
@@ -363,12 +374,16 @@ public class householdMemberController implements Initializable {
                 NhanKhau selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
                 cccd_tf.setText(selectedNK.getCccd());
 
-                Date sqlDate = Date.valueOf(selectedNK.getNgayCapID().toString());
-                ngayCap_date.setValue(sqlDate.toLocalDate());
+                if(selectedNK.getNgayCapID() == null) {
+                    ngayCap_date.setValue(null);
+                } else {
+                    Date sqlDate = Date.valueOf(selectedNK.getNgayCapID().toString());
+                    ngayCap_date.setValue(sqlDate.toLocalDate());
+                }
                 noiCap_tf.setText(selectedNK.getNoiCapID());
                 ghiChu_tf.setText(selectedNK.getGhiChu());
 
-                if (selectedNK.getGhiChu().equals("Tam tru")) {
+                if (selectedNK.getGhiChu().equals("Tạm trú")) {
 
                     tuNgayTamTru_date.setEditable(true);
                     denNgayTamTru_date.setEditable(true);
@@ -382,7 +397,7 @@ public class householdMemberController implements Initializable {
                         idHoKhauThuongTru_tf.setText(Integer.toString(tt.getIdHoKhau()));
                     }
                 }
-                if (selectedNK.getGhiChu().equals("Tam vang")) {
+                if (selectedNK.getGhiChu().equals("Tạm vắng")) {
 
                     ngayChuyenDi_date.setEditable(true);
                     ngayChuyenVe_date.setEditable(true);
@@ -424,6 +439,12 @@ public class householdMemberController implements Initializable {
             if (gioiTinh_cb.getValue().equals("Giới tính")) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa nhập giới tính!");
+            } else if (ngaySinh_date.getValue() == null) {
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("Bạn chưa nhập ngày sinh!");
+            } else if (cccd_tf.getText() != null && ngayCap_date.getValue() == null) {
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("Bạn chưa nhập ngày cấp CCCD!");
             } else {
                 selectedNK.setGioiTinh(gioiTinh_cb.getValue());
                 selectedNK.setDanToc(danToc_tf.getText());
@@ -433,10 +454,15 @@ public class householdMemberController implements Initializable {
                 selectedNK.setNgheNghiep(ngheNghiep_tf.getText());
                 selectedNK.setNoiLamViec(noiLamViec_tf.getText());
                 selectedNK.setCccd(cccd_tf.getText());
-                selectedNK.setNgayCapID(Date.valueOf(ngayCap_date.getValue()));
                 selectedNK.setNoiCapID(noiCap_tf.getText());
                 selectedNK.setGhiChu(ghiChu_tf.getText());
-                if (ghiChu_tf.getText().equals("Tam tru")) {
+
+                Date ngayCapCCCD = null;
+                if (ngayCap_date.getValue() != null)
+                    ngayCapCCCD = Date.valueOf(ngayCap_date.getValue());
+                selectedNK.setNgayCapID(ngayCapCCCD);
+
+                if (ghiChu_tf.getText().equals("Tạm trú")) {
                     if (tuNgayTamTru_date.getValue().isAfter(denNgayTamTru_date.getValue())) {
                         AlertMessage alert = new AlertMessage();
                         alert.errorMessage("Thời gian tạm trú không hợp lệ!");
@@ -467,7 +493,7 @@ public class householdMemberController implements Initializable {
                             alert.errorMessage("Sửa nhân khẩu không thành công!");
                         }
                     }
-                } else if (ghiChu_tf.getText().equals("Tam vang")) {
+                } else if (ghiChu_tf.getText().equals("Tạm vắng")) {
                     if (ngayChuyenDi_date.getValue().isAfter(ngayChuyenVe_date.getValue())) {
                         AlertMessage alert = new AlertMessage();
                         alert.errorMessage("Thời gian tạm vắng không hợp lệ!");
@@ -520,6 +546,12 @@ public class householdMemberController implements Initializable {
                 if (gioiTinh_cb.getValue().equals("Giới tính")) {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Bạn chưa nhập giới tính!");
+                } else if (ngaySinh_date.getValue() == null) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("Bạn chưa nhập ngày sinh!");
+                } else if (cccd_tf.getText() != null && ngayCap_date.getValue() == null) {
+                    AlertMessage alert = new AlertMessage();
+                    alert.errorMessage("Bạn chưa nhập ngày cấp CCCD!");
                 } else {
                     try {
                         newNK.setGioiTinh(gioiTinh_cb.getValue());
@@ -530,8 +562,12 @@ public class householdMemberController implements Initializable {
                         newNK.setNgheNghiep(ngheNghiep_tf.getText());
                         newNK.setNoiLamViec(noiLamViec_tf.getText());
                         newNK.setCccd(cccd_tf.getText());
-                        newNK.setNgayCapID(Date.valueOf(ngayCap_date.getValue()));
                         newNK.setNoiCapID(noiCap_tf.getText());
+                        newNK.setGhiChu(ghiChu_tf.getText());
+
+                        Date ngayCapCCCD = null;
+                        if (ngayCap_date.getValue() != null) ngayCapCCCD = Date.valueOf(ngayCap_date.getValue());
+                        newNK.setNgayCapID(ngayCapCCCD);
 
                         if (NhanKhauDAO.getInstance().insert(newNK)) {
                             AlertMessage alert = new AlertMessage();
@@ -550,8 +586,7 @@ public class householdMemberController implements Initializable {
         }
     }
 
-    @FXML
-    public void dongNhanKhauDialog(ActionEvent event) {
+    void clearInfo() {
         hoTen_tf.clear();
         gioiTinh_cb.setValue(gioiTinhList.get(0));
         quanHe_tf.clear();
@@ -573,6 +608,11 @@ public class householdMemberController implements Initializable {
         dangSuaNK = false;
         search_tf.clear();
         ghiChu_tf.clear();
+    }
+
+    @FXML
+    public void dongNhanKhauDialog(ActionEvent event) {
+        clearInfo();
         refreshNhanKhauTable(NhanKhauDAO.getInstance().selectAll());
         menu.setVisible(true);
         nhanKhauPane2.setVisible(false);

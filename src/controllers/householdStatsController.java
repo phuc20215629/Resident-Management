@@ -7,8 +7,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import application.authentication.AlertMessage;
 import application.dao.NhanKhauDAO;
+import application.dao.TamTruDAO;
+import application.dao.TamVangDAO;
 import application.model.NhanKhau;
+import application.model.TamTru;
+import application.model.TamVang;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
@@ -29,11 +34,96 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class householdStatsController implements Initializable {
+
+    @FXML
+    private Label tuNgay_lbl;
+
+    @FXML
+    private Label denNgay_lbl;
+
+    @FXML
+    private Button next_btn;
+
+    @FXML
+    private Button back1_btn;
+
+    @FXML
+    private TextField biDanh_tf;
+
+    @FXML
+    private TextField cccd_tf;
+
+    @FXML
+    private TextField danToc_tf;
+
+    @FXML
+    private DatePicker denNgayTamTru_date;
+
+    @FXML
+    private TextField ghiChu_tf;
+
+    @FXML
+    private ChoiceBox<?> gioiTinh_cb1;
+
+    @FXML
+    private TextField hoTen_tf;
+
+    @FXML
+    private TextField idHoKhauThuongTru_tf;
+
+    @FXML
+    private Button luuNK_btn;
+
+    @FXML
+    private DatePicker ngayCap_date;
+
+    @FXML
+    private DatePicker ngayChuyenDi_date;
+
+    @FXML
+    private DatePicker ngayChuyenVe_date;
+
+    @FXML
+    private DatePicker ngaySinh_date;
+
+    @FXML
+    private TextField ngheNghiep_tf;
+
+    @FXML
+    private TextField nguyenQuan_tf;
+
+    @FXML
+    private Pane nhanKhauPane1;
+
+    @FXML
+    private Pane nhanKhauPane2;
+
+    @FXML
+    private TextField noiCap_tf;
+
+    @FXML
+    private TextField noiChuyenDi_tf;
+
+    @FXML
+    private TextField noiLamViec_tf;
+
+    @FXML
+    private TextField noiSinh_tf;
+
+    @FXML
+    private TextField noiThuongTru_tf;
+
+    @FXML
+    private TextField quanHe_tf;
+
+    @FXML
+    private DatePicker tuNgayTamTru_date;
 
     @FXML
     private DatePicker denNgay_date;
@@ -43,6 +133,9 @@ public class householdStatsController implements Initializable {
 
     @FXML
     private ChoiceBox<String> gioiTinh_cb;
+
+    @FXML
+    private ChoiceBox<String> gioiTinhPane_cb;
 
     @FXML
     private ImageView gradient;
@@ -141,39 +234,141 @@ public class householdStatsController implements Initializable {
     }
 
     @FXML
+    void dongNhanKhauDialog(ActionEvent event) {
+        hoTen_tf.clear();
+        gioiTinhPane_cb.setValue(gioiTinhList.get(0));
+        quanHe_tf.clear();
+        biDanh_tf.clear();
+        ngaySinh_date.setValue(null);
+        danToc_tf.clear();
+        noiSinh_tf.clear();
+        nguyenQuan_tf.clear();
+        ngheNghiep_tf.clear();
+        noiLamViec_tf.clear();
+        cccd_tf.clear();
+        noiCap_tf.clear();
+        ngayCap_date.setValue(null);
+        tuNgayTamTru_date.setValue(null);
+        denNgayTamTru_date.setValue(null);
+        ngayChuyenDi_date.setValue(null);
+        ngayChuyenVe_date.setValue(null);
+        noiChuyenDi_tf.clear();
+        ghiChu_tf.clear();
+        menu.setVisible(true);
+        nhanKhauPane2.setVisible(false);
+        nhanKhauPane1.setVisible(false);
+    }
+
+    @FXML
+    void moNhanKhauDialog(ActionEvent event) {
+        if (!nhanKhauPane1.isVisible() && back1_btn.isArmed()) {
+            nhanKhauPane1.setVisible(true);
+            nhanKhauPane2.setVisible(false);
+            menu.setVisible(false);
+        }
+        if (!nhanKhauPane1.isVisible()) {
+            NhanKhau selectedNK = statsTable.getSelectionModel().getSelectedItem();
+            if (selectedNK == null) {
+                AlertMessage alert = new AlertMessage();
+                alert.errorMessage("Bạn chưa chọn nhân khẩu!");
+            } else {
+                hoTen_tf.setText(selectedNK.getHoTen());
+                if (selectedNK.getGioiTinh().equals("Nam")) {
+                    gioiTinhPane_cb.setValue(gioiTinhList.get(1));
+                } else {
+                    gioiTinhPane_cb.setValue(gioiTinhList.get(2));
+                }
+                quanHe_tf.setText(selectedNK.getQhChuHo());
+                biDanh_tf.setText(selectedNK.getBiDanh());
+
+                // Date sqlDate = Date.valueOf(selectedNK.getNgaySinh().toString());
+                Date sqlDate = selectedNK.getNgaySinh();
+                ngaySinh_date.setValue(sqlDate.toLocalDate());
+                danToc_tf.setText(selectedNK.getDanToc());
+                noiSinh_tf.setText(selectedNK.getNoiSinh());
+                nguyenQuan_tf.setText(selectedNK.getNguyenQuan());
+                ngheNghiep_tf.setText(selectedNK.getNgheNghiep());
+                noiLamViec_tf.setText(selectedNK.getNoiLamViec());
+
+                nhanKhauPane1.setVisible(true);
+                menu.setVisible(false);
+            }
+        }
+    }
+
+    @FXML
+    public void moNhanKhauDialog2(ActionEvent event) {
+        if (!nhanKhauPane2.isVisible()) {
+            nhanKhauPane2.setVisible(true);
+            nhanKhauPane1.setVisible(false);
+            menu.setVisible(false);
+
+            NhanKhau selectedNK = statsTable.getSelectionModel().getSelectedItem();
+            cccd_tf.setText(selectedNK.getCccd());
+
+            Date sqlDate = Date.valueOf(selectedNK.getNgayCapID().toString());
+            ngayCap_date.setValue(sqlDate.toLocalDate());
+            noiCap_tf.setText(selectedNK.getNoiCapID());
+            ghiChu_tf.setText(selectedNK.getGhiChu());
+
+            if (selectedNK.getGhiChu().equals("Tạm trú")) {
+
+                tuNgayTamTru_date.setEditable(true);
+                denNgayTamTru_date.setEditable(true);
+                noiThuongTru_tf.setEditable(true);
+
+                TamTru tt = TamTruDAO.getInstance().selectByNKID(selectedNK.getId());
+                if (tt != null) {
+                    tuNgayTamTru_date.setValue(tt.getTuNgayDangKy().toLocalDate());
+                    denNgayTamTru_date.setValue(tt.getDenNgayDangKy().toLocalDate());
+                    noiThuongTru_tf.setText(tt.getDiaChiTruocChuyenDen());
+                    idHoKhauThuongTru_tf.setText(Integer.toString(tt.getIdHoKhau()));
+                }
+            }
+            if (selectedNK.getGhiChu().equals("Tạm vắng")) {
+
+                ngayChuyenDi_date.setEditable(true);
+                ngayChuyenVe_date.setEditable(true);
+                noiChuyenDi_tf.setEditable(true);
+
+                TamVang tv = TamVangDAO.getInstance().selectByNKID(selectedNK.getId());
+                if (tv != null) {
+                    ngayChuyenDi_date.setValue(tv.getTuNgayDangKy().toLocalDate());
+                    ngayChuyenVe_date.setValue(tv.getDenNgayDangKy().toLocalDate());
+                    noiChuyenDi_tf.setText(tv.getDiaChiChuyenDen());
+                }
+            }
+        }
+    }
+
+    @FXML
     void thongKe(ActionEvent event) {
         String gioiTinh = gioiTinh_cb.getValue();
         String doTuoi = doTuoi_cb.getValue();
         String trangThai = trangThai_cb.getValue();
         Date tuNgay_sqlDate = Date.valueOf(tuNgay_date.getValue());
         Date denNgay_sqlDate = Date.valueOf(denNgay_date.getValue());
-        int soLuong;
-        try {
-            soLuong = Integer.parseInt(soLuong_tf.getText());
-        } catch (Exception e) {
-            soLuong = 1000;
-        }
 
         if (doTuoi.equals("Tất cả")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, -1,
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(gioiTinh, -1,
                     200, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         } else if (doTuoi.equals("Mầm non")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 0,
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(gioiTinh, 0,
                     5, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         } else if (doTuoi.equals("Cấp 1")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 6,
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(gioiTinh, 6,
                     10, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         } else if (doTuoi.equals("Cấp 2")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 11,
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(gioiTinh, 11,
                     14, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         } else if (doTuoi.equals("Cấp 3")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 15,
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(gioiTinh, 15,
                     17, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         } else if (doTuoi.equals("Lao động")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 18,
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(gioiTinh, 18,
                     60, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         } else if (doTuoi.equals("Nghỉ hưu")) {
-            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(soLuong, gioiTinh, 61,
+            statsTableList = FXCollections.observableArrayList(NhanKhauDAO.getInstance().thongKe(gioiTinh, 61,
                     200, trangThai, tuNgay_sqlDate, denNgay_sqlDate));
         }
 
@@ -181,7 +376,13 @@ public class householdStatsController implements Initializable {
         idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
         hoTenCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, ArrayList<String>>("hoTen"));
         statsTable.setItems(statsTableList);
-        soLuong_tf.clear();
+        int soLuong = statsTableList.size();
+        soLuong_tf.setText(Integer.toString(soLuong));
+
+        tuNgay_lbl.setVisible(false);
+        tuNgay_date.setVisible(false);
+        denNgay_lbl.setVisible(false);
+        denNgay_date.setVisible(false);
     }
 
     @Override
@@ -199,6 +400,21 @@ public class householdStatsController implements Initializable {
         idHoKhauCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("hoKhauID"));
         hoTenCol.setCellValueFactory(new PropertyValueFactory<NhanKhau, ArrayList<String>>("hoTen"));
         statsTable.setItems(statsTableList);
+
+        soLuong_tf.setText(Integer.toString(statsTableList.size()));
+        trangThai_cb.setOnAction(event -> {
+            if(!trangThai_cb.getValue().equals("Tất cả")) {
+                tuNgay_lbl.setVisible(true);
+                tuNgay_date.setVisible(true);
+                denNgay_lbl.setVisible(true);
+                denNgay_date.setVisible(true);
+            } else {
+                tuNgay_lbl.setVisible(false);
+                tuNgay_date.setVisible(false);
+                denNgay_lbl.setVisible(false);
+                denNgay_date.setVisible(false);
+            }
+        });
 
         if (gioiTinh_cb != null) {
             gioiTinh_cb.setValue(gioiTinhList.get(0));

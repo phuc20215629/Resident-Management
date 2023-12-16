@@ -18,7 +18,7 @@ public class LichSuThayDoiDAO {
             Connection connection = JDBCUtil.getConnection();
             Statement st = connection.createStatement();
             String sql = "INSERT INTO LICHSUTHAYDOI (HoKhauID, ThayDoi)" +
-                    " VALUES (" + t.getHoKhauID() + ", '" + t.getThayDoi() + "');";
+                    " VALUES (" + t.getHoKhauID() + ", N'" + t.getThayDoi() + "');";
             int ans = st.executeUpdate(sql);
             JDBCUtil.closeConnection(connection);
             return ans > 0;
