@@ -222,6 +222,13 @@ public class householdController implements Initializable {
     @FXML
     private TableColumn<NhanKhau, String> nhanKhauName_col;
 
+    @FXML
+    private TableView<NhanKhau> nhanKhauTamTruTable;
+    @FXML
+    private TableColumn<NhanKhau, Integer> nhanKhauTamTruID_col;
+    @FXML
+    private TableColumn<NhanKhau, String> nhanKhauTamTruName_col;
+
     ObservableList<NhanKhau> nhanKhauTableList;
     ObservableList<HoKhau> hoKhauTableList;
     ObservableList<String> hoKhauList = FXCollections.observableArrayList("Mã hộ", "Chủ hộ");
@@ -542,7 +549,7 @@ public class householdController implements Initializable {
             NhanKhau chuHo = new NhanKhau();
             for (NhanKhau nk : nhanKhauList) {
                 if (ID == nk.getId()) {
-                    if (nk.getLaChuHo() == 1) {
+                    if (nk.getGhiChu().equals("Tạm vắng") || nk.getGhiChu().equals("Tạm trú")) {
                         break;
                     } else {
                         checkIDChuHo = true;
@@ -569,7 +576,7 @@ public class householdController implements Initializable {
                 }
             } else {
                 AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Không tìm thấy ID hoặc ID này đã là chủ hộ của hộ khác!");
+                alert.errorMessage("Nhân khẩu đăng kí tạm vắng hoặc tạm trú không được làm chủ hộ!");
             }
         }
     }
@@ -780,31 +787,24 @@ public class householdController implements Initializable {
             tamTru = true;
             tamTruDialogPane.setVisible(true);
             diaChi_lbl.setText("Địa chỉ trước khi chuyển tới");
-            idTamTru_tf.textProperty().addListener((observable, oldValue, newValue) -> {
-                int idNhanKhau = 0;
-                try {
-                    idNhanKhau = Integer.parseInt(newValue);
-                    NhanKhau nk = NhanKhauDAO.getInstance().selectById(idNhanKhau);
-                    hoTenTamTru_tf.setText(nk.getHoTen());
-                } catch (Exception e) {
-                    hoTenTamTru_tf.clear();
-                }
+            refreshNhanKhauTamTruTable(NhanKhauDAO.getInstance().selectByHKId(0));
+            nhanKhauTamTruTable.setOnMouseClicked(e -> {
+                NhanKhau nkTamTru = nhanKhauTamTruTable.getSelectionModel().getSelectedItem();
+                idTamTru_tf.setText(Integer.toString(nkTamTru.getId()));
+                hoTenTamTru_tf.setText(nkTamTru.getHoTen());
             });
         }
         // Tam vang
         if (!tamTruDialogPane.isVisible() && tamVang_btn.isArmed()) {
-            selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
-            if (selectedNK == null) {
-                AlertMessage alert = new AlertMessage();
-                alert.errorMessage("Bạn chưa chọn nhân khẩu tạm vắng!");
-            } else {
-                tamTru = false;
-                tamTruDialogPane.setVisible(true);
-                diaChi_lbl.setText("Địa chỉ nơi chuyển tới");
-                idTamTru_tf.setEditable(false);
-                idTamTru_tf.setText(Integer.toString(selectedNK.getId()));
-                hoTenTamTru_tf.setText(selectedNK.getHoTen());
-            }
+            refreshNhanKhauTamTruTable(NhanKhauDAO.getInstance().selectByHKId(selectedHK.getIdHoKhau()));
+            nhanKhauTamTruTable.setOnMouseClicked(e -> {
+                NhanKhau nkTamTru = nhanKhauTamTruTable.getSelectionModel().getSelectedItem();
+                idTamTru_tf.setText(Integer.toString(nkTamTru.getId()));
+                hoTenTamTru_tf.setText(nkTamTru.getHoTen());
+            });
+            tamTru = false;
+            tamTruDialogPane.setVisible(true);
+            diaChi_lbl.setText("Địa chỉ nơi chuyển tới");
         }
     }
 
@@ -813,10 +813,7 @@ public class householdController implements Initializable {
         // Tam tru
         if (tamTru) {
             String diaChi = diaChiTamTru_tf.getText();
-            if (hoTenTamTru_tf.getText().isBlank()) {
-                AlertMessage alert = new AlertMessage();
-                alert.errorMessage("ID nhân khẩu không hợp lệ!");
-            } else if (diaChi.isBlank() || tuNgay_date.getValue() == null || denNgay_date.getValue() == null) {
+            if (idTamTru_tf.getText().isBlank() || diaChi.isBlank() || tuNgay_date.getValue() == null || denNgay_date.getValue() == null) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa nhập đủ thông tin!");
             } else if (tuNgay_date.getValue().isAfter(denNgay_date.getValue())) {
@@ -831,7 +828,7 @@ public class householdController implements Initializable {
                 TamTru tt = new TamTru(idNK, selectedHK.getIdHoKhau(),
                         Date.valueOf(tuNgay_date.getValue()), Date.valueOf(denNgay_date.getValue()), diaChi);
                 if (TamTruDAO.getInstance().insert(tt)) {
-                    String lichSuThayDoi = "Đăng ký tạm trú cho nhân khẩu " + idNK;
+                    String lichSuThayDoi = "Đăng ký tạm trú cho nhân khẩu " + idNK + " " + LocalDate.now().toString();
                     LichSuThayDoiDAO.getInstance().insert(new LichSuThayDoi(selectedHK.getIdHoKhau(), lichSuThayDoi));
                     AlertMessage alert = new AlertMessage();
                     alert.successMessage("Đăng ký tạm trú thành công!");
@@ -851,18 +848,17 @@ public class householdController implements Initializable {
         // Tam vang
         else {
             String diaChi = diaChiTamTru_tf.getText();
-            if (diaChi.isBlank() || tuNgay_date.getValue() == null || denNgay_date.getValue() == null) {
+            if (idTamTru_tf.getText().isBlank() || diaChi.isBlank() || tuNgay_date.getValue() == null || denNgay_date.getValue() == null) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa nhập đủ thông tin!");
-            }
-            if (tuNgay_date.getValue().isAfter(denNgay_date.getValue())) {
+            } else if (tuNgay_date.getValue().isAfter(denNgay_date.getValue())) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Thời gian tạm vắng không hợp lệ!");
             } else {
                 int idNK = Integer.parseInt(idTamTru_tf.getText());
                 if (TamVangDAO.getInstance().insert(new TamVang(idNK, selectedNK.getHoKhauID(),
                         Date.valueOf(tuNgay_date.getValue()), Date.valueOf(denNgay_date.getValue()), diaChi))) {
-                    String lichSuThayDoi = "Đăng ký tạm vắng cho nhân khẩu " + idNK;
+                    String lichSuThayDoi = "Đăng ký tạm vắng cho nhân khẩu " + idNK + " " + LocalDate.now().toString();
                     LichSuThayDoiDAO.getInstance().insert(new LichSuThayDoi(selectedHK.getIdHoKhau(), lichSuThayDoi));
                     // Neu dang ky tam vang chu ho
                     if (selectedNK.getLaChuHo() == 1) {
@@ -899,6 +895,13 @@ public class householdController implements Initializable {
         nhanKhauID_col.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
         nhanKhauName_col.setCellValueFactory(new PropertyValueFactory<NhanKhau, String>("hoTen"));
         nhanKhauTable.setItems(nhanKhauTableList);
+    }
+
+    public void refreshNhanKhauTamTruTable(ArrayList<NhanKhau> list) {
+        nhanKhauTableList = FXCollections.observableArrayList(list);
+        nhanKhauTamTruID_col.setCellValueFactory(new PropertyValueFactory<NhanKhau, Integer>("id"));
+        nhanKhauTamTruName_col.setCellValueFactory(new PropertyValueFactory<NhanKhau, String>("hoTen"));
+        nhanKhauTamTruTable.setItems(nhanKhauTableList);
     }
 
     public void refreshHoKhauTable(ArrayList<HoKhau> list) {

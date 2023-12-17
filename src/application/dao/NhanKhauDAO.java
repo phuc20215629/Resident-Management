@@ -26,7 +26,7 @@ public class NhanKhauDAO implements DAOInterface<NhanKhau> {
                     + t.getBiDanh() + "', N'" + t.getGioiTinh() + "', '"
                     + t.getNgaySinh() + "', N'" + t.getNoiSinh() + "', N'"
                     + t.getNguyenQuan() + "', N'" + t.getDanToc() + "', N'"
-                    + t.getNgheNghiep() + "', N'" + t.getNoiLamViec() + "N', '"
+                    + t.getNgheNghiep() + "', N'" + t.getNoiLamViec() + "', '"
                     + t.getNgayCapID() + "', N'" + t.getNoiCapID() + "', '" + t.getCccd() + "', N'" + t.getGhiChu()
                     + "');";
             if(t.getNgayCapID() == null) {

@@ -16,6 +16,37 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.householdMemberController">
    <children>
+      <VBox fx:id="menu" layoutX="19.0" layoutY="151.0" prefHeight="194.0" prefWidth="320.0" spacing="20.0">
+         <children>
+            <Label fx:id="houseHold" onMouseClicked="#hoKhauView" prefHeight="51.0" prefWidth="233.0" styleClass="functionInsideTitle" text=" HỘ KHẨU">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
+                     <image>
+                        <Image url="@../assets/family-dress.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label fx:id="nhanKhau" onMouseClicked="#nhanKhauView" prefHeight="51.0" prefWidth="269.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" text=" NHÂN KHẨU">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/user.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" text=" THỐNG KÊ">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
+                     <image>
+                        <Image url="@../assets/stats.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+      </VBox>
       <ImageView fx:id="gradient" fitHeight="868.0" fitWidth="868.0" layoutX="-322.0" layoutY="238.0">
          <image>
             <Image url="@../assets/gradient_star.png" />
@@ -67,35 +98,29 @@
             </Pane>
          </children>
       </Pane>
-      <Pane fx:id="nhanKhauPane2" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog" visible="false">
+      <Pane fx:id="nhanKhauPane2" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog">
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
                   <Label layoutX="81.0" layoutY="63.0" styleClass="functionDetailTitle" text="Số CCCD/CMND" />
                   <Label layoutX="81.0" layoutY="128.0" styleClass="functionDetailTitle" text="Nơi cấp" />
                   <TextField fx:id="cccd_tf" layoutX="263.0" layoutY="53.0" prefHeight="51.0" prefWidth="638.0" styleClass="functionDetailInfo" />
-                  <Label layoutX="81.0" layoutY="199.0" styleClass="functionDetailTitle" text="Đăng ký thường trú từ ngày" />
-                  <Label layoutX="81.0" layoutY="269.0" styleClass="functionDetailTitle" text="Nơi thường trú trước khi chuyển đến" />
+                  <Label fx:id="thoiGianDangKi_lbl" layoutX="81.0" layoutY="199.0" styleClass="functionDetailTitle" text="Đăng ký thường trú từ ngày" />
+                  <Label fx:id="diaDiem_lbl" layoutX="81.0" layoutY="269.0" styleClass="functionDetailTitle" text="Nơi thường trú trước khi chuyển đến" />
                   <TextField fx:id="noiCap_tf" layoutX="178.0" layoutY="119.0" prefHeight="51.0" prefWidth="1059.0" styleClass="functionDetailInfo" />
-                  <TextField fx:id="noiThuongTru_tf" editable="false" layoutX="488.0" layoutY="259.0" prefHeight="51.0" prefWidth="750.0" styleClass="functionDetailInfo" />
+                  <TextField fx:id="diaDiem_tf" editable="false" layoutX="488.0" layoutY="259.0" prefHeight="51.0" prefWidth="750.0" styleClass="functionDetailInfo" />
                   <Label layoutX="922.0" layoutY="63.0" styleClass="functionDetailTitle" text="Ngày cấp" />
                   <DatePicker fx:id="ngayCap_date" layoutX="1042.0" layoutY="59.0" prefHeight="38.0" prefWidth="195.0" />
-                  <Label layoutX="81.0" layoutY="339.0" styleClass="functionDetailTitle" text="Ngày chuyển đi" />
-                  <TextField fx:id="noiChuyenDi_tf" editable="false" layoutX="888.0" layoutY="334.0" prefHeight="51.0" prefWidth="351.0" styleClass="functionDetailInfo" />
-                  <DatePicker fx:id="tuNgayTamTru_date" editable="false" layoutX="402.0" layoutY="195.0" prefHeight="38.0" prefWidth="195.0" />
-                  <DatePicker fx:id="ngayChuyenDi_date" editable="false" layoutX="266.0" layoutY="334.0" prefHeight="43.0" prefWidth="195.0" />
-                  <DatePicker fx:id="denNgayTamTru_date" editable="false" layoutX="645.0" layoutY="195.0" prefHeight="38.0" prefWidth="195.0" />
-                  <Label layoutX="922.0" layoutY="199.0" styleClass="functionDetailTitle" text="Hộ khẩu thường trú" />
-                  <TextField fx:id="idHoKhauThuongTru_tf" editable="false" layoutX="1150.0" layoutY="192.0" prefHeight="51.0" prefWidth="88.0" styleClass="functionDetailInfo" />
-                  <Label layoutX="609.0" layoutY="199.0" styleClass="functionDetailTitle" text="➖" />
-                  <Button id="savePerson" fx:id="luuNK_btn" layoutX="632.0" layoutY="497.0" mnemonicParsing="false" onAction="#luuNhanKhau" styleClass="mybutton" text="Lưu" />
+                  <DatePicker fx:id="tuNgay_date" editable="false" layoutX="402.0" layoutY="195.0" prefHeight="38.0" prefWidth="195.0" />
+                  <DatePicker fx:id="denNgay_date" editable="false" layoutX="645.0" layoutY="195.0" prefHeight="38.0" prefWidth="195.0" />
+                  <Label fx:id="hoKhau_lbl" layoutX="922.0" layoutY="199.0" styleClass="functionDetailTitle" text="Hộ khẩu" />
+                  <TextField fx:id="idHoKhauDangKi_tf" editable="false" layoutX="1043.0" layoutY="192.0" prefHeight="51.0" prefWidth="195.0" styleClass="functionDetailInfo" />
+                  <Label fx:id="gach" layoutX="609.0" layoutY="199.0" styleClass="functionDetailTitle" text="➖" />
+                  <Button id="savePerson" fx:id="luuNK_btn" layoutX="632.0" layoutY="459.0" mnemonicParsing="false" onAction="#luuNhanKhau" styleClass="mybutton" text="Lưu" />
                   <Button fx:id="back1_btn" layoutX="78.0" layoutY="510.0" mnemonicParsing="false" onAction="#moNhanKhauDialog" styleClass="close" text="Trước" />
-                  <Label layoutX="81.0" layoutY="416.0" styleClass="functionDetailTitle" text="Ghi chú" />
-                  <TextField fx:id="ghiChu_tf" layoutX="180.0" layoutY="411.0" prefHeight="51.0" prefWidth="1059.0" styleClass="functionDetailInfo" />
-                  <Label layoutX="724.0" layoutY="339.0" styleClass="functionDetailTitle" text="Nơi chuyển đi" />
+                  <Label fx:id="ghiChu_lbl" layoutX="81.0" layoutY="339.0" styleClass="functionDetailTitle" text="Ghi chú" />
+                  <TextField fx:id="ghiChu_tf" editable="false" layoutX="180.0" layoutY="334.0" prefHeight="51.0" prefWidth="1059.0" styleClass="functionDetailInfo" />
                   <Button layoutX="1196.0" layoutY="510.0" mnemonicParsing="false" onAction="#dongNhanKhauDialog" styleClass="close" text="❌" />
-                  <DatePicker fx:id="ngayChuyenVe_date" editable="false" layoutX="506.0" layoutY="334.0" prefHeight="43.0" prefWidth="195.0" />
-                  <Label layoutX="472.0" layoutY="338.0" styleClass="functionDetailTitle" text="➖" />
                </children>
             </Pane>
          </children>
@@ -106,36 +131,5 @@
          </cursor>
       </Button>
       <Button id="deletePerson" layoutX="901.0" layoutY="672.0" mnemonicParsing="false" onAction="#xoaNhanKhau" styleClass="mybutton" stylesheets="@style.css" text="Xóa" fx:id="xoa_btn" />
-      <VBox fx:id="menu" layoutX="19.0" layoutY="151.0" prefHeight="194.0" prefWidth="320.0" spacing="20.0">
-         <children>
-            <Label fx:id="houseHold" onMouseClicked="#hoKhauView" prefHeight="51.0" prefWidth="233.0" styleClass="functionInsideTitle" text=" HỘ KHẨU">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
-                     <image>
-                        <Image url="@../assets/family-dress.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-            <Label fx:id="nhanKhau" onMouseClicked="#nhanKhauView" prefHeight="51.0" prefWidth="269.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" text=" NHÂN KHẨU">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/user.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" text=" THỐNG KÊ">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
-                     <image>
-                        <Image url="@../assets/stats.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-         </children>
-      </VBox>
    </children>
 </AnchorPane>

@@ -378,11 +378,6 @@ public class householdStatsController implements Initializable {
         statsTable.setItems(statsTableList);
         int soLuong = statsTableList.size();
         soLuong_tf.setText(Integer.toString(soLuong));
-
-        tuNgay_lbl.setVisible(false);
-        tuNgay_date.setVisible(false);
-        denNgay_lbl.setVisible(false);
-        denNgay_date.setVisible(false);
     }
 
     @Override
