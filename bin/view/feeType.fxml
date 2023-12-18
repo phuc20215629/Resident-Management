@@ -16,6 +16,28 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.feeTypeController">
    <children>
+      <VBox fx:id="menu" layoutX="13.0" layoutY="151.0" prefHeight="150.0" prefWidth="320.0" spacing="20.0">
+         <children>
+            <Label fx:id="type" onMouseClicked="#typeView" prefHeight="51.0" prefWidth="259.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" stylesheets="@style.css" text="CÁC KHOẢN">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/coin.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" stylesheets="@style.css" text="THỐNG KÊ">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
+                     <image>
+                        <Image url="@../assets/stats.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+      </VBox>
       <ImageView fx:id="gradient" fitHeight="868.0" fitWidth="868.0" layoutX="-327.0" layoutY="235.0">
          <image>
             <Image url="@../assets/gradient_star.png" />
@@ -93,27 +115,5 @@
             </TableView>
          </children>
       </Pane>
-      <VBox fx:id="menu" layoutX="13.0" layoutY="151.0" prefHeight="150.0" prefWidth="320.0" spacing="20.0">
-         <children>
-            <Label fx:id="type" onMouseClicked="#typeView" prefHeight="51.0" prefWidth="259.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" stylesheets="@style.css" text="CÁC KHOẢN">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/coin.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" stylesheets="@style.css" text="THỐNG KÊ">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
-                     <image>
-                        <Image url="@../assets/stats.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-         </children>
-      </VBox>
    </children>
 </AnchorPane>

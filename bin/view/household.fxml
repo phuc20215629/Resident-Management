@@ -18,6 +18,34 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.householdController">
    <children>
+      <VBox fx:id="menu" layoutX="19.0" layoutY="151.0" prefHeight="194.0" prefWidth="320.0" spacing="20.0">
+         <children>
+            <Label fx:id="houseHold" onMouseClicked="#hoKhauView" prefHeight="51.0" prefWidth="240.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" text=" HỘ KHẨU">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/family-dress.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Label>
+            <Label fx:id="nhanKhau" onMouseClicked="#nhanKhauView" prefHeight="51.0" prefWidth="263.0" styleClass="functionInsideTitle" text=" NHÂN KHẨU">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
+                     <image>
+                        <Image url="@../assets/user.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Label>
+            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" text=" THỐNG KÊ">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
+                     <image>
+                        <Image url="@../assets/stats.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Label>
+         </children>
+      </VBox>
       <Button id="search_btn" fx:id="find_btn" layoutX="825.0" layoutY="667.0" mnemonicParsing="false" onAction="#timHoKhau" prefHeight="62.0" prefWidth="83.0" styleClass="mybutton" stylesheets="@style.css" text="🔍">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
@@ -136,33 +164,5 @@
             </Pane>
          </children>
       </Pane>
-      <VBox fx:id="menu" layoutX="19.0" layoutY="151.0" prefHeight="194.0" prefWidth="320.0" spacing="20.0">
-         <children>
-            <Label fx:id="houseHold" onMouseClicked="#hoKhauView" prefHeight="51.0" prefWidth="240.0" style="-fx-font-weight: 700;" styleClass="functionInsideTitle" text=" HỘ KHẨU">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/family-dress.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Label>
-            <Label fx:id="nhanKhau" onMouseClicked="#nhanKhauView" prefHeight="51.0" prefWidth="263.0" styleClass="functionInsideTitle" text=" NHÂN KHẨU">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
-                     <image>
-                        <Image url="@../assets/user.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Label>
-            <Label fx:id="stat" onMouseClicked="#statView" prefHeight="52.0" prefWidth="254.0" styleClass="functionInsideTitle" text=" THỐNG KÊ">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 50%;">
-                     <image>
-                        <Image url="@../assets/stats.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Label>
-         </children>
-      </VBox>
    </children>
 </AnchorPane>

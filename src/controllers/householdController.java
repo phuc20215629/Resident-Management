@@ -41,7 +41,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -204,9 +203,6 @@ public class householdController implements Initializable {
     private Label tenChuHo_lbl;
 
     @FXML
-    private VBox menu;
-
-    @FXML
     private TableView<HoKhau> hoKhauTable;
     @FXML
     private TableColumn<HoKhau, String> tenChuHoCol;
@@ -340,7 +336,6 @@ public class householdController implements Initializable {
                 idThanhVien_lbl.setVisible(true);
                 idThanhVien_tf.setVisible(true);
                 thanhVien_lbl.setText("Thành viên");
-                menu.setVisible(false);
 
                 idChuHo_tf.setText(Integer.toString(selectedHK.getIdChuHo()));
                 tenChuHo_tf.setText(selectedHK.getTenChuHo());
@@ -378,7 +373,6 @@ public class householdController implements Initializable {
             idThanhVien_tf.setVisible(false);
             themXoaNK_btn.setVisible(false);
             xoaThanhVien_btn.setVisible(false);
-            menu.setVisible(false);
 
             nhanKhauTable.setOnMouseClicked((MouseEvent e) -> {
                 selectedNK = nhanKhauTable.getSelectionModel().getSelectedItem();
@@ -638,20 +632,27 @@ public class householdController implements Initializable {
             NhanKhau chuHoMoi = new NhanKhau();
             if (selectedHK.getSoNha() != soNha) {
                 lichSuThayDoi = lichSuThayDoi + " " + "Số nhà";
+                selectedHK.setGhiChu("Đã sửa");
+                selectedHK.setSoNha(soNha);
             }
             if (!selectedHK.getDuong().equals(duong)) {
                 lichSuThayDoi = lichSuThayDoi + " " + "Đường";
+                selectedHK.setGhiChu("Đã sửa");
+                selectedHK.setDuong(duong);
             }
             if (!selectedHK.getPhuong().equals(phuong)) {
                 lichSuThayDoi = lichSuThayDoi + " " + "Phường";
+                selectedHK.setGhiChu("Đã sửa");
+                selectedHK.setPhuong(phuong);
             }
             if (!selectedHK.getQuan().equals(quan)) {
                 lichSuThayDoi = lichSuThayDoi + " " + "Quận";
+                selectedHK.setGhiChu("Đã sửa");
+                selectedHK.setQuan(quan);
             }
             if (idChuHoCu == Integer.parseInt(idChuHoMoi)) { // Neu khong thay doi chu ho
                 checkIdChuHo = true;
-            }
-            if (idChuHoCu != Integer.parseInt(idChuHoMoi)) { // Neu thay doi chu ho
+            } else { // Neu thay doi chu ho
                 for (NhanKhau nk : nhanKhauTableList) {
                     if (idChuHoMoi.equals(Integer.toString(nk.getId()))
                             && (nk.getHoKhauID() == 0 || nk.getHoKhauID() == selectedHK.getIdHoKhau())) {
@@ -666,27 +667,25 @@ public class householdController implements Initializable {
                         selectedHK.setIdChuHo(chuHoMoi.getId());
                         selectedHK.setGhiChu("Đã sửa");
                         selectedHK.setSoThanhVien(HoKhauDAO.getInstance().getSoThanhVien(selectedHK.getIdHoKhau()));
-                        HoKhauDAO.getInstance().update(selectedHK);
                         break;
                     }
                 }
                 lichSuThayDoi = lichSuThayDoi + " " + "Chủ hộ";
             }
             if (checkIdChuHo) {
-                try {
-                    // Cập nhật chủ hộ mới
-                    if (selectedHK.getSoNha() != soNha || !selectedHK.getDuong().equals(duong) ||
-                            !selectedHK.getPhuong().equals(phuong) || !selectedHK.getQuan().equals(quan) ||
-                            idChuHoCu != Integer.parseInt(idChuHoMoi) || themThanhVien || xoaThanhVien) {
-                        lichSuThayDoi = lichSuThayDoi + " " + LocalDate.now().toString();
-                        LichSuThayDoiDAO.getInstance()
-                                .insert(new LichSuThayDoi(selectedHK.getIdHoKhau(), lichSuThayDoi));
-                    }
+                // Cập nhật chủ hộ mới
+                if (selectedHK.getSoNha() != soNha || !selectedHK.getDuong().equals(duong) ||
+                        !selectedHK.getPhuong().equals(phuong) || !selectedHK.getQuan().equals(quan) ||
+                        idChuHoCu != Integer.parseInt(idChuHoMoi) || themThanhVien || xoaThanhVien) {
+                    lichSuThayDoi = lichSuThayDoi + " " + LocalDate.now().toString();
+                    LichSuThayDoiDAO.getInstance().insert(new LichSuThayDoi(selectedHK.getIdHoKhau(), lichSuThayDoi));
+                }
+                if (HoKhauDAO.getInstance().update(selectedHK)) {
                     dongHoKhauDialog(event);
                     AlertMessage alert = new AlertMessage();
                     alert.successMessage("Sửa thành công!");
                     refreshHoKhauTable(HoKhauDAO.getInstance().selectAll());
-                } catch (Exception e) {
+                } else {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Sửa không thành công!");
                 }
@@ -708,14 +707,12 @@ public class householdController implements Initializable {
         quan_tf.clear();
         idThanhVien_tf.clear();
         lichSuThayDoi_tf.clear();
-        menu.setVisible(true);
     }
 
     @FXML
     public void moTachKhauDialog(ActionEvent event) {
         if (!tachKhauDialogPane.isVisible())
             tachKhauDialogPane.setVisible(true);
-        menu.setVisible(false);
     }
 
     @FXML
@@ -813,7 +810,8 @@ public class householdController implements Initializable {
         // Tam tru
         if (tamTru) {
             String diaChi = diaChiTamTru_tf.getText();
-            if (idTamTru_tf.getText().isBlank() || diaChi.isBlank() || tuNgay_date.getValue() == null || denNgay_date.getValue() == null) {
+            if (idTamTru_tf.getText().isBlank() || diaChi.isBlank() || tuNgay_date.getValue() == null
+                    || denNgay_date.getValue() == null) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa nhập đủ thông tin!");
             } else if (tuNgay_date.getValue().isAfter(denNgay_date.getValue())) {
@@ -848,7 +846,8 @@ public class householdController implements Initializable {
         // Tam vang
         else {
             String diaChi = diaChiTamTru_tf.getText();
-            if (idTamTru_tf.getText().isBlank() || diaChi.isBlank() || tuNgay_date.getValue() == null || denNgay_date.getValue() == null) {
+            if (idTamTru_tf.getText().isBlank() || diaChi.isBlank() || tuNgay_date.getValue() == null
+                    || denNgay_date.getValue() == null) {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Bạn chưa nhập đủ thông tin!");
             } else if (tuNgay_date.getValue().isAfter(denNgay_date.getValue())) {
@@ -856,7 +855,7 @@ public class householdController implements Initializable {
                 alert.errorMessage("Thời gian tạm vắng không hợp lệ!");
             } else {
                 int idNK = Integer.parseInt(idTamTru_tf.getText());
-                if (TamVangDAO.getInstance().insert(new TamVang(idNK, selectedNK.getHoKhauID(),
+                if (TamVangDAO.getInstance().insert(new TamVang(idNK, selectedHK.getIdHoKhau(),
                         Date.valueOf(tuNgay_date.getValue()), Date.valueOf(denNgay_date.getValue()), diaChi))) {
                     String lichSuThayDoi = "Đăng ký tạm vắng cho nhân khẩu " + idNK + " " + LocalDate.now().toString();
                     LichSuThayDoiDAO.getInstance().insert(new LichSuThayDoi(selectedHK.getIdHoKhau(), lichSuThayDoi));

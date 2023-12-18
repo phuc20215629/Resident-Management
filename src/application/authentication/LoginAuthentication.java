@@ -18,6 +18,10 @@ public class LoginAuthentication {
         this.info = info;
     }
 
+    public LoginAuthentication(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -28,13 +32,30 @@ public class LoginAuthentication {
         return info;
     }
 
-    public boolean checkAuthentication() {
+    public boolean checkPassword() {
         try {
             Connection c = JDBCUtil.getConnection();
             String query = "SELECT * FROM USERS WHERE USERNAME LIKE ? AND PASS LIKE ?;";
             PreparedStatement preparedStatement = c.prepareStatement(query);
             preparedStatement.setString(1, this.username);
             preparedStatement.setString(2, this.password);
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()) {
+                return true;
+            }
+            else return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean checkUsername() {
+        try {
+            Connection c = JDBCUtil.getConnection();
+            String query = "SELECT * FROM USERS WHERE USERNAME LIKE ?;";
+            PreparedStatement preparedStatement = c.prepareStatement(query);
+            preparedStatement.setString(1, this.username);
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) {
                 return true;

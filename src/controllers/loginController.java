@@ -22,8 +22,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class loginController implements Initializable{
-	
+public class loginController implements Initializable {
+
 	@FXML
 	public ImageView gradient;
 	public Button nextBtn, okButton, loginButton, logout;
@@ -31,9 +31,9 @@ public class loginController implements Initializable{
 	public ImageView household, fee;
 	public TextField username_tf;
 	public PasswordField password_tf;
-    public TextField newPasswordCf_tf;
-    public TextField newPassword_tf;
-    public TextField infoCf_tf;
+	public TextField newPasswordCf_tf;
+	public TextField newPassword_tf;
+	public TextField infoCf_tf;
 
 	private static String username, password;
 
@@ -47,112 +47,114 @@ public class loginController implements Initializable{
 		rotate.setByAngle(360);
 		rotate.play();
 	}
-	
-//	--------------------------------------------------------------------------
+
+	// --------------------------------------------------------------------------
 	@FXML
-	public void loginNext() throws Exception{
+	public void loginNext() throws Exception {
 		username = username_tf.getText();
-		if(username == "") {
+		if (username == "") {
 			AlertMessage alert = new AlertMessage();
-			alert.errorMessage("Please fill up the username field!");
-		}
-		else {
-			Parent root = FXMLLoader.load(loginController.class.getResource("/view/loginPassword.fxml"));
-			Stage window = (Stage)nextBtn.getScene().getWindow();
-			Scene s = new Scene(root,1400,800);
-			s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-			window.setScene(s);
-		}
-	}
-	
-	public void forgetPass()throws Exception{
-		Parent root = FXMLLoader.load(loginController.class.getResource("/view/loginResetPassword.fxml"));
-		Stage window = (Stage)forget.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
-		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-		window.setScene(s);
-	}
-	
-	public void resetPass()throws Exception{
-		String infoCf = infoCf_tf.getText();
-		String newPassword = newPassword_tf.getText();
-		String newPasswordCf = newPasswordCf_tf.getText();
-		if(infoCf == "" || newPassword == "" || newPasswordCf == "") {
-			AlertMessage alert = new AlertMessage();
-			alert.errorMessage("Please fill up all fields!");
-		}
-		else {
-			if(newPassword.equals(newPasswordCf)) {
-				LoginAuthentication userCf = new LoginAuthentication(null, newPasswordCf, infoCf);
-				if(userCf.confirmAuthentication()) {
-					AlertMessage alert = new AlertMessage();
-					alert.successMessage("Your password is successfully changed!");
-					Parent root = FXMLLoader.load(loginController.class.getResource("/view/login.fxml"));
-					Stage window = (Stage)okButton.getScene().getWindow();
-					Scene s = new Scene(root,1400,800);
-					s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-					window.setScene(s);
-				}
-				else {
-					AlertMessage alert = new AlertMessage();
-					alert.errorMessage("Wrong username!");
-				}
-			}
-			else {
-				AlertMessage alert = new AlertMessage();
-				alert.errorMessage("Your new password doesn't match!");
-			}
-		}
-	}
-	
-	public void login()throws Exception{
-		password = password_tf.getText();
-		if(password == "") {
-			AlertMessage alert = new AlertMessage();
-			alert.errorMessage("Please fill up the password field!");
-		}
-		else {
-			LoginAuthentication user = new LoginAuthentication(username, password, null);
-			if (user.checkAuthentication()) {
-				Parent root = FXMLLoader.load(loginController.class.getResource("/view/functionOption.fxml"));
-				Stage window = (Stage)loginButton.getScene().getWindow();
-				Scene s = new Scene(root,1400,800);
+			alert.errorMessage("Bạn chưa nhập tên đăng nhập!");
+		} else {
+			LoginAuthentication newAuthentication = new LoginAuthentication(username);
+			if (newAuthentication.checkUsername()) {
+				Parent root = FXMLLoader.load(loginController.class.getResource("/view/loginPassword.fxml"));
+				Stage window = (Stage) nextBtn.getScene().getWindow();
+				Scene s = new Scene(root, 1400, 800);
 				s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
 				window.setScene(s);
 			} else {
 				AlertMessage alert = new AlertMessage();
-				alert.errorMessage("Wrong username or password");
+				alert.errorMessage("Sai tên đăng nhập!");
+			}
+
+		}
+	}
+
+	public void forgetPass() throws Exception {
+		Parent root = FXMLLoader.load(loginController.class.getResource("/view/loginResetPassword.fxml"));
+		Stage window = (Stage) forget.getScene().getWindow();
+		Scene s = new Scene(root, 1400, 800);
+		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+		window.setScene(s);
+	}
+
+	public void resetPass() throws Exception {
+		String infoCf = infoCf_tf.getText();
+		String newPassword = newPassword_tf.getText();
+		String newPasswordCf = newPasswordCf_tf.getText();
+		if (infoCf == "" || newPassword == "" || newPasswordCf == "") {
+			AlertMessage alert = new AlertMessage();
+			alert.errorMessage("Bạn chưa điền hết thông tin!");
+		} else {
+			if (newPassword.equals(newPasswordCf)) {
+				LoginAuthentication userCf = new LoginAuthentication(null, newPasswordCf, infoCf);
+				if (userCf.confirmAuthentication()) {
+					AlertMessage alert = new AlertMessage();
+					alert.successMessage("Thay đổi mật khẩu thành công!");
+					Parent root = FXMLLoader.load(loginController.class.getResource("/view/login.fxml"));
+					Stage window = (Stage) okButton.getScene().getWindow();
+					Scene s = new Scene(root, 1400, 800);
+					s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+					window.setScene(s);
+				} else {
+					AlertMessage alert = new AlertMessage();
+					alert.errorMessage("Sai tên đăng nhập!");
+				}
+			} else {
+				AlertMessage alert = new AlertMessage();
+				alert.errorMessage("Mật khẩu mới không khớp!");
+			}
+		}
+	}
+
+	public void login() throws Exception {
+		password = password_tf.getText();
+		if (password == "") {
+			AlertMessage alert = new AlertMessage();
+			alert.errorMessage("Bạn chưa nhập mật khẩu!");
+		} else {
+			LoginAuthentication user = new LoginAuthentication(username, password, null);
+			if (user.checkPassword()) {
+				Parent root = FXMLLoader.load(loginController.class.getResource("/view/functionOption.fxml"));
+				Stage window = (Stage) loginButton.getScene().getWindow();
+				Scene s = new Scene(root, 1400, 800);
+				s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
+				window.setScene(s);
+			} else {
+				AlertMessage alert = new AlertMessage();
+				alert.errorMessage("Sai mât khẩu");
 				Parent root = FXMLLoader.load(loginController.class.getResource("/view/login.fxml"));
-				Stage window = (Stage)loginButton.getScene().getWindow();
-				Scene s = new Scene(root,1400,800);
+				Stage window = (Stage) loginButton.getScene().getWindow();
+				Scene s = new Scene(root, 1400, 800);
 				s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
 				window.setScene(s);
 			}
 		}
 	}
-	
-	public void nhanKhauHoKhau(MouseEvent event)throws Exception{
+
+	public void nhanKhauHoKhau(MouseEvent event) throws Exception {
 		Parent root = FXMLLoader.load(loginController.class.getResource("/view/household.fxml"));
-		Stage window = (Stage)household.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
+		Stage window = (Stage) household.getScene().getWindow();
+		Scene s = new Scene(root, 1400, 800);
 		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
 		window.setScene(s);
 	}
-	
-	public void thuPhiDongGop(MouseEvent event)throws Exception{
+
+	public void thuPhiDongGop(MouseEvent event) throws Exception {
 		Parent root = FXMLLoader.load(loginController.class.getResource("/view/feeType.fxml"));
-		Stage window = (Stage)fee.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
+		Stage window = (Stage) fee.getScene().getWindow();
+		Scene s = new Scene(root, 1400, 800);
 		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
 		window.setScene(s);
 	}
-	
-	public void logoutView()throws Exception{
+
+	public void logoutView() throws Exception {
 		Parent root = FXMLLoader.load(loginController.class.getResource("/view/login.fxml"));
-		Stage window = (Stage)logout.getScene().getWindow();
-		Scene s = new Scene(root,1400,800);
+		Stage window = (Stage) logout.getScene().getWindow();
+		Scene s = new Scene(root, 1400, 800);
 		s.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
 		window.setScene(s);
 	}
-	
+
 }

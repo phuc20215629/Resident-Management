@@ -35,7 +35,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -79,9 +78,6 @@ public class feeTypeController implements Initializable {
 
     @FXML
     private TextField maHo_tf;
-
-    @FXML
-    private VBox menu;
 
     @FXML
     private TextField search_tf;
@@ -196,7 +192,6 @@ public class feeTypeController implements Initializable {
 
     @FXML
     void moDongPhiDialog(ActionEvent event) {
-        menu.setVisible(false);
         dinhMuc_tf1.setEditable(false);
         refreshHoKhauTable(HoKhauDAO.getInstance().selectAll());
         hoKhauTable.setOnMouseClicked(e -> {
@@ -230,7 +225,6 @@ public class feeTypeController implements Initializable {
 
     @FXML
     void dongDongPhiDialog(ActionEvent event) {
-        menu.setVisible(true);
         dongPhiDialog.setVisible(false);
         clearInfo();
     }

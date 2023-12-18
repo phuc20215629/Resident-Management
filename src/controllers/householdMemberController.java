@@ -37,7 +37,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -86,9 +85,6 @@ public class householdMemberController implements Initializable {
     private TextField danToc_tf;
 
     @FXML
-    private DatePicker denNgayTamTru_date;
-
-    @FXML
     private Button find_btn;
 
     @FXML
@@ -116,16 +112,7 @@ public class householdMemberController implements Initializable {
     private Button luuNK_btn;
 
     @FXML
-    private VBox menu;
-
-    @FXML
     private DatePicker ngayCap_date;
-
-    @FXML
-    private DatePicker ngayChuyenDi_date;
-
-    @FXML
-    private DatePicker ngayChuyenVe_date;
 
     @FXML
     private DatePicker ngaySinh_date;
@@ -147,9 +134,6 @@ public class householdMemberController implements Initializable {
 
     @FXML
     private TextField noiCap_tf;
-
-    @FXML
-    private TextField noiChuyenDi_tf;
 
     @FXML
     private TextField noiLamViec_tf;
@@ -177,9 +161,6 @@ public class householdMemberController implements Initializable {
 
     @FXML
     private Button themNk_btn;
-
-    @FXML
-    private DatePicker tuNgayTamTru_date;
 
     @FXML
     private Button xoa_btn;
@@ -454,7 +435,6 @@ public class householdMemberController implements Initializable {
 
                 nhanKhauPane2.setVisible(true);
                 nhanKhauPane1.setVisible(false);
-                menu.setVisible(false);
             }
         }
     }
@@ -646,7 +626,6 @@ public class householdMemberController implements Initializable {
     public void dongNhanKhauDialog(ActionEvent event) {
         clearInfo();
         refreshNhanKhauTable(NhanKhauDAO.getInstance().selectAll());
-        menu.setVisible(true);
         nhanKhauPane2.setVisible(false);
         nhanKhauPane1.setVisible(false);
     }

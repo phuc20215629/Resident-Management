@@ -47,12 +47,6 @@
             </Label>
          </children>
       </VBox>
-      <ImageView fx:id="gradient" fitHeight="868.0" fitWidth="868.0" layoutX="-322.0" layoutY="238.0">
-         <image>
-            <Image url="@../assets/gradient_star.png" />
-         </image>
-      </ImageView>
-      <Button id="button_logout" fx:id="logout" layoutX="65.0" layoutY="720.0" mnemonicParsing="false" onAction="#logoutView" stylesheets="@style.css" text="Đăng xuất" />
       <TableView id="feeTable" fx:id="nhanKhauTable" layoutX="299.0" layoutY="54.0" prefHeight="588.0" prefWidth="1077.0">
          <columns>
             <TableColumn fx:id="idNhanKhauCol" prefWidth="177.33334350585938" styleClass="tableAtrb" text="ID" />
@@ -60,6 +54,12 @@
             <TableColumn fx:id="idHoKhauCol" prefWidth="250.00006103515625" styleClass="tableAtrb" text="Mã hộ" />
          </columns>
       </TableView>
+      <ImageView fx:id="gradient" fitHeight="868.0" fitWidth="868.0" layoutX="-322.0" layoutY="238.0">
+         <image>
+            <Image url="@../assets/gradient_star.png" />
+         </image>
+      </ImageView>
+      <Button id="button_logout" fx:id="logout" layoutX="65.0" layoutY="720.0" mnemonicParsing="false" onAction="#logoutView" stylesheets="@style.css" text="Đăng xuất" />
       <Button id="editPerson" fx:id="sua_btn" layoutX="1009.0" layoutY="672.0" mnemonicParsing="false" onAction="#moNhanKhauDialog" styleClass="mybutton" stylesheets="@style.css" text="Sửa" />
       <Button id="addPerson" fx:id="themNk_btn" layoutX="1115.0" layoutY="672.0" mnemonicParsing="false" onAction="#moNhanKhauDialog" prefHeight="61.0" prefWidth="262.0" styleClass="mybutton" stylesheets="@style.css" text="Thêm nhân khẩu" />
       <ImageView id="button_home" fx:id="home" fitHeight="62.0" fitWidth="69.0" layoutX="92.0" layoutY="635.0" onMouseClicked="#home">
@@ -98,7 +98,7 @@
             </Pane>
          </children>
       </Pane>
-      <Pane fx:id="nhanKhauPane2" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog">
+      <Pane fx:id="nhanKhauPane2" layoutX="41.0" layoutY="32.0" prefHeight="575.0" prefWidth="1323.0" styleClass="dialog" visible="false">
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>

@@ -35,7 +35,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -179,9 +178,6 @@ public class householdStatsController implements Initializable {
     @FXML
     private TableColumn<NhanKhau, ArrayList<String>> hoTenCol;
 
-    @FXML
-    private VBox menu;
-
     ObservableList<NhanKhau> statsTableList;
     ObservableList<String> gioiTinhList = FXCollections.observableArrayList("Tất cả", "Nam", "Nữ");
     ObservableList<String> doTuoiList = FXCollections.observableArrayList("Tất cả", "Mầm non", "Cấp 1", "Cấp 2",
@@ -254,7 +250,6 @@ public class householdStatsController implements Initializable {
         ngayChuyenVe_date.setValue(null);
         noiChuyenDi_tf.clear();
         ghiChu_tf.clear();
-        menu.setVisible(true);
         nhanKhauPane2.setVisible(false);
         nhanKhauPane1.setVisible(false);
     }
@@ -264,7 +259,6 @@ public class householdStatsController implements Initializable {
         if (!nhanKhauPane1.isVisible() && back1_btn.isArmed()) {
             nhanKhauPane1.setVisible(true);
             nhanKhauPane2.setVisible(false);
-            menu.setVisible(false);
         }
         if (!nhanKhauPane1.isVisible()) {
             NhanKhau selectedNK = statsTable.getSelectionModel().getSelectedItem();
@@ -291,7 +285,6 @@ public class householdStatsController implements Initializable {
                 noiLamViec_tf.setText(selectedNK.getNoiLamViec());
 
                 nhanKhauPane1.setVisible(true);
-                menu.setVisible(false);
             }
         }
     }
@@ -301,7 +294,6 @@ public class householdStatsController implements Initializable {
         if (!nhanKhauPane2.isVisible()) {
             nhanKhauPane2.setVisible(true);
             nhanKhauPane1.setVisible(false);
-            menu.setVisible(false);
 
             NhanKhau selectedNK = statsTable.getSelectionModel().getSelectedItem();
             cccd_tf.setText(selectedNK.getCccd());
