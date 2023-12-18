@@ -629,30 +629,37 @@ public class householdController implements Initializable {
             boolean checkIdChuHo = false;
             boolean themThanhVien = false;
             boolean xoaThanhVien = false;
+            boolean thayDoi = false;
             NhanKhau chuHoMoi = new NhanKhau();
             if (selectedHK.getSoNha() != soNha) {
+                thayDoi = true;
                 lichSuThayDoi = lichSuThayDoi + " " + "Số nhà";
                 selectedHK.setGhiChu("Đã sửa");
                 selectedHK.setSoNha(soNha);
             }
             if (!selectedHK.getDuong().equals(duong)) {
+                thayDoi = true;
                 lichSuThayDoi = lichSuThayDoi + " " + "Đường";
                 selectedHK.setGhiChu("Đã sửa");
                 selectedHK.setDuong(duong);
             }
             if (!selectedHK.getPhuong().equals(phuong)) {
+                thayDoi = true;
                 lichSuThayDoi = lichSuThayDoi + " " + "Phường";
                 selectedHK.setGhiChu("Đã sửa");
                 selectedHK.setPhuong(phuong);
             }
             if (!selectedHK.getQuan().equals(quan)) {
+                thayDoi = true;
                 lichSuThayDoi = lichSuThayDoi + " " + "Quận";
                 selectedHK.setGhiChu("Đã sửa");
                 selectedHK.setQuan(quan);
             }
             if (idChuHoCu == Integer.parseInt(idChuHoMoi)) { // Neu khong thay doi chu ho
                 checkIdChuHo = true;
-            } else { // Neu thay doi chu ho
+            } 
+            else { // Neu thay doi chu ho
+                thayDoi = true;
                 for (NhanKhau nk : nhanKhauTableList) {
                     if (idChuHoMoi.equals(Integer.toString(nk.getId()))
                             && (nk.getHoKhauID() == 0 || nk.getHoKhauID() == selectedHK.getIdHoKhau())) {
@@ -671,12 +678,9 @@ public class householdController implements Initializable {
                     }
                 }
                 lichSuThayDoi = lichSuThayDoi + " " + "Chủ hộ";
-            }
-            if (checkIdChuHo) {
-                // Cập nhật chủ hộ mới
-                if (selectedHK.getSoNha() != soNha || !selectedHK.getDuong().equals(duong) ||
-                        !selectedHK.getPhuong().equals(phuong) || !selectedHK.getQuan().equals(quan) ||
-                        idChuHoCu != Integer.parseInt(idChuHoMoi) || themThanhVien || xoaThanhVien) {
+            } 
+            if (checkIdChuHo) { // Check id chủ hộ hợp lệ
+                if (thayDoi) { // Nếu có thay đổi
                     lichSuThayDoi = lichSuThayDoi + " " + LocalDate.now().toString();
                     LichSuThayDoiDAO.getInstance().insert(new LichSuThayDoi(selectedHK.getIdHoKhau(), lichSuThayDoi));
                 }
