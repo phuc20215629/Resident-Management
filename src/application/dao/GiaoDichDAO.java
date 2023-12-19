@@ -78,9 +78,8 @@ public class GiaoDichDAO implements DAOInterface<GiaoDich>{
             JDBCUtil.closeConnection(connection);
             return ans > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
     public boolean deleteByHKID(int id){

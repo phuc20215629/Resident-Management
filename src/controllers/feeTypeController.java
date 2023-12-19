@@ -190,6 +190,13 @@ public class feeTypeController implements Initializable {
         }
     }
 
+    ChangeListener<String> textFieldListener = new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien() * selectedHK.getSoThanhVien()));
+        }
+    };
+
     @FXML
     void moDongPhiDialog(ActionEvent event) {
         dinhMuc_tf1.setEditable(false);
@@ -211,12 +218,12 @@ public class feeTypeController implements Initializable {
                 dongPhiDialog.setVisible(true);
                 tenKhoan_tf1.setText(selectedKP.getTenKhoanPhi());
                 if (selectedKP.getLoaiPhi().equals("Bắt buộc theo hộ")) {
+                    maHo_tf.textProperty().removeListener(textFieldListener);
                     dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien()));
                 } else if (selectedKP.getLoaiPhi().equals("Bắt buộc theo người")) {
-                    maHo_tf.textProperty().addListener((observable, oldVal, newVal) -> {
-                        dinhMuc_tf1.setText(Integer.toString(selectedKP.getSoTien() * selectedHK.getSoThanhVien()));
-                    });
+                    maHo_tf.textProperty().addListener(textFieldListener);
                 } else {
+                    maHo_tf.textProperty().removeListener(textFieldListener);
                     dinhMuc_tf1.setEditable(true);
                 }
             }
@@ -248,7 +255,7 @@ public class feeTypeController implements Initializable {
                     AlertMessage alert = new AlertMessage();
                     alert.errorMessage("Nộp phí không thành công!");
                 }
-            } else {    //Loại phí bắt buộc
+            } else { // Loại phí bắt buộc
                 if (GiaoDichDAO.getInstance().selectByHK_KPID(maHo, selectedKP.getMaKhoanPhi()) == null) {
                     if (GiaoDichDAO.getInstance().insert(new GiaoDich(selectedKP.getMaKhoanPhi(), soTien, maHo, now,
                             selectedKP.getTenKhoanPhi()))) {
@@ -266,8 +273,17 @@ public class feeTypeController implements Initializable {
             }
         }
     }
+    
+    ChangeListener<String> dinhMucListener = new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+            if (loaiPhi_cb.getValue().equals("Không bắt buộc"))
+                dinhMuc_tf.clear();
+        }  
+    };
 
     public void moKhoanThuDialog() {
+        loaiPhi_cb.valueProperty().addListener(dinhMucListener);
         if (!khoanThuDialog.isVisible() && them_btn.isArmed()) { // Them khoan phi
             khoanThuDialog.setVisible(true);
             them_btn1.setVisible(true);
@@ -406,6 +422,7 @@ public class feeTypeController implements Initializable {
                             selectedKP.setTrangThai("Không hiệu lực");
                         }
                         if (KhoanPhiDAO.getInstance().update(selectedKP)) {
+                            GiaoDichDAO.getInstance().deleteByKPID(selectedKP.getMaKhoanPhi());
                             AlertMessage alert = new AlertMessage();
                             alert.successMessage("Sửa khoản phí thành công!");
                             dongKhoanThuDialog();

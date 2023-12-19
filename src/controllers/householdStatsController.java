@@ -35,10 +35,38 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class householdStatsController implements Initializable {
+
+    @FXML
+    private DatePicker denNgayPane_date;
+
+    @FXML
+    private Label diaDiem_lbl;
+
+    @FXML
+    private TextField diaDiem_tf;
+
+    @FXML
+    private Label gach;
+
+    @FXML
+    private Label ghiChu_lbl;
+
+    @FXML
+    private Label hoKhau_lbl;
+
+    @FXML
+    private TextField idHoKhauDangKi_tf;
+
+    @FXML
+    private VBox menu;
+
+    @FXML
+    private Label thoiGianDangKi_lbl;
 
     @FXML
     private Label tuNgay_lbl;
@@ -62,13 +90,7 @@ public class householdStatsController implements Initializable {
     private TextField danToc_tf;
 
     @FXML
-    private DatePicker denNgayTamTru_date;
-
-    @FXML
-    private TextField ghiChu_tf;
-
-    @FXML
-    private ChoiceBox<?> gioiTinh_cb1;
+    private TextField ghiChu_tf;;
 
     @FXML
     private TextField hoTen_tf;
@@ -77,16 +99,7 @@ public class householdStatsController implements Initializable {
     private TextField idHoKhauThuongTru_tf;
 
     @FXML
-    private Button luuNK_btn;
-
-    @FXML
     private DatePicker ngayCap_date;
-
-    @FXML
-    private DatePicker ngayChuyenDi_date;
-
-    @FXML
-    private DatePicker ngayChuyenVe_date;
 
     @FXML
     private DatePicker ngaySinh_date;
@@ -107,22 +120,13 @@ public class householdStatsController implements Initializable {
     private TextField noiCap_tf;
 
     @FXML
-    private TextField noiChuyenDi_tf;
-
-    @FXML
     private TextField noiLamViec_tf;
 
     @FXML
     private TextField noiSinh_tf;
 
     @FXML
-    private TextField noiThuongTru_tf;
-
-    @FXML
     private TextField quanHe_tf;
-
-    @FXML
-    private DatePicker tuNgayTamTru_date;
 
     @FXML
     private DatePicker denNgay_date;
@@ -165,6 +169,9 @@ public class householdStatsController implements Initializable {
 
     @FXML
     private DatePicker tuNgay_date;
+
+    @FXML
+    private DatePicker tuNgayPane_date;
 
     @FXML
     private TableView<NhanKhau> statsTable;
@@ -244,11 +251,9 @@ public class householdStatsController implements Initializable {
         cccd_tf.clear();
         noiCap_tf.clear();
         ngayCap_date.setValue(null);
-        tuNgayTamTru_date.setValue(null);
-        denNgayTamTru_date.setValue(null);
-        ngayChuyenDi_date.setValue(null);
-        ngayChuyenVe_date.setValue(null);
-        noiChuyenDi_tf.clear();
+        tuNgayPane_date.setValue(null);
+        denNgayPane_date.setValue(null);
+        idHoKhauDangKi_tf.clear();
         ghiChu_tf.clear();
         nhanKhauPane2.setVisible(false);
         nhanKhauPane1.setVisible(false);
@@ -292,45 +297,56 @@ public class householdStatsController implements Initializable {
     @FXML
     public void moNhanKhauDialog2(ActionEvent event) {
         if (!nhanKhauPane2.isVisible()) {
-            nhanKhauPane2.setVisible(true);
-            nhanKhauPane1.setVisible(false);
+                nhanKhauPane2.setVisible(true);
+                nhanKhauPane1.setVisible(false);
 
-            NhanKhau selectedNK = statsTable.getSelectionModel().getSelectedItem();
-            cccd_tf.setText(selectedNK.getCccd());
+                NhanKhau selectedNK = statsTable.getSelectionModel().getSelectedItem();
+                cccd_tf.setText(selectedNK.getCccd());
 
-            Date sqlDate = Date.valueOf(selectedNK.getNgayCapID().toString());
-            ngayCap_date.setValue(sqlDate.toLocalDate());
-            noiCap_tf.setText(selectedNK.getNoiCapID());
-            ghiChu_tf.setText(selectedNK.getGhiChu());
+                if (selectedNK.getNgayCapID() == null) {
+                    ngayCap_date.setValue(null);
+                } else {
+                    Date sqlDate = Date.valueOf(selectedNK.getNgayCapID().toString());
+                    ngayCap_date.setValue(sqlDate.toLocalDate());
+                }
+                noiCap_tf.setText(selectedNK.getNoiCapID());
+                ghiChu_tf.setText(selectedNK.getGhiChu());
 
-            if (selectedNK.getGhiChu().equals("Tạm trú")) {
+                if (selectedNK.getGhiChu().equals("Tạm trú")) {
+                    tuNgayPane_date.setVisible(true);
+                    denNgayPane_date.setVisible(true);
+                    tuNgayPane_date.setEditable(true);
+                    denNgayPane_date.setEditable(true);
+                    diaDiem_tf.setEditable(true);
+                    diaDiem_lbl.setText("Nơi thường trú trước khi chuyển đến");
+                    thoiGianDangKi_lbl.setText("Đăng ký thường trú từ ngày");
 
-                tuNgayTamTru_date.setEditable(true);
-                denNgayTamTru_date.setEditable(true);
-                noiThuongTru_tf.setEditable(true);
+                    TamTru tt = TamTruDAO.getInstance().selectByNKID(selectedNK.getId());
+                    if (tt != null) {
+                        tuNgayPane_date.setValue(tt.getTuNgayDangKy().toLocalDate());
+                        denNgayPane_date.setValue(tt.getDenNgayDangKy().toLocalDate());
+                        diaDiem_tf.setText(tt.getDiaChiTruocChuyenDen());
+                        idHoKhauDangKi_tf.setText(Integer.toString(tt.getIdHoKhau()));
+                    }
+                }
+                if (selectedNK.getGhiChu().equals("Tạm vắng")) {
+                    tuNgayPane_date.setVisible(true);
+                    denNgayPane_date.setVisible(true);
+                    tuNgayPane_date.setEditable(true);
+                    denNgayPane_date.setEditable(true);
+                    diaDiem_tf.setEditable(true);
+                    diaDiem_lbl.setText("Nơi chuyển đến sau khi tạm vắng");
+                    thoiGianDangKi_lbl.setText("Đăng ký tạm vắng từ ngày");
 
-                TamTru tt = TamTruDAO.getInstance().selectByNKID(selectedNK.getId());
-                if (tt != null) {
-                    tuNgayTamTru_date.setValue(tt.getTuNgayDangKy().toLocalDate());
-                    denNgayTamTru_date.setValue(tt.getDenNgayDangKy().toLocalDate());
-                    noiThuongTru_tf.setText(tt.getDiaChiTruocChuyenDen());
-                    idHoKhauThuongTru_tf.setText(Integer.toString(tt.getIdHoKhau()));
+                    TamVang tv = TamVangDAO.getInstance().selectByNKID(selectedNK.getId());
+                    if (tv != null) {
+                        tuNgayPane_date.setValue(tv.getTuNgayDangKy().toLocalDate());
+                        denNgayPane_date.setValue(tv.getDenNgayDangKy().toLocalDate());
+                        diaDiem_tf.setText(tv.getDiaChiChuyenDen());
+                        idHoKhauDangKi_tf.setText(Integer.toString(tv.getIdHoKhau()));
+                    }
                 }
             }
-            if (selectedNK.getGhiChu().equals("Tạm vắng")) {
-
-                ngayChuyenDi_date.setEditable(true);
-                ngayChuyenVe_date.setEditable(true);
-                noiChuyenDi_tf.setEditable(true);
-
-                TamVang tv = TamVangDAO.getInstance().selectByNKID(selectedNK.getId());
-                if (tv != null) {
-                    ngayChuyenDi_date.setValue(tv.getTuNgayDangKy().toLocalDate());
-                    ngayChuyenVe_date.setValue(tv.getDenNgayDangKy().toLocalDate());
-                    noiChuyenDi_tf.setText(tv.getDiaChiChuyenDen());
-                }
-            }
-        }
     }
 
     @FXML

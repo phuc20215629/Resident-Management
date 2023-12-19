@@ -371,6 +371,17 @@ public class householdMemberController implements Initializable {
     @FXML
     public void moNhanKhauDialog2(ActionEvent event) {
         if (!nhanKhauPane2.isVisible()) {
+            tuNgay_date.setVisible(false);
+            denNgay_date.setVisible(false);
+            hoKhau_lbl.setVisible(false);
+            idHoKhauDangKi_tf.setVisible(false);
+            gach.setVisible(false);
+            thoiGianDangKi_lbl.setVisible(false);
+            diaDiem_lbl.setVisible(false);
+            diaDiem_tf.setVisible(false);
+            ghiChu_lbl.setVisible(false);
+            ghiChu_tf.setVisible(false);
+
             if (dangSuaNK) { // Sua nhan khau
                 nhanKhauPane2.setVisible(true);
                 nhanKhauPane1.setVisible(false);
@@ -390,6 +401,15 @@ public class householdMemberController implements Initializable {
                 if (selectedNK.getGhiChu().equals("Tạm trú")) {
                     tuNgay_date.setVisible(true);
                     denNgay_date.setVisible(true);
+                    hoKhau_lbl.setVisible(true);
+                    idHoKhauDangKi_tf.setVisible(true);
+                    gach.setVisible(true);
+                    thoiGianDangKi_lbl.setVisible(true);
+                    diaDiem_lbl.setVisible(true);
+                    diaDiem_tf.setVisible(true);
+                    ghiChu_lbl.setVisible(true);
+                    ghiChu_tf.setVisible(true);
+
                     tuNgay_date.setEditable(true);
                     denNgay_date.setEditable(true);
                     diaDiem_tf.setEditable(true);
@@ -407,6 +427,15 @@ public class householdMemberController implements Initializable {
                 if (selectedNK.getGhiChu().equals("Tạm vắng")) {
                     tuNgay_date.setVisible(true);
                     denNgay_date.setVisible(true);
+                    hoKhau_lbl.setVisible(true);
+                    idHoKhauDangKi_tf.setVisible(true);
+                    gach.setVisible(true);
+                    thoiGianDangKi_lbl.setVisible(true);
+                    diaDiem_lbl.setVisible(true);
+                    diaDiem_tf.setVisible(true);
+                    ghiChu_lbl.setVisible(true);
+                    ghiChu_tf.setVisible(true);
+
                     tuNgay_date.setEditable(true);
                     denNgay_date.setEditable(true);
                     diaDiem_tf.setEditable(true);
@@ -422,17 +451,6 @@ public class householdMemberController implements Initializable {
                     }
                 }
             } else { // Them nhan khau
-                tuNgay_date.setVisible(false);
-                denNgay_date.setVisible(false);
-                hoKhau_lbl.setVisible(false);
-                idHoKhauDangKi_tf.setVisible(false);
-                gach.setVisible(false);
-                thoiGianDangKi_lbl.setVisible(false);
-                diaDiem_lbl.setVisible(false);
-                diaDiem_tf.setVisible(false);
-                ghiChu_lbl.setVisible(false);
-                ghiChu_tf.setVisible(false);
-
                 nhanKhauPane2.setVisible(true);
                 nhanKhauPane1.setVisible(false);
             }
@@ -482,7 +500,7 @@ public class householdMemberController implements Initializable {
                         TamTru tt = new TamTru();
                         tt.setIdNhanKhau(selectedNK.getId());
                         tt.setTuNgayDangKy(Date.valueOf(tuNgay_date.getValue()));
-                        tt.setDenNgayDangKy(Date.valueOf(denNgay_date.getValue()));                     
+                        tt.setDenNgayDangKy(Date.valueOf(denNgay_date.getValue()));
                         tt.setDiaChiTruocChuyenDen(diaDiem_tf.getText());
                         TamTruDAO.getInstance().update(tt);
                         if (tuNgay_date.getValue().isAfter(LocalDate.now())
