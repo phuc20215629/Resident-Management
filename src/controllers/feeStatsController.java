@@ -136,11 +136,9 @@ public class feeStatsController implements Initializable {
 
 	@FXML
 	void timKhoanPhi(ActionEvent event) {
-		tongThu_lbl.setVisible(false);
-		tongThu_tf.setVisible(false);
-		soHoDaNop_lbl.setVisible(false);
-		soHoDaNop_tf.setVisible(false);
-
+		tongThu_lbl.setVisible(true);
+		tongThu_tf.setVisible(true);
+		
 		if (search_tf.getText().isBlank()) {
 			AlertMessage alert = new AlertMessage();
 			alert.errorMessage("Bạn chưa nhập thông tin tìm kiếm!");
@@ -151,6 +149,11 @@ public class feeStatsController implements Initializable {
 				ArrayList<GiaoDich> list = GiaoDichDAO.getInstance().selectByHKID(maHo);
 				if (!list.isEmpty()) {
 					refreshTimMaHoTable(list);
+				long tongThu = 0;
+				for (GiaoDich gd : list) {
+					tongThu += (long) gd.getSoTien();
+				}
+				tongThu_tf.setText(Long.toString(tongThu));
 				} else {
 					AlertMessage alert = new AlertMessage();
 					alert.errorMessage("Không tìm thấy mã hộ khẩu hoặc hộ khẩu này chưa thực hiện đóng phí nào!");
