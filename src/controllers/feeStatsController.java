@@ -37,9 +37,6 @@ public class feeStatsController implements Initializable {
 	private DatePicker denNgay_date;
 
 	@FXML
-	private Button find_btn;
-
-	@FXML
 	private ImageView gradient;
 
 	@FXML
@@ -99,7 +96,6 @@ public class feeStatsController implements Initializable {
 		LocalDate tuNgay = tuNgay_date.getValue();
 		LocalDate denNgay = denNgay_date.getValue();
 		ArrayList<GiaoDich> list = new ArrayList<>();
-
 		int soHoDaNop = 0;
 		if (tuNgay == null || denNgay == null) {
 			tuNgay = LocalDate.now().minusDays(1);
@@ -107,62 +103,56 @@ public class feeStatsController implements Initializable {
 			tuNgay_date.setValue(tuNgay);
 			denNgay_date.setValue(denNgay);
 		}
-		if (loaiPhi_cb.getValue().equals("Bắt buộc")) {
-			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Bắt buộc%");
-			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Bắt buộc%");
-			refreshTimMaHoTable(list);
-		} else if (loaiPhi_cb.getValue().equals("Tất cả")) {
-			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Tất cả");
-			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), "Tất cả");
-			refreshTimMaHoTable(list);
-		} else {
-			list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), loaiPhi_cb.getValue());
-			soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
-					Date.valueOf(denNgay), loaiPhi_cb.getValue());
+
+		if (!search_tf.getText().isBlank()) { // Thống kê 1 hộ đươc yêu cầu
+			soHoDaNop_lbl.setVisible(false);
+			soHoDaNop_tf.setVisible(false);
+			int maHo = Integer.parseInt(search_tf.getText());
+			if (!GiaoDichDAO.getInstance().selectByHKID(maHo).isEmpty()) { // Ho co thuc hien giao dich
+				if (loaiPhi_cb.getValue().equals("Bắt buộc")) {
+					list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
+							Date.valueOf(denNgay), "Bắt buộc%", maHo);
+				} else if (loaiPhi_cb.getValue().equals("Tất cả")) {
+					list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
+							Date.valueOf(denNgay), "Tất cả", maHo);
+				} else { // Bắt buôc theo hộ hoăc theo người
+					list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
+							Date.valueOf(denNgay), loaiPhi_cb.getValue(), maHo);
+				}
+				refreshTimMaHoTable(list);
+			} else {
+				soHoDaNop = 0;
+				AlertMessage alert = new AlertMessage();
+				alert.errorMessage("Mã hộ khẩu không tồn tại hoặc hộ khẩu chưa thực hiên giao dịch nào!");
+			}
+		} else { // Thống kê tất cả các hộ
+			soHoDaNop_lbl.setVisible(true);
+			soHoDaNop_tf.setVisible(true);
+			if (loaiPhi_cb.getValue().equals("Bắt buộc")) {
+				list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
+						Date.valueOf(denNgay), "Bắt buộc%", 0);
+				soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
+						Date.valueOf(denNgay), "Bắt buộc%");
+			} else if (loaiPhi_cb.getValue().equals("Tất cả")) {
+				list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
+						Date.valueOf(denNgay), "Tất cả", 0);
+				soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
+						Date.valueOf(denNgay), "Tất cả");
+			} else { // Bắt buôc theo hộ hoăc theo người
+				list = GiaoDichDAO.getInstance().selectByPeriodAndType(Date.valueOf(tuNgay),
+						Date.valueOf(denNgay), loaiPhi_cb.getValue(), 0);
+				soHoDaNop = GiaoDichDAO.getInstance().countSoHoDaNop(Date.valueOf(tuNgay),
+						Date.valueOf(denNgay), loaiPhi_cb.getValue());
+			}
 			refreshTimMaHoTable(list);
 		}
+
 		long tongThu = 0;
 		for (GiaoDich gd : list) {
 			tongThu += (long) gd.getSoTien();
 		}
 		tongThu_tf.setText(Long.toString(tongThu));
 		soHoDaNop_tf.setText(Integer.toString(soHoDaNop));
-	}
-
-	@FXML
-	void timKhoanPhi(ActionEvent event) {
-		tongThu_lbl.setVisible(true);
-		tongThu_tf.setVisible(true);
-		
-		if (search_tf.getText().isBlank()) {
-			AlertMessage alert = new AlertMessage();
-			alert.errorMessage("Bạn chưa nhập thông tin tìm kiếm!");
-			refreshTimMaHoTable(GiaoDichDAO.getInstance().selectAll());
-		} else {
-			try {
-				int maHo = Integer.parseInt(search_tf.getText());
-				ArrayList<GiaoDich> list = GiaoDichDAO.getInstance().selectByHKID(maHo);
-				if (!list.isEmpty()) {
-					refreshTimMaHoTable(list);
-				long tongThu = 0;
-				for (GiaoDich gd : list) {
-					tongThu += (long) gd.getSoTien();
-				}
-				tongThu_tf.setText(Long.toString(tongThu));
-				} else {
-					AlertMessage alert = new AlertMessage();
-					alert.errorMessage("Không tìm thấy mã hộ khẩu hoặc hộ khẩu này chưa thực hiện đóng phí nào!");
-				}
-			} catch (Exception e) {
-				AlertMessage alert = new AlertMessage();
-				alert.errorMessage("Mã hộ khẩu phải là số!");
-			}
-		}
 	}
 
 	@FXML
