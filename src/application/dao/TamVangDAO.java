@@ -101,6 +101,30 @@ public class TamVangDAO {
         return tamVang;
     }
 
+    public TamVang selectByHKID(int id) {
+        TamVang tamVang = null;
+        try (Connection connection = JDBCUtil.getConnection()) {
+            String sql = "SELECT * FROM TAMVANG WHERE idHoKhau = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, id);
+                ResultSet rs = preparedStatement.executeQuery();
+                if (rs.next()) {
+                    tamVang = new TamVang();
+                    tamVang.setMaTamVang(rs.getInt("maTamVang"));
+                    tamVang.setIdNhanKhau(rs.getInt("idNhanKhau"));
+                    tamVang.setIdHoKhau(rs.getInt("idHoKhau"));
+                    tamVang.setTuNgayDangKy(rs.getDate("tuNgayDangKy"));
+                    tamVang.setDenNgayDangKy(rs.getDate("denNgayDangKy"));
+                    tamVang.setDiaChiChuyenDen(rs.getString("diaChiChuyenDen"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tamVang;
+    }
+
     public ArrayList<TamVang> selectAll() {
         ArrayList<TamVang> danhSachTamVang = new ArrayList<>();
 

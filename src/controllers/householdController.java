@@ -603,6 +603,13 @@ public class householdController implements Initializable {
                     x.setLaChuHo(0);
                     NhanKhauDAO.getInstance().update(x);
                 }
+                // Xoa ca nhung thang dang tam vang
+                NhanKhau nkTamVang = NhanKhauDAO.getInstance().selectById(TamVangDAO.getInstance().selectByHKID(idHoKhau).getIdNhanKhau());
+                nkTamVang.setGhiChu("");
+                nkTamVang.setQhChuHo("");
+                nkTamVang.setHoKhauID(0);
+                nkTamVang.setLaChuHo(0);
+                NhanKhauDAO.getInstance().update(nkTamVang);
             } else {
                 AlertMessage alert = new AlertMessage();
                 alert.errorMessage("Xóa hộ khẩu không thành công!");
