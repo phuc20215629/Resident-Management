@@ -15,17 +15,17 @@
             <Image url="@../assets/Vector.png" />
          </image>
       </ImageView>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="511.0" layoutY="256.0" prefHeight="36.0" prefWidth="366.0" text="Enter your email/phone number">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="511.0" layoutY="291.0" prefHeight="36.0" prefWidth="366.0" text="Nhập tài khoản">
          <font>
             <Font name="Inter Regular" size="20.0" />
          </font>
       </Label>
-      <TextField id="loginEmailPhone" fx:id="username_tf" layoutX="536.0" layoutY="346.0" prefHeight="48.0" prefWidth="314.0" promptText="email/phone number">
+      <TextField id="loginEmailPhone" fx:id="username_tf" layoutX="536.0" layoutY="346.0" prefHeight="48.0" prefWidth="314.0" promptText="Tài khoản">
          <font>
             <Font size="19.0" />
          </font>
       </TextField>
-      <Button id="loginNext" fx:id="nextBtn" layoutX="637.0" layoutY="438.0" mnemonicParsing="false" onAction="#loginNext" prefHeight="60.0" prefWidth="112.0" styleClass="mybutton" text="Next">
+      <Button id="loginNext" fx:id="nextBtn" layoutX="637.0" layoutY="438.0" mnemonicParsing="false" onAction="#loginNext" prefHeight="60.0" prefWidth="112.0" styleClass="mybutton" text="Tiếp">
          <font>
             <Font size="20.0" />
          </font>
